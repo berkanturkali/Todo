@@ -1,14 +1,11 @@
-package com.example.todo.fragments
+package com.example.todo.view.fragments
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.todo.R
-import com.example.todo.databinding.FragmentSplashScreenBinding
 import kotlinx.coroutines.*
 
 class SplashScreenFragment : Fragment(R.layout.fragment_splash_screen) {

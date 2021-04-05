@@ -7,36 +7,51 @@
 
     <fragment
         android:id="@+id/splashScreenFragment"
-        android:name="com.example.todo.fragments.SplashScreenFragment"
+        android:name="com.example.todo.view.fragments.SplashScreenFragment"
         android:label="fragment_splash_screen"
         tools:layout="@layout/fragment_splash_screen" >
         <action
             android:id="@+id/action_splashScreenFragment_to_loginFragment"
             app:destination="@id/navigation"
+            app:launchSingleTop="true"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
-            app:popUpTo="@id/splashScreenFragment"
-            app:popUpToInclusive="true" />
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true"
+          />
     </fragment>
     <navigation android:id="@+id/navigation"
         app:startDestination="@id/loginFragment">
         <fragment
             android:id="@+id/loginFragment"
-            android:name="com.example.todo.fragments.authflow.LoginFragment"
+            android:name="com.example.todo.view.fragments.authflow.LoginFragment"
             android:label="fragment_login_layout"
             tools:layout="@layout/fragment_login_layout">
             <action
                 android:id="@+id/action_loginFragment_to_registerFragment"
-                app:destination="@id/registerFragment" />
+                app:destination="@id/registerFragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right"
+                app:popUpTo="@id/loginFragment"
+                app:popUpToInclusive="true"
+                 />
         </fragment>
         <fragment
             android:id="@+id/registerFragment"
-            android:name="com.example.todo.fragments.authflow.RegisterFragment"
+            android:name="com.example.todo.view.fragments.authflow.RegisterFragment"
             android:label="fragment_register_layout"
             tools:layout="@layout/fragment_register_layout">
             <action
                 android:id="@+id/action_registerFragment_to_loginFragment"
-                app:destination="@id/loginFragment" />
+                app:destination="@id/loginFragment"
+                app:enterAnim="@anim/slide_in_left"
+                app:exitAnim="@anim/slide_out_right"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right"
+                app:popUpTo="@id/registerFragment"
+                app:popUpToInclusive="true" />
         </fragment>
     </navigation>
 </navigation>
