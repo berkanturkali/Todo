@@ -8,7 +8,7 @@ import com.google.android.material.snackbar.Snackbar
 
 class SnackUtil {
     companion object{
-        fun showSnackbar(context: Context, view: View, message: String, colorId:Int, callBack: (() -> Unit)?) {
+        fun showSnackbar(context: Context, view: View, message: String, colorId:Int, callBack: (() -> Unit)? = null) {
             Snackbar.make(context, view, message, Snackbar.LENGTH_LONG)
                 .setBackgroundTint(ContextCompat.getColor(context, colorId))
                 .addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar>() {

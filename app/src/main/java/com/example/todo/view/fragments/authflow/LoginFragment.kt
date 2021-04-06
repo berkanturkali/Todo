@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
-
 import com.example.todo.R
 import com.example.todo.databinding.FragmentLoginLayoutBinding
 import com.example.todo.util.Resource
@@ -30,7 +29,6 @@ class LoginFragment : Fragment() {
     private var _binding: FragmentLoginLayoutBinding? = null
     private val binding get() = _binding!!
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -130,9 +128,8 @@ class LoginFragment : Fragment() {
                             requireContext(),
                             requireView(),
                             it.data.toString(),
-                            R.color.color_success,
-                            null
-                        )
+                            R.color.color_success
+                        ) { navigateToHomeFlow() }
                     }
                     is Resource.Error -> {
                         hideProgress()
@@ -141,13 +138,16 @@ class LoginFragment : Fragment() {
                             requireView(),
                             it.message.toString(),
                             R.color.color_danger,
-                            null
-                        )
+                            )
                     }
                 }
             }
-
         }
+    }
+
+    private fun navigateToHomeFlow(){
+        findNavController().navigate(R.id.action_loginFragment_to_homeActivity)
+        requireActivity().finish()
     }
 
     private fun showProgress() {

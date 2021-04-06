@@ -116,7 +116,7 @@ class RegisterFragment : Fragment() {
                         requireView(),
                         resource.message.toString(),
                         R.color.color_danger,
-                        null
+
                     )
                 }
             }
