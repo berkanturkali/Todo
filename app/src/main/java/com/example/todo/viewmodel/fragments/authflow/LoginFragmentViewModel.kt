@@ -39,7 +39,7 @@ class LoginFragmentViewModel @Inject constructor(
                 if (response.isSuccessful) {
                     response.body()?.let {
                         Log.i(TAG, "loginUser: $it")
-                        storageManager.setToken(it.token)
+                        storageManager.setTokenAndUserId(it.token,it.userId)
                         _loginInfo.value = Event(Resource.Success("Successfully logged in"))
                     }
                 } else {

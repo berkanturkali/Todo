@@ -1,13 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/addTodo"
-        android:title="Add Todo"/>
+        android:title="Add Todo"
+        android:icon="@drawable/ic_add_todo"
+        app:showAsAction="ifRoom|withText"/>
     <item
         android:id="@+id/editProfile"
-        android:title="Edit Profile"/>
+        android:title="Edit Profile"
+        android:icon="@drawable/ic_edit"
+        app:showAsAction="withText|ifRoom"
+        />
+    <item
+        android:id="@+id/logout"
+        android:title="Logout"
+        android:icon="@drawable/ic_logout"
+        app:showAsAction="withText|ifRoom"/>
 
 
 </menu>

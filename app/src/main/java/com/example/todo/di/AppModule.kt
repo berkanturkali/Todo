@@ -58,13 +58,16 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideHttpClient(interceptor: HttpLoggingInterceptor): OkHttpClient {
+    fun provideHttpClient(
+        loggingInterceptor: HttpLoggingInterceptor,
+        interceptor: Interceptor,
+    ): OkHttpClient {
         return OkHttpClient.Builder()
             .connectTimeout(CONNECTION_TIMEOUT, TimeUnit.SECONDS)
             .writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)
             .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
-
             .addInterceptor(interceptor)
+            .addInterceptor(loggingInterceptor)
             .retryOnConnectionFailure(true)
             .build()
     }

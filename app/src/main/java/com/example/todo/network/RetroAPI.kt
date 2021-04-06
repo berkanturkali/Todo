@@ -5,10 +5,7 @@ import com.example.todo.model.User
 import com.google.gson.JsonObject
 import okhttp3.MultipartBody
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.Multipart
-import retrofit2.http.POST
-import retrofit2.http.Part
+import retrofit2.http.*
 
 interface RetroAPI {
     @Multipart
@@ -20,4 +17,10 @@ interface RetroAPI {
 
     @POST("user/login")
     suspend fun loginUser(@Body credentials: JsonObject): Response<TokenResponse>
+
+    @GET("user/{id}")
+    suspend fun userInfo(
+        @Path("id")id:String
+    ): Response<User>
+
 }

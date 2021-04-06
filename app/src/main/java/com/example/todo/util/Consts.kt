@@ -12,5 +12,6 @@ class Consts {
         const val WRITE_TIMEOUT: Long = 30L
         const val FILE_NAME = "photo"
         const val PREF_NAME = "token"
+        const val USER_ID ="userId"
     }
 }
