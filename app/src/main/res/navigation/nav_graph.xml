@@ -16,7 +16,7 @@
             app:launchSingleTop="true"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
-            app:popUpTo="@id/nav_graph"
+            app:popUpTo="@id/splashScreenFragment"
             app:popUpToInclusive="true"
           />
     </fragment>
@@ -52,6 +52,14 @@
                 app:popExitAnim="@anim/slide_out_right"
                 app:popUpTo="@id/registerFragment"
                 app:popUpToInclusive="true" />
+            <action
+                android:id="@+id/action_registerFragment_to_fragmentCameraOptionsFragment"
+                app:destination="@id/fragmentCameraOptionsFragment" />
         </fragment>
+        <dialog
+            android:id="@+id/fragmentCameraOptionsFragment"
+            tools:layout="@layout/fragment_camera_options_layout"
+            android:name="com.example.todo.view.fragments.authflow.FragmentCameraOptionsFragment"
+            android:label="FragmentCameraOptionsFragment" />
     </navigation>
 </navigation>

@@ -130,7 +130,8 @@ class LoginFragment : Fragment() {
                             requireContext(),
                             requireView(),
                             it.data.toString(),
-                            R.color.color_success
+                            R.color.color_success,
+                            null
                         )
                     }
                     is Resource.Error -> {
@@ -139,7 +140,8 @@ class LoginFragment : Fragment() {
                             requireContext(),
                             requireView(),
                             it.message.toString(),
-                            R.color.color_danger
+                            R.color.color_danger,
+                            null
                         )
                     }
                 }
