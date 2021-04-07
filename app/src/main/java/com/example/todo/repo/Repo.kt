@@ -13,11 +13,15 @@ import javax.inject.Singleton
 class Repo @Inject constructor(
     private val retroApi: RetroAPI,
     private val retrofit: Retrofit
-):BaseService() {
+) : BaseService() {
     suspend fun registerUser(user: User, body: MultipartBody.Part?) =
         retroApi.registerUser(user, body)
 
     suspend fun loginUser(credentials: JsonObject) = retroApi.loginUser(credentials)
 
-    suspend fun getUserInfo(id:String): Resource<User> = apiCall({retroApi.userInfo(id)},retrofit)
+    suspend fun getUserInfo(id: String): Resource<User> =
+        apiCall({ retroApi.userInfo(id) }, retrofit)
+
+    suspend fun updateUser(credentials: JsonObject, image: MultipartBody.Part?, id: String) =
+        apiCall({ retroApi.updateUser(id, credentials, image) }, retrofit)
 }

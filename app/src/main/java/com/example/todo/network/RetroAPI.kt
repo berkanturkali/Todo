@@ -20,7 +20,14 @@ interface RetroAPI {
 
     @GET("user/{id}")
     suspend fun userInfo(
-        @Path("id")id:String
+        @Path("id") id: String
     ): Response<User>
+    @Multipart
+    @PUT("user/{id}")
+    suspend fun updateUser(
+        @Path("id") id: String,
+        @Part("credentials") credentials: JsonObject,
+        @Part profilePic: MultipartBody.Part?
+    ): Response<Unit>
 
 }

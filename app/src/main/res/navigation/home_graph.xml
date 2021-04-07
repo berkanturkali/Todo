@@ -10,4 +10,18 @@
         android:name="com.example.todo.view.fragments.homeflow.HomeFragment"
         android:label="HomeFragment"
         tools:layout="@layout/fragment_home_layout"/>
+    <fragment
+        android:id="@+id/editProfile"
+        android:name="com.example.todo.view.fragments.homeflow.EditProfileFragment"
+        android:label="EditProfileFragment"
+        tools:layout="@layout/fragment_profile_edit_layout">
+        <action
+            android:id="@+id/action_editProfile_to_fragmentCameraOptionsFragment2"
+            app:destination="@id/fragmentCameraOptionsFragment2" />
+    </fragment>
+    <dialog
+        android:id="@+id/fragmentCameraOptionsFragment2"
+        android:name="com.example.todo.view.fragments.authflow.FragmentCameraOptionsFragment"
+        android:label="FragmentCameraOptionsFragment"
+        tools:layout="@layout/fragment_camera_options_layout"/>
 </navigation>

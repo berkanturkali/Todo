@@ -2,17 +2,14 @@ package com.example.todo
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.navigation.NavController
-import androidx.navigation.Navigation
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
 import com.example.todo.databinding.ActivityHomeBinding
@@ -23,46 +20,60 @@ import com.example.todo.util.SnackUtil
 import com.example.todo.util.StorageManager
 import com.example.todo.viewmodel.HomeActivityViewModel
 import com.google.android.material.imageview.ShapeableImageView
-import com.google.android.material.navigation.NavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-private const val TAG = "HomeActivity"
 @AndroidEntryPoint
-class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class HomeActivity : AppCompatActivity() {
     private val mViewModel: HomeActivityViewModel by viewModels()
     private lateinit var binding: ActivityHomeBinding
     private lateinit var headerView: View
-    private lateinit var navHostFragment: NavHostFragment
+    private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var navController: NavController
+
     @Inject
     lateinit var storageManager: StorageManager
-
     private var isLogout = false
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        getUserInfo(storageManager.getUserId().toString())
-        headerView = binding.drawerView.getHeaderView(0)
-        navHostFragment =
+        val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment_home) as NavHostFragment
         navController = navHostFragment.navController
+        getUserInfo(storageManager.getUserId().toString())
+        headerView = binding.drawerView.getHeaderView(0)
         setupNavigation()
+        subscribeObservers()
     }
 
     private fun setupNavigation() {
-        setSupportActionBar(binding.toolbar)
-
+        appBarConfiguration = AppBarConfiguration(
+            navController.graph,
+            binding.drawerLayout,
+            fallbackOnNavigateUpListener = ::onSupportNavigateUp
+        )
+        binding.toolbar.setupWithNavController(navController, appBarConfiguration)
         binding.drawerView.setupWithNavController(navController)
-        NavigationUI.setupActionBarWithNavController(this, navController, binding.drawerLayout)
-        binding.drawerView.setNavigationItemSelectedListener(this)
+        binding.drawerView.setNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.logout -> logout()
+                else -> {
+                    NavigationUI.onNavDestinationSelected(it, navController)
+                    binding.drawerLayout.closeDrawers()
+                }
+            }
+            true
+        }
     }
 
     private fun getUserInfo(id: String) {
-        mViewModel.getUserInfo(id).observe(this) { resource ->
+        mViewModel.getUserInfo(id)
+    }
+
+    private fun subscribeObservers() {
+        mViewModel.userInfo.observe(this) { resource ->
             when (resource) {
                 is Resource.Success -> {
                     setUserInfo(resource.data!!)
@@ -98,27 +109,12 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-    override fun onSupportNavigateUp(): Boolean =
-        NavigationUI.navigateUp(navController, binding.drawerLayout)
-
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        binding.drawerLayout.closeDrawers()
-        when (item.itemId) {
-            R.id.addTodo -> {
-
-            }
-            R.id.editProfile -> {
-
-            }
-            R.id.logout -> {
-                storageManager.clearSharedPref()
-                isLogout = true
-                val intent = Intent(this,MainActivity::class.java)
-                intent.putExtra("isLogout",isLogout)
-                startActivity(intent)
-                finish()
-            }
-        }
-        return true
+    private fun logout() {
+        storageManager.clearSharedPref()
+        isLogout = true
+        val intent = Intent(this, MainActivity::class.java)
+        intent.putExtra("isLogout", isLogout)
+        startActivity(intent)
+        finish()
     }
 }

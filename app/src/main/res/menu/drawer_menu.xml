@@ -1,26 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    >
-    <group android:id="@+id/drawerGroup"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+    <group
+        android:id="@+id/drawerGroup"
         android:checkableBehavior="single">
-    <item
-        android:id="@+id/addTodo"
-        android:checkable="true"
-        android:icon="@drawable/ic_add_todo"
-        android:title="Add Todo"
-        app:showAsAction="ifRoom|withText" />
-    <item
-        android:id="@+id/editProfile"
-        android:checkable="true"
-        android:icon="@drawable/ic_edit"
-        android:title="Edit Profile"
-        app:showAsAction="withText|ifRoom" />
-    <item
-        android:id="@+id/logout"
-        android:checkable="true"
-        android:icon="@drawable/ic_logout"
-        android:title="Logout"
-        app:showAsAction="withText|ifRoom" />
+        <item
+            android:id="@+id/homeFragment"
+            android:checkable="true"
+            android:icon="@drawable/ic_home"
+            android:title="Home"
+            android:menuCategory="secondary"
+            app:showAsAction="ifRoom|withText" />
+        <item
+            android:id="@+id/addTodo"
+            android:checkable="true"
+            android:icon="@drawable/ic_add_todo"
+            android:title="Add Todo"
+            android:menuCategory="secondary"
+            app:showAsAction="ifRoom|withText" />
+        <item
+            android:id="@+id/editProfile"
+            android:checkable="true"
+            android:icon="@drawable/ic_edit"
+            android:title="Edit Profile"
+            android:menuCategory="secondary"
+            app:showAsAction="withText|ifRoom" />
+        <item
+            android:id="@+id/logout"
+            android:checkable="true"
+            android:icon="@drawable/ic_logout"
+            android:title="Logout"
+            android:menuCategory="secondary"
+            app:showAsAction="withText|ifRoom" />
     </group>
 </menu>
