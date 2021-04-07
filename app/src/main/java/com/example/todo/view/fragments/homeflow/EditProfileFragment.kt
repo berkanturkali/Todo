@@ -145,7 +145,7 @@ class EditProfileFragment :
                     requireView(),
                     status.toString(),
                     color,
-                    ) { activityViewModel.getUserInfo(storageManager.getUserId()!!) }
+                ) { activityViewModel.getUserInfo(storageManager.getUserId()!!) }
             }
         }
     }
@@ -180,7 +180,6 @@ class EditProfileFragment :
         val storageDirectory = requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
         return File.createTempFile(fileName, ".jpg", storageDirectory)
     }
-
 
     private fun setUserInfo(user: User) {
         GlideUtil.loadImage(requireContext(), user.profilePic, binding.profileImage)

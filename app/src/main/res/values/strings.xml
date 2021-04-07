@@ -8,4 +8,7 @@
     <string name="lastName">Lastname</string>
     <string name="edit_profile">Edit Profile</string>
     <string name="update">Update</string>
+    <string name="title">Title</string>
+    <string name="category">Category</string>
+    <string name="add_todo">Add your task</string>
 </resources>

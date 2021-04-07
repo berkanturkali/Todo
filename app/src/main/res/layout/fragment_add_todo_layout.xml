@@ -1,6 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="8dp">
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/titleField"
+        style="@style/textInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/title"
+        app:counterEnabled="true"
+        app:counterMaxLength="20"
+        app:endIconMode="clear_text"
+        app:layout_constraintTop_toTopOf="parent"
+        app:startIconContentDescription="@string/title"
+        app:startIconDrawable="@drawable/ic_title">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/titleEt"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="text"
+            android:maxLines="1"
+            android:textColor="@color/black" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textField"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/category"
+        app:layout_constraintTop_toBottomOf="@+id/titleField"
+        app:startIconContentDescription="@string/category"
+        app:startIconDrawable="@drawable/ic_category"
+        tools:layout_editor_absoluteX="8dp">
+
+        <AutoCompleteTextView
+            android:id="@+id/emailEt"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="none"
+            android:maxLines="1"
+            android:textColor="@color/black" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textField">
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:hint="Date"
+            android:inputType="none"
+            android:maxLines="1"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
+            app:startIconDrawable="@drawable/ic_date">
+
+            <AutoCompleteTextView
+                android:id="@+id/dateEt"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="none"
+                android:maxLines="1"
+                android:textColor="@color/black" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <ImageButton
+            android:id="@+id/datePickerIb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="12dp"
+            android:background="@null"
+            android:src="@drawable/ic_down" />
+    </RelativeLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginTop="8dp"
+        android:ellipsize="end"
+        android:hint="@string/add_todo"
+        android:inputType="textImeMultiLine"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
+        app:endIconMode="clear_text"
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout"
+        app:startIconDrawable="@drawable/ic_todo_details"
+        tools:layout_editor_absoluteX="8dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/todoEt"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="text"
+            android:textColor="@color/black" />
+    </com.google.android.material.textfield.TextInputLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
