@@ -1,6 +1,8 @@
 package com.example.todo
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
@@ -8,6 +10,8 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.navigation.NavController
+import androidx.navigation.Navigation
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
@@ -23,6 +27,7 @@ import com.google.android.material.navigation.NavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+private const val TAG = "HomeActivity"
 @AndroidEntryPoint
 class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private val mViewModel: HomeActivityViewModel by viewModels()
@@ -30,9 +35,10 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var headerView: View
     private lateinit var navHostFragment: NavHostFragment
     private lateinit var navController: NavController
-
     @Inject
     lateinit var storageManager: StorageManager
+
+    private var isLogout = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,6 +55,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun setupNavigation() {
         setSupportActionBar(binding.toolbar)
+
         binding.drawerView.setupWithNavController(navController)
         NavigationUI.setupActionBarWithNavController(this, navController, binding.drawerLayout)
         binding.drawerView.setNavigationItemSelectedListener(this)
@@ -104,7 +111,12 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             }
             R.id.logout -> {
-
+                storageManager.clearSharedPref()
+                isLogout = true
+                val intent = Intent(this,MainActivity::class.java)
+                intent.putExtra("isLogout",isLogout)
+                startActivity(intent)
+                finish()
             }
         }
         return true

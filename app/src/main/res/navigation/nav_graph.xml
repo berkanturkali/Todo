@@ -9,25 +9,25 @@
         android:id="@+id/splashScreenFragment"
         android:name="com.example.todo.view.fragments.SplashScreenFragment"
         android:label="fragment_splash_screen"
-        tools:layout="@layout/fragment_splash_screen" >
+        tools:layout="@layout/fragment_splash_screen">
         <action
             android:id="@+id/action_splashScreenFragment_to_loginFragment"
             app:destination="@id/navigation"
-            app:launchSingleTop="true"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
+            app:launchSingleTop="true"
             app:popUpTo="@id/splashScreenFragment"
-            app:popUpToInclusive="true"
-          />
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_splashScreenFragment_to_homeActivity"
-            app:destination="@+id/homeActivity"
+            app:destination="@id/homeActivity"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popUpTo="@id/splashScreenFragment"
             app:popUpToInclusive="true" />
     </fragment>
-    <navigation android:id="@+id/navigation"
+    <navigation
+        android:id="@+id/navigation"
         app:startDestination="@id/loginFragment">
         <fragment
             android:id="@+id/loginFragment"
@@ -42,15 +42,14 @@
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right"
                 app:popUpTo="@id/loginFragment"
-                app:popUpToInclusive="true"
-                 />
+                app:popUpToInclusive="true" />
             <action
                 android:id="@+id/action_loginFragment_to_homeActivity"
-                app:destination="@+id/homeActivity"
+                app:destination="@id/homeActivity"
                 app:enterAnim="@anim/slide_in_right"
                 app:exitAnim="@anim/slide_out_left"
                 app:popUpTo="@id/loginFragment"
-                app:popUpToInclusive="true"/>
+                app:popUpToInclusive="true" />
         </fragment>
         <fragment
             android:id="@+id/registerFragment"
@@ -72,13 +71,14 @@
         </fragment>
         <dialog
             android:id="@+id/fragmentCameraOptionsFragment"
-            tools:layout="@layout/fragment_camera_options_layout"
             android:name="com.example.todo.view.fragments.authflow.FragmentCameraOptionsFragment"
-            android:label="FragmentCameraOptionsFragment" />
+            android:label="FragmentCameraOptionsFragment"
+            tools:layout="@layout/fragment_camera_options_layout" />
     </navigation>
-    <activity
-        android:id="@+id/homeActivity"
-        android:name="com.example.todo.HomeActivity"
-        android:label="home_activity"
-        tools:layout="@layout/activity_home"/>
+        <activity
+            android:id="@+id/homeActivity"
+            android:name="com.example.todo.HomeActivity"
+            android:label="home_activity"
+            tools:layout="@layout/activity_home"/>
+
 </navigation>

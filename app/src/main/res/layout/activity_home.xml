@@ -33,6 +33,9 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
+        app:itemTextColor="@color/black"
+        app:itemIconTint="@color/black"
+        app:itemBackground="@color/drawer_item_background"
         app:headerLayout="@layout/drawer_header_layout"
         app:menu="@menu/drawer_menu" />
 
