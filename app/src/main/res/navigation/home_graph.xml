@@ -24,4 +24,9 @@
         android:name="com.example.todo.view.fragments.authflow.FragmentCameraOptionsFragment"
         android:label="FragmentCameraOptionsFragment"
         tools:layout="@layout/fragment_camera_options_layout"/>
+    <fragment
+        android:id="@+id/addTodo"
+        android:name="com.example.todo.view.fragments.homeflow.AddTodoFragment"
+        android:label="Add New Task"
+        tools:layout="@layout/fragment_add_todo_layout"/>
 </navigation>
