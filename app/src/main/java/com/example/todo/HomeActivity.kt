@@ -7,9 +7,6 @@ import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
-import androidx.navigation.NavController
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.example.todo.databinding.ActivityHomeBinding
 import com.example.todo.model.User
@@ -42,6 +39,9 @@ class HomeActivity : AppCompatActivity() {
         savedInstanceState?.let {
             drawerSelectedItemId = it.getInt(drawerSelectedItemIdKey, drawerSelectedItemId)
         }
+        binding.logoutBtn.setOnClickListener {
+            logout()
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -60,7 +60,11 @@ class HomeActivity : AppCompatActivity() {
             intent = intent
         )
         controller.observe(this, { navController ->
-            NavigationUI.setupWithNavController(binding.toolbar, navController, binding.drawerLayout)
+            NavigationUI.setupWithNavController(
+                binding.toolbar,
+                navController,
+                binding.drawerLayout
+            )
             drawerSelectedItemId = navController.graph.id
         })
     }

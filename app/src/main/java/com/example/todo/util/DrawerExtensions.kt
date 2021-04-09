@@ -27,6 +27,7 @@ import com.google.android.material.navigation.NavigationView
  *
  * Your navGraphIds must have the same ids as your menuItem ids
  */
+private const val TAG = "DrawerExtensions"
 fun NavigationView.setupWithNavController(
     fragmentManager: FragmentManager,
     navGraphIds: List<Int>,
@@ -72,6 +73,7 @@ fun NavigationView.setupWithNavController(
     setNavigationItemSelectedListener { item: MenuItem ->
         // Don't do anything if the state is state has already been saved.
         if (fragmentManager.isStateSaved) {
+
             false
         } else {
             val newItemId = item.itemId
@@ -88,6 +90,7 @@ fun NavigationView.setupWithNavController(
             // Optional: When the already selected item is re-selected
             // You can also add a call to hideDrawer() if desired
             if (checkedItem!!.itemId == newItemId) {
+                hideDrawer()
                 return@setNavigationItemSelectedListener popToStart(selectedFragment)
             }
 

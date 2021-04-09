@@ -12,7 +12,7 @@
             android:id="@+id/action_editProfileFragment_to_fragmentCameraOptionsFragment3"
             app:destination="@id/fragmentCameraOptionsFragment3" />
     </fragment>
-    <fragment
+    <dialog
         android:id="@+id/fragmentCameraOptionsFragment3"
         android:name="com.example.todo.view.fragments.authflow.FragmentCameraOptionsFragment"
         android:label="FragmentCameraOptionsFragment" />

@@ -21,6 +21,7 @@ import com.jakewharton.rxbinding4.widget.textChanges
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.disposables.Disposable
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -35,9 +36,7 @@ class EditProfileFragment :
     BaseFragment<FragmentProfileEditLayoutBinding>(FragmentProfileEditLayoutBinding::inflate) {
 
     private val mViewModel by viewModels<EditProfileFragmentViewModel>()
-
     private val activityViewModel by activityViewModels<HomeActivityViewModel>()
-    private val compositeDisposable = CompositeDisposable()
     private var photoFile: File? = null
 
     @Inject
@@ -46,9 +45,10 @@ class EditProfileFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         getUserInfo()
+        subscribeObservers()
         initButtons()
         observeInputFields()
-        val backStackEntry = findNavController().getBackStackEntry(R.id.editProfile)
+        val backStackEntry = findNavController().getBackStackEntry(R.id.editProfileFragment)
         backStackEntry.savedStateHandle.getLiveData<Uri>("imageUri")
             .observe(viewLifecycleOwner) { result ->
                 photoFile = getPhotoFile(Consts.FILE_NAME)
@@ -61,14 +61,15 @@ class EditProfileFragment :
                     .load(result)
                     .into(binding.profileImage)
             }
-        subscribeObservers()
     }
 
     private fun getUserInfo() {
         activityViewModel.userInfo
             .observe(viewLifecycleOwner) { resource ->
                 when (resource) {
-                    is Resource.Success -> setUserInfo(resource.data!!)
+                    is Resource.Success -> {
+                        setUserInfo(resource.data!!)
+                    }
                     is Resource.Error -> SnackUtil.showSnackbar(
                         requireContext(),
                         binding.root,
@@ -82,12 +83,11 @@ class EditProfileFragment :
     private fun initButtons() {
         binding.apply {
             selectImage.setOnClickListener {
-                findNavController().navigate(R.id.action_editProfile_to_fragmentCameraOptionsFragment2)
+                findNavController().navigate(R.id.action_editProfileFragment_to_fragmentCameraOptionsFragment3)
             }
             updateBtn.setOnClickListener {
                 updateUser()
             }
-
         }
     }
 
@@ -130,20 +130,20 @@ class EditProfileFragment :
                     checkFields(firstName, lastName, email)
                 })
                 .distinctUntilChanged()
-        compositeDisposable.add(isEnabledObservable.subscribe { isEnabled ->
+        safeAdd(isEnabledObservable.subscribe { isEnabled ->
             binding.updateBtn.isEnabled = isEnabled
         })
     }
 
     private fun subscribeObservers() {
         mViewModel.updatedInfo.observe(viewLifecycleOwner) {
-            it?.getContentIfNotHandled().let { status ->
+            it?.getContentIfNotHandled()?.let { status ->
                 val color =
                     if (status == "Profile updated successfully") R.color.color_success else R.color.color_danger
                 SnackUtil.showSnackbar(
                     requireContext(),
                     requireView(),
-                    status.toString(),
+                    status,
                     color,
                 ) { activityViewModel.getUserInfo(storageManager.getUserId()!!) }
             }
@@ -187,13 +187,6 @@ class EditProfileFragment :
             firstNameEt.setText(user.firstName)
             lastNameEt.setText(user.lastName)
             emailEt.setText(user.email)
-        }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        if (!compositeDisposable.isDisposed) {
-            compositeDisposable.dispose()
         }
     }
 }

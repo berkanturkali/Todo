@@ -1,7 +1,6 @@
 package com.example.todo.util
 
 open class Event<out T>(private val content: T) {
-
     var hasBeenHandled = false
         private set
     fun getContentIfNotHandled(): T? {

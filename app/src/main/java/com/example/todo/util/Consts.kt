@@ -1,5 +1,6 @@
 package com.example.todo.util
 
+import android.util.SparseArray
 import com.example.todo.BuildConfig
 import com.example.todo.R
 
@@ -15,7 +16,7 @@ class Consts {
         const val PREF_NAME = "token"
         const val USER_ID = "userId"
 
-        val CATEGORIES = mapOf(
+        val CATEGORIES = hashMapOf(
             "Work" to R.drawable.ic_category_work,
             "Music" to R.drawable.ic_category_music,
             "Travel" to R.drawable.ic_category_travel,

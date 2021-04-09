@@ -9,6 +9,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            >
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -16,6 +20,18 @@
             android:layout_height="?attr/actionBarSize"
             app:titleTextColor="@color/black"
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+            <ImageButton
+                android:id="@+id/logoutBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_logout"
+                android:layout_gravity="center_vertical|right"
+                android:tint="@color/black"
+                android:background="@android:color/transparent"
+                android:layout_marginRight="16dp"/>
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/nav_host_fragment_home"

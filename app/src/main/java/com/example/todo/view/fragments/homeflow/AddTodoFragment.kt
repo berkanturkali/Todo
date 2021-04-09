@@ -1,9 +1,8 @@
 package com.example.todo.view.fragments.homeflow
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.View
-import android.widget.ArrayAdapter
-import com.example.todo.R
 import com.example.todo.databinding.FragmentAddTodoLayoutBinding
 import com.example.todo.util.Consts
 import com.example.todo.view.fragments.BaseFragment
@@ -28,13 +27,18 @@ class AddTodoFragment :
         for (key in Consts.CATEGORIES.keys) {
             list.add(key)
         }
-        val adapter = ArrayAdapter(
-            requireContext(),
-            R.layout.category_list_item_layout,
-            R.id.category,
-            list
-        )
-        binding.categoryEt.setAdapter(adapter)
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Choose a category")
+
+        val categories = list.toTypedArray()
+        builder.setItems(categories) { dialog, which ->
+            binding.categoryEt.setText(categories[which])
+            dialog.dismiss()
+        }
+        val dialog = builder.create()
+        binding.categoryPickerIb.setOnClickListener {
+            dialog.show()
+        }
         binding.datePickerIb.setOnClickListener {
             val datePicker = MaterialDatePicker.Builder.datePicker()
                 .setTitleText("Select dates")
@@ -50,3 +54,4 @@ class AddTodoFragment :
         }
     }
 }
+
