@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/edit_profile"
+    app:startDestination="@id/editProfileFragment">
+
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="com.example.todo.view.fragments.homeflow.EditProfileFragment"
+        android:label="EditProfileFragment" >
+        <action
+            android:id="@+id/action_editProfileFragment_to_fragmentCameraOptionsFragment3"
+            app:destination="@id/fragmentCameraOptionsFragment3" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentCameraOptionsFragment3"
+        android:name="com.example.todo.view.fragments.authflow.FragmentCameraOptionsFragment"
+        android:label="FragmentCameraOptionsFragment" />
+</navigation>

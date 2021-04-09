@@ -7,21 +7,21 @@
         android:id="@+id/drawerGroup"
         android:checkableBehavior="single">
         <item
-            android:id="@+id/homeFragment"
-            android:checkable="true"
+            android:id="@+id/homeFragment2"
+            android:checked="true"
             android:icon="@drawable/ic_home"
             android:title="Home"
             android:menuCategory="secondary"
             app:showAsAction="ifRoom|withText" />
         <item
-            android:id="@+id/addTodo"
+            android:id="@+id/add_todo"
             android:checkable="true"
             android:icon="@drawable/ic_add_todo"
             android:title="Add Todo"
             android:menuCategory="secondary"
             app:showAsAction="ifRoom|withText" />
         <item
-            android:id="@+id/editProfile"
+            android:id="@+id/edit_profile"
             android:checkable="true"
             android:icon="@drawable/ic_edit"
             android:title="Edit Profile"

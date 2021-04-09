@@ -11,13 +11,9 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
-import androidx.navigation.ui.setupWithNavController
 import com.example.todo.databinding.ActivityHomeBinding
 import com.example.todo.model.User
-import com.example.todo.util.GlideUtil
-import com.example.todo.util.Resource
-import com.example.todo.util.SnackUtil
-import com.example.todo.util.StorageManager
+import com.example.todo.util.*
 import com.example.todo.viewmodel.HomeActivityViewModel
 import com.google.android.material.imageview.ShapeableImageView
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,8 +24,8 @@ class HomeActivity : AppCompatActivity() {
     private val mViewModel: HomeActivityViewModel by viewModels()
     private lateinit var binding: ActivityHomeBinding
     private lateinit var headerView: View
-    private lateinit var appBarConfiguration: AppBarConfiguration
-    private lateinit var navController: NavController
+    private val drawerSelectedItemIdKey = "DRAWER_SELECTED_ITEM_ID_KEY"
+    private var drawerSelectedItemId = R.id.home
 
     @Inject
     lateinit var storageManager: StorageManager
@@ -39,33 +35,34 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.nav_host_fragment_home) as NavHostFragment
-        navController = navHostFragment.navController
         getUserInfo(storageManager.getUserId().toString())
-        headerView = binding.drawerView.getHeaderView(0)
+        headerView = binding.navView.getHeaderView(0)
         setupNavigation()
         subscribeObservers()
+        savedInstanceState?.let {
+            drawerSelectedItemId = it.getInt(drawerSelectedItemIdKey, drawerSelectedItemId)
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putInt(drawerSelectedItemIdKey, drawerSelectedItemId)
+        super.onSaveInstanceState(outState)
     }
 
     private fun setupNavigation() {
-        appBarConfiguration = AppBarConfiguration(
-            navController.graph,
-            binding.drawerLayout,
-            fallbackOnNavigateUpListener = ::onSupportNavigateUp
+        val navGraphIds =
+            listOf(R.navigation.home, R.navigation.add_todo, R.navigation.edit_profile)
+        val controller = binding.navView.setupWithNavController(
+            navGraphIds = navGraphIds,
+            fragmentManager = supportFragmentManager,
+            containerId = R.id.nav_host_fragment_home,
+            currentItemId = drawerSelectedItemId,
+            intent = intent
         )
-        binding.toolbar.setupWithNavController(navController, appBarConfiguration)
-        binding.drawerView.setupWithNavController(navController)
-        binding.drawerView.setNavigationItemSelectedListener {
-            when (it.itemId) {
-                R.id.logout -> logout()
-                else -> {
-                    NavigationUI.onNavDestinationSelected(it, navController)
-                    binding.drawerLayout.closeDrawers()
-                }
-            }
-            true
-        }
+        controller.observe(this, { navController ->
+            NavigationUI.setupWithNavController(binding.toolbar, navController, binding.drawerLayout)
+            drawerSelectedItemId = navController.graph.id
+        })
     }
 
     private fun getUserInfo(id: String) {
@@ -104,8 +101,6 @@ class HomeActivity : AppCompatActivity() {
     override fun onBackPressed() {
         if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
             binding.drawerLayout.closeDrawer(GravityCompat.START)
-        } else {
-            super.onBackPressed()
         }
     }
 
