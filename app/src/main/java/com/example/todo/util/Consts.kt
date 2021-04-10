@@ -16,13 +16,13 @@ class Consts {
         const val PREF_NAME = "token"
         const val USER_ID = "userId"
 
-        val CATEGORIES = hashMapOf(
-            "Work" to R.drawable.ic_category_work,
-            "Music" to R.drawable.ic_category_music,
-            "Travel" to R.drawable.ic_category_travel,
-            "Study" to R.drawable.ic_category_study,
-            "Home" to R.drawable.ic_category_home,
-            "Shopping" to R.drawable.ic_category_shopping
+        val CATEGORIES = arrayOf(
+            "Work",
+            "Music",
+            "Travel",
+            "Study",
+            "Home",
+            "Shopping",
         )
 
 

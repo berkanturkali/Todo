@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.todo.repo.Repo
+import com.example.todo.repo.UserRepo
 import com.example.todo.util.ErrorUtil
 import com.example.todo.util.Event
 import com.example.todo.util.Resource
@@ -23,7 +23,7 @@ private const val TAG = "LoginFragmentViewModel"
 
 @HiltViewModel
 class LoginFragmentViewModel @Inject constructor(
-    private val repo: Repo,
+    private val userRepo: UserRepo,
     private val storageManager: StorageManager,
     private val retrofit: Retrofit
 ) : ViewModel() {
@@ -35,7 +35,7 @@ class LoginFragmentViewModel @Inject constructor(
     fun loginUser(credentials: JsonObject) {
         viewModelScope.launch(Dispatchers.Main) {
             try {
-                val response = withContext(Dispatchers.IO) { repo.loginUser(credentials) }
+                val response = withContext(Dispatchers.IO) { userRepo.loginUser(credentials) }
                 if (response.isSuccessful) {
                     response.body()?.let {
                         Log.i(TAG, "loginUser: $it")

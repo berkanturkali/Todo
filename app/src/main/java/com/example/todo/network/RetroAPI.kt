@@ -1,5 +1,6 @@
 package com.example.todo.network
 
+import com.example.todo.model.Todo
 import com.example.todo.model.TokenResponse
 import com.example.todo.model.User
 import com.google.gson.JsonObject
@@ -29,5 +30,10 @@ interface RetroAPI {
         @Part("credentials") credentials: JsonObject,
         @Part profilePic: MultipartBody.Part?
     ): Response<Unit>
+
+    @POST("todo/new")
+    suspend fun addTodo(
+        @Body todo: Todo
+    ):Response<Unit>
 
 }

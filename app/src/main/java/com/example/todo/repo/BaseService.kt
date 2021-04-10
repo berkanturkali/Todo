@@ -6,11 +6,16 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.Response
 import retrofit2.Retrofit
+import javax.inject.Inject
+import javax.inject.Singleton
+
 
 abstract class BaseService() {
+    @Inject
+    lateinit var retrofit: Retrofit
     protected suspend fun <T : Any> apiCall(
         call: suspend () -> Response<T>,
-        retrofit: Retrofit,
+        retrofit: Retrofit = this.retrofit,
     ): Resource<T> {
         val response: Response<T>
         try {

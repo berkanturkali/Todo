@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.todo.repo.Repo
+import com.example.todo.repo.UserRepo
 import com.example.todo.util.Event
 import com.example.todo.util.Resource
 import com.google.gson.JsonObject
@@ -16,13 +16,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class EditProfileFragmentViewModel @Inject constructor(
-    private val repo: Repo
+    private val userRepo: UserRepo
 ) : ViewModel() {
     private val _updatedInfo = MutableLiveData<Event<String>>()
      val updatedInfo: LiveData<Event<String>> get() = _updatedInfo
     fun updateUser(credentials: JsonObject, image: MultipartBody.Part?, id: String) {
         viewModelScope.launch(Dispatchers.Main) {
-            when (val resource = repo.updateUser(credentials, image, id)) {
+            when (val resource = userRepo.updateUser(credentials, image, id)) {
                 is Resource.Success -> {
                     _updatedInfo.value = Event("Profile updated successfully")
                 }

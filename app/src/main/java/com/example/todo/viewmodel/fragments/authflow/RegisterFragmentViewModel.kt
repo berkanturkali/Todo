@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.todo.model.User
-import com.example.todo.repo.Repo
+import com.example.todo.repo.UserRepo
 import com.example.todo.util.ErrorUtil
 import com.example.todo.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RegisterFragmentViewModel @Inject constructor(
-    private val repo: Repo,
+    private val userRepo: UserRepo,
     private val retrofit: Retrofit
 ) : ViewModel() {
 
@@ -30,7 +30,7 @@ class RegisterFragmentViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.Main) {
             _registerInfo.value = Resource.Loading()
             try {
-                val response = withContext(Dispatchers.IO) { repo.registerUser(user, body) }
+                val response = withContext(Dispatchers.IO) { userRepo.registerUser(user, body) }
                 if (response.isSuccessful) {
                     _registerInfo.value = Resource.Success("Registration completed successfully")
                 } else {

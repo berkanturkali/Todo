@@ -10,9 +10,8 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class Repo @Inject constructor(
+class UserRepo @Inject constructor(
     private val retroApi: RetroAPI,
-    private val retrofit: Retrofit
 ) : BaseService() {
     suspend fun registerUser(user: User, body: MultipartBody.Part?) =
         retroApi.registerUser(user, body)
@@ -20,8 +19,8 @@ class Repo @Inject constructor(
     suspend fun loginUser(credentials: JsonObject) = retroApi.loginUser(credentials)
 
     suspend fun getUserInfo(id: String): Resource<User> =
-        apiCall({ retroApi.userInfo(id) }, retrofit)
+        apiCall({ retroApi.userInfo(id) })
 
     suspend fun updateUser(credentials: JsonObject, image: MultipartBody.Part?, id: String) =
-        apiCall({ retroApi.updateUser(id, credentials, image) }, retrofit)
+        apiCall({ retroApi.updateUser(id, credentials, image) })
 }
