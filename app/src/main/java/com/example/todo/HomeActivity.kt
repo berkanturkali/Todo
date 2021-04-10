@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.navigation.ui.NavigationUI
 import com.example.todo.databinding.ActivityHomeBinding
@@ -14,6 +15,7 @@ import com.example.todo.util.*
 import com.example.todo.viewmodel.HomeActivityViewModel
 import com.google.android.material.imageview.ShapeableImageView
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.regex.Pattern
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -23,6 +25,7 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var headerView: View
     private val drawerSelectedItemIdKey = "DRAWER_SELECTED_ITEM_ID_KEY"
     private var drawerSelectedItemId = R.id.home
+    private lateinit var title: String
 
     @Inject
     lateinit var storageManager: StorageManager
@@ -60,6 +63,15 @@ class HomeActivity : AppCompatActivity() {
             intent = intent
         )
         controller.observe(this, { navController ->
+            navController.addOnDestinationChangedListener { controller, _, arguments ->
+                title = when (controller.graph.id) {
+                    R.id.home -> "Todos"
+                    R.id.edit_profile -> "Edit Profile"
+                    R.id.add_todo -> "Add Todo"
+                    else -> ""
+                }
+                binding.toolbar.setTitle(title, binding.test, arguments)
+            }
             NavigationUI.setupWithNavController(
                 binding.toolbar,
                 navController,
@@ -116,4 +128,27 @@ class HomeActivity : AppCompatActivity() {
         startActivity(intent)
         finish()
     }
+
+    private fun Toolbar.setTitle(label: CharSequence?, textView: TextView, arguments: Bundle?) {
+        if (label != null) {
+            // Fill in the data pattern with the args to build a valid URI
+            val title = StringBuffer()
+            val fillInPattern = Pattern.compile("\\{(.+?)\\}")
+            val matcher = fillInPattern.matcher(label)
+            while (matcher.find()) {
+                val argName = matcher.group(1)
+                if (arguments != null && arguments.containsKey(argName)) {
+                    matcher.appendReplacement(title, "")
+                    title.append(arguments.get(argName).toString())
+                } else {
+                    return //returning because the argument required is not found
+                }
+            }
+            matcher.appendTail(title)
+            setTitle("")
+            textView.text = title
+        }
+    }
 }
+
+

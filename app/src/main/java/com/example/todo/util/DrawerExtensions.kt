@@ -104,7 +104,6 @@ fun NavigationView.setupWithNavController(
             true
         }
     }
-
     // Optional: handle deep links
     setupDeepLinks(
         fragmentManager,
@@ -241,6 +240,7 @@ private fun obtainNavHostFragment(
         .commitNow()
     return navHostFragment
 }
+
 
 private fun getFragmentTag(index: Int) = "navigationView#$index"
 

@@ -2,13 +2,14 @@ package com.example.todo.view.fragments.homeflow
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.util.Log
 import android.view.View
+import android.view.View.inflate
 import androidx.fragment.app.viewModels
 import com.example.todo.R
 import com.example.todo.databinding.FragmentAddTodoLayoutBinding
 import com.example.todo.model.Todo
 import com.example.todo.util.Consts
+import com.example.todo.util.Resource
 import com.example.todo.util.SnackUtil
 import com.example.todo.view.fragments.BaseFragment
 import com.example.todo.viewmodel.fragments.homeflow.AddTodoFragmentViewModel
@@ -103,10 +104,35 @@ class AddTodoFragment :
 
     private fun subscribeObserver() {
         mViewModel.addedStatus.observe(viewLifecycleOwner) {
-            it?.getContentIfNotHandled()?.let {
-                Log.i(TAG, "subscribeObserver: $it")
+            it?.getContentIfNotHandled()?.let { resource ->
+                when (resource) {
+                    is Resource.Success -> {
+                        SnackUtil.showSnackbar(
+                            requireContext(),
+                            requireView(),
+                            resource.data.toString(),
+                            R.color.color_success
+                        )
+                        clearFields()
+                    }
+                    is Resource.Error -> {
+                        SnackUtil.showSnackbar(
+                            requireContext(),
+                            requireView(),
+                            resource.message.toString(),
+                            R.color.color_danger
+                        )
+                    }
+                }
             }
         }
+    }
+    private fun clearFields(){
+        binding.titleEt.text = null
+        binding.todoEt.text = null
+        binding.categoryEt.setText(Consts.CATEGORIES[0])
+        val date = Date()
+        binding.dateEt.setText(dateFormat.format(date))
     }
 }
 

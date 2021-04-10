@@ -8,6 +8,5 @@
     <fragment
         android:id="@+id/homeFragment2"
         android:name="com.example.todo.view.fragments.homeflow.HomeFragment"
-        android:label="HomeFragment"
         tools:layout="@layout/fragment_home_layout"/>
 </navigation>

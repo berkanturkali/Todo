@@ -13,19 +13,17 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+private const val TAG = "AddTodoFragmentViewMode"
+
 @HiltViewModel
 class AddTodoFragmentViewModel @Inject constructor(private val todoRepo: TodoRepo) : ViewModel() {
 
-    private val _addedStatus = MutableLiveData<Event<String>>()
-    val addedStatus: LiveData<Event<String>> get() = _addedStatus
+    private val _addedStatus = MutableLiveData<Event<Resource<String>>>()
+    val addedStatus: LiveData<Event<Resource<String>>> get() = _addedStatus
 
     fun addTodo(todo: Todo) {
         viewModelScope.launch(Dispatchers.Main) {
-            val response = todoRepo.addTodo(todo)
-            when (response) {
-                is Resource.Success -> _addedStatus.value = Event(response.data.toString())
-                is Resource.Error -> _addedStatus.value = Event(response.message.toString())
-            }
+            _addedStatus.value =Event(todoRepo.addTodo(todo))
         }
     }
 }

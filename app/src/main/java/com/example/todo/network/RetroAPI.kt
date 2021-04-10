@@ -34,6 +34,6 @@ interface RetroAPI {
     @POST("todo/new")
     suspend fun addTodo(
         @Body todo: Todo
-    ):Response<Unit>
+    ):Response<String>
 
 }
