@@ -10,5 +10,6 @@ data class User(
     val password: String,
     @SerializedName("userImage")
     @Expose
-    val profilePic: String = ""
+    val profilePic: String = "",
+    var id:Long? = null,
 )
