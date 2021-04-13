@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 @Entity
 data class TodoRemoteKeys(
     @PrimaryKey
-    val todoId: Long,
+    val todoId: String,
     val prevKey: Int?,
-    val nextKey: Int
+    val nextKey: Int?
 )

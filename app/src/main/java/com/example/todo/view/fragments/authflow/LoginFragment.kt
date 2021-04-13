@@ -2,10 +2,7 @@ package com.example.todo.view.fragments.authflow
 
 import android.os.Bundle
 import android.util.Patterns
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
@@ -13,31 +10,21 @@ import com.example.todo.R
 import com.example.todo.databinding.FragmentLoginLayoutBinding
 import com.example.todo.util.Resource
 import com.example.todo.util.SnackUtil
+import com.example.todo.view.fragments.BaseFragment
 import com.example.todo.viewmodel.fragments.authflow.AuthFlowViewModel
 import com.example.todo.viewmodel.fragments.authflow.LoginFragmentViewModel
 import com.google.gson.JsonObject
 import com.jakewharton.rxbinding4.widget.textChanges
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.disposables.CompositeDisposable
 
 
 @AndroidEntryPoint
-class LoginFragment : Fragment() {
+class LoginFragment :
+    BaseFragment<FragmentLoginLayoutBinding>(FragmentLoginLayoutBinding::inflate) {
     private val mViewModel: LoginFragmentViewModel by viewModels()
     private val authFlowViewModel: AuthFlowViewModel by navGraphViewModels(R.id.navigation)
-    private var _binding: FragmentLoginLayoutBinding? = null
-    private val binding get() = _binding!!
-    private val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentLoginLayoutBinding.inflate(inflater, container, false)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -95,7 +82,7 @@ class LoginFragment : Fragment() {
                 })
                 .distinctUntilChanged()
 
-        compositeDisposable.add(isEnabledObservable.subscribe { isEnabled ->
+        safeAdd(isEnabledObservable.subscribe { isEnabled ->
             binding.loginBtn.isEnabled = isEnabled
         })
     }
@@ -138,14 +125,14 @@ class LoginFragment : Fragment() {
                             requireView(),
                             it.message.toString(),
                             R.color.color_danger,
-                            )
+                        )
                     }
                 }
             }
         }
     }
 
-    private fun navigateToHomeFlow(){
+    private fun navigateToHomeFlow() {
         findNavController().navigate(R.id.action_loginFragment_to_homeActivity)
         requireActivity().finish()
     }
@@ -163,13 +150,5 @@ class LoginFragment : Fragment() {
         authFlowViewModel.loginEmail = binding.emailEt.text.toString().trim()
         authFlowViewModel.loginPassword = binding.passwordEt.text.toString().trim()
         findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        if (!compositeDisposable.isDisposed) {
-            compositeDisposable.dispose()
-        }
-        _binding = null
     }
 }

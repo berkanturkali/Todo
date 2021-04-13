@@ -13,7 +13,7 @@ interface TodoRemoteKeyDao {
     fun insertAll(remoteKey: List<TodoRemoteKeys>)
 
     @Query("SELECT * FROM TodoRemoteKeys WHERE todoId = :todoId")
-    fun remoteKeysByTodoId(todoId: Long): TodoRemoteKeys?
+    fun remoteKeysByTodoId(todoId: String): TodoRemoteKeys?
 
     @Query("DELETE FROM TodoRemoteKeys")
     fun clearRemoteKeys()

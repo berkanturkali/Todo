@@ -8,6 +8,7 @@ import androidx.fragment.app.viewModels
 import com.example.todo.R
 import com.example.todo.databinding.FragmentAddTodoLayoutBinding
 import com.example.todo.model.Todo
+import com.example.todo.repo.TodoRepo
 import com.example.todo.util.Consts
 import com.example.todo.util.Resource
 import com.example.todo.util.SnackUtil
@@ -17,6 +18,7 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
 private const val TAG = "AddTodoFragment"
 
@@ -25,6 +27,9 @@ class AddTodoFragment :
     BaseFragment<FragmentAddTodoLayoutBinding>(FragmentAddTodoLayoutBinding::inflate) {
 
     private val mViewModel: AddTodoFragmentViewModel by viewModels()
+
+    @Inject
+    lateinit var repo:TodoRepo
 
     private lateinit var calendar: Calendar
     private lateinit var dateFormat: SimpleDateFormat
@@ -112,8 +117,10 @@ class AddTodoFragment :
                             requireView(),
                             resource.data.toString(),
                             R.color.color_success
-                        )
-                        clearFields()
+                        ){
+                            clearFields()
+                        }
+
                     }
                     is Resource.Error -> {
                         SnackUtil.showSnackbar(

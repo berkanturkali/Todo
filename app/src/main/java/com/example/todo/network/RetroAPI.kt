@@ -36,4 +36,10 @@ interface RetroAPI {
         @Body todo: Todo
     ):Response<String>
 
+    @GET("todo/todos")
+    suspend fun todos(
+        @Query("page")page:Int?,
+        @Query("limit")limit:Int
+    ):List<Todo>
+
 }

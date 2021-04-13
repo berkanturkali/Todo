@@ -11,5 +11,7 @@ data class User(
     @SerializedName("userImage")
     @Expose
     val profilePic: String = "",
-    var id:Long? = null,
+    @SerializedName("_id")
+    @Expose
+    var _id:String? = null,
 )

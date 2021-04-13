@@ -4,9 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="16dp"
-    app:cardCornerRadius="8dp"
-    app:cardElevation="8dp">
+    >
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -19,7 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="0dp"
-            android:textSize="30sp"
+            android:textSize="25sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Title" />
@@ -37,6 +35,7 @@
                 android:id="@+id/todoCheckbox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+
                 android:buttonTint="@color/black" />
 
             <TextView
@@ -58,9 +57,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
             android:drawableLeft="@drawable/ic_date"
             android:drawablePadding="4dp"
             android:gravity="center_vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
             tools:text="01/01/2021" />
@@ -71,9 +72,11 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"
             android:drawableLeft="@drawable/ic_category"
             android:drawablePadding="4dp"
             android:gravity="center_vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
             tools:text="Work" />

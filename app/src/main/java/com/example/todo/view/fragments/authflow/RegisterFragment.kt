@@ -4,12 +4,8 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.util.Patterns
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import com.bumptech.glide.Glide
@@ -20,12 +16,12 @@ import com.example.todo.util.Consts.Companion.FILE_NAME
 import com.example.todo.util.FileUtil
 import com.example.todo.util.Resource
 import com.example.todo.util.SnackUtil
+import com.example.todo.view.fragments.BaseFragment
 import com.example.todo.viewmodel.fragments.authflow.AuthFlowViewModel
 import com.example.todo.viewmodel.fragments.authflow.RegisterFragmentViewModel
 import com.jakewharton.rxbinding4.widget.textChanges
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.disposables.CompositeDisposable
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -33,23 +29,11 @@ import java.io.File
 import java.io.FileOutputStream
 
 @AndroidEntryPoint
-class RegisterFragment : Fragment() {
+class RegisterFragment :
+    BaseFragment<FragmentRegisterLayoutBinding>(FragmentRegisterLayoutBinding::inflate) {
     private val mViewModel: RegisterFragmentViewModel by viewModels()
-    private var _binding: FragmentRegisterLayoutBinding? = null
-    private val binding get() = _binding!!
     private val authFlowViewModel: AuthFlowViewModel by navGraphViewModels(R.id.navigation)
     private var photoFile: File? = null
-    private val compositeDisposable = CompositeDisposable()
-
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentRegisterLayoutBinding.inflate(inflater, container, false)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -116,7 +100,6 @@ class RegisterFragment : Fragment() {
                         requireView(),
                         resource.message.toString(),
                         R.color.color_danger,
-
                     )
                 }
             }
@@ -184,7 +167,7 @@ class RegisterFragment : Fragment() {
                     checkFields(firstName, lastName, email, password)
                 })
                 .distinctUntilChanged()
-        compositeDisposable.add(isEnabledObservable.subscribe { isEnabled ->
+        safeAdd(isEnabledObservable.subscribe { isEnabled ->
             binding.registerBtn.isEnabled = isEnabled
         })
     }
@@ -252,14 +235,5 @@ class RegisterFragment : Fragment() {
 
         }
         findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-
-        if (!compositeDisposable.isDisposed) {
-            compositeDisposable.dispose()
-        }
-        _binding = null
     }
 }
