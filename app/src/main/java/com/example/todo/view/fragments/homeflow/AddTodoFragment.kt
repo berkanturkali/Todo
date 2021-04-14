@@ -3,13 +3,12 @@ package com.example.todo.view.fragments.homeflow
 import android.app.AlertDialog
 import android.os.Bundle
 import android.view.View
-import android.view.View.inflate
 import androidx.fragment.app.viewModels
 import com.example.todo.R
 import com.example.todo.databinding.FragmentAddTodoLayoutBinding
 import com.example.todo.model.Todo
 import com.example.todo.repo.TodoRepo
-import com.example.todo.util.Consts
+import com.example.todo.util.DialogUtil
 import com.example.todo.util.Resource
 import com.example.todo.util.SnackUtil
 import com.example.todo.view.fragments.BaseFragment
@@ -29,7 +28,7 @@ class AddTodoFragment :
     private val mViewModel: AddTodoFragmentViewModel by viewModels()
 
     @Inject
-    lateinit var repo:TodoRepo
+    lateinit var repo: TodoRepo
 
     private lateinit var calendar: Calendar
     private lateinit var dateFormat: SimpleDateFormat
@@ -49,6 +48,9 @@ class AddTodoFragment :
         if (binding.dateEt.text.toString().isEmpty()) {
             val date = Date()
             binding.dateEt.setText(dateFormat.format(date))
+        }
+        if (binding.importanceTv.text.toString().isEmpty()) {
+            binding.importanceTv.setText(resources.getStringArray(R.array.importance_array)[1])
         }
         val builder = AlertDialog.Builder(requireContext())
         builder.setTitle("Select a category")
@@ -72,6 +74,14 @@ class AddTodoFragment :
                 binding.dateEt.setText(dateFormat.format(calendar.timeInMillis))
             }
         }
+        binding.importancePickIb.setOnClickListener {
+            DialogUtil.showDialog(
+                requireContext(),
+                "Select Importance",
+                resources.getStringArray(R.array.importance_array),
+                binding.importanceTv
+            )
+        }
         binding.addTodoBtn.setOnClickListener {
             if (isValidFields()) {
                 addTodo()
@@ -94,7 +104,12 @@ class AddTodoFragment :
         val todoDesc = binding.todoEt.text.toString().trim()
         var date = dateFormat.parse(binding.dateEt.text.toString())
         val dateInMillis = date.time
-        val todo = Todo(todoTitle, category, dateInMillis, todoDesc)
+        val importance = when (binding.importanceTv.text.toString()) {
+            "Important" -> true
+            "Not Important" -> false
+            else -> null
+        }
+        val todo = Todo(todoTitle, category, dateInMillis, todoDesc, isImportant = importance!!)
         mViewModel.addTodo(todo)
     }
 
@@ -117,10 +132,8 @@ class AddTodoFragment :
                             requireView(),
                             resource.data.toString(),
                             R.color.color_success
-                        ){
-                            clearFields()
-                        }
-
+                        )
+                        clearFields()
                     }
                     is Resource.Error -> {
                         SnackUtil.showSnackbar(
@@ -134,10 +147,12 @@ class AddTodoFragment :
             }
         }
     }
-    private fun clearFields(){
+
+    private fun clearFields() {
         binding.titleEt.text = null
         binding.todoEt.text = null
         binding.categoryEt.setText(resources.getStringArray(R.array.category_array)[0])
+        binding.importanceTv.setText(resources.getStringArray(R.array.importance_array)[1])
         val date = Date()
         binding.dateEt.setText(dateFormat.format(date))
     }

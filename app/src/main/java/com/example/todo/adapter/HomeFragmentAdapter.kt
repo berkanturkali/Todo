@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.CompoundButton
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -33,7 +34,6 @@ class HomeFragmentAdapter(
                         (oldItem is TodoModel.SeperatorItem && newItem is TodoModel.SeperatorItem &&
                                 oldItem.date == newItem.date)
             }
-
             override fun areContentsTheSame(oldItem: TodoModel, newItem: TodoModel): Boolean =
                 oldItem == newItem
         }
@@ -114,6 +114,7 @@ class HomeFragmentAdapter(
                 categoryTv.text = todo.category
                 dateTv.text = DateUtil.getRelativeTimeSpanString(todo.date)
                 todoCheckbox.isChecked = todo.isCompleted
+                importantTv.isVisible = todo.isImportant
             }
         }
     }

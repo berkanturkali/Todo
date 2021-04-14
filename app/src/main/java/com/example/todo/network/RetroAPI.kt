@@ -51,7 +51,12 @@ interface RetroAPI {
     @PATCH("todo/{id}")
     suspend fun updateTodo(
         @Path("id") id: String,
-        @Body todo:Todo
+        @Body todo: Todo
+    ): Response<String>
+
+    @DELETE("todo/{id}")
+    suspend fun deleteTodo(
+        @Path("id") id: String
     ): Response<String>
 
 }

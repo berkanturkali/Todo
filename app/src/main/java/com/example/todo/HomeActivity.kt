@@ -8,6 +8,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
+import androidx.core.view.isVisible
 import androidx.navigation.ui.NavigationUI
 import com.example.todo.databinding.ActivityHomeBinding
 import com.example.todo.model.User
@@ -99,6 +100,11 @@ class HomeActivity : AppCompatActivity() {
                         R.color.color_danger
                     )
                 }
+            }
+        }
+        mViewModel.progress.observe(this) {
+            it.getContentIfNotHandled()?.let { isVisible ->
+                binding.progressBar.isVisible = isVisible
             }
         }
     }

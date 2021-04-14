@@ -1,6 +1,5 @@
 package com.example.todo.view.fragments.homeflow
 
-import android.graphics.Paint
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
@@ -34,13 +33,20 @@ class HomeFragment : BaseFragment<FragmentHomeLayoutBinding>(FragmentHomeLayoutB
     private lateinit var mAdapter: HomeFragmentAdapter
     private lateinit var dividerItemDecoration: DividerItemDecoration
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initAdapter()
         initRecycler()
         mViewModel.getTodos()
         subscribeObserver()
+        val backStackEntry = findNavController().getBackStackEntry(R.id.homeFragment2)
+        backStackEntry.savedStateHandle.getLiveData<Boolean>("isDeleted")
+            .observe(viewLifecycleOwner) {
+                if (it) {
+                    mAdapter.refresh()
+                    backStackEntry.savedStateHandle.remove<Boolean>("isDeleted")
+                }
+            }
     }
 
     private fun initAdapter() {
@@ -114,7 +120,7 @@ class HomeFragment : BaseFragment<FragmentHomeLayoutBinding>(FragmentHomeLayoutB
         findNavController().navigate(action)
     }
 
-    override fun onCheckboxListener(todo: Todo, isChecked: Boolean,textView: TextView) {
+    override fun onCheckboxListener(todo: Todo, isChecked: Boolean, textView: TextView) {
 
     }
 }

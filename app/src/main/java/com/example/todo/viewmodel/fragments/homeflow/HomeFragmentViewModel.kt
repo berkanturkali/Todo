@@ -1,14 +1,21 @@
 package com.example.todo.viewmodel.fragments.homeflow
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.insertSeparators
 import androidx.paging.map
 import com.example.todo.model.TodoModel
 import com.example.todo.repo.TodoRepo
+import com.example.todo.util.Event
+import com.example.todo.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.scopes.FragmentScoped
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -17,6 +24,9 @@ class HomeFragmentViewModel @Inject constructor(
 ) : ViewModel() {
 
     lateinit var todosPaginated: Flow<PagingData<TodoModel>>
+    private val _deleteStatus = MutableLiveData<Event<Resource<String>>>()
+    val deleteStatus: LiveData<Event<Resource<String>>> get() = _deleteStatus
+
 
     fun getTodos() {
         todosPaginated = repo.getTodos()
@@ -40,5 +50,13 @@ class HomeFragmentViewModel @Inject constructor(
                 }
             }
     }
+
+
+    fun deleteTodo(id: String) {
+        viewModelScope.launch {
+            _deleteStatus.value = Event(repo.deleteTodo(id))
+        }
+    }
+
 
 }

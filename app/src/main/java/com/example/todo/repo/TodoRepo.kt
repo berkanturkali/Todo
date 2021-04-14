@@ -27,4 +27,6 @@ class TodoRepo @Inject constructor(
 
     suspend fun getTodo(id: String) = apiCall({ retroAPI.getTodo(id) })
     suspend fun updateTodo(id:String,todo: Todo) = apiCall({retroAPI.updateTodo(id,todo)})
+
+    suspend fun deleteTodo(id:String) = apiCall({retroAPI.deleteTodo(id)})
 }
