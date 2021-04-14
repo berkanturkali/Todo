@@ -1,7 +1,10 @@
 package com.example.todo.adapter
 
+import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.CompoundButton
+import android.widget.TextView
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -13,7 +16,11 @@ import com.example.todo.model.TodoModel
 import com.example.todo.util.DateUtil
 import java.text.SimpleDateFormat
 
-class HomeFragmentAdapter(private val listener: OnTodoClickListener) :
+private const val TAG = "HomeFragmentAdapter"
+
+class HomeFragmentAdapter(
+    private val listener: OnTodoClickListener
+) :
     PagingDataAdapter<TodoModel, RecyclerView.ViewHolder>(TodoComparator) {
 
     private val simpleDateFormat = SimpleDateFormat("dd/MM/yyyy")
@@ -56,11 +63,9 @@ class HomeFragmentAdapter(private val listener: OnTodoClickListener) :
         }
     }
 
-
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val todoModel = getItem(position)!!
-
-        todoModel.let {
+        val todoModel = getItem(position)
+        todoModel?.let {
             when (todoModel) {
                 is TodoModel.TodoItem -> {
                     (holder as TodoViewHolder).bind(todoModel.todo)
@@ -70,7 +75,6 @@ class HomeFragmentAdapter(private val listener: OnTodoClickListener) :
                 }
             }
         }
-
     }
 
 
@@ -82,10 +86,25 @@ class HomeFragmentAdapter(private val listener: OnTodoClickListener) :
                 if (position != RecyclerView.NO_POSITION) {
                     val item = getItem(position)
                     item?.let {
-//                        listener.onTodoClick(it)
+                        it as TodoModel.TodoItem
+                        listener.onTodoClick(it.todo)
                     }
                 }
             }
+            binding.todoCheckbox.setOnClickListener {
+                val position = bindingAdapterPosition
+                val item = getItem(position) as TodoModel.TodoItem
+                item.todo.isCompleted = (it as CompoundButton).isChecked
+                if (item.todo.isCompleted) {
+                    binding.todoTv.paintFlags =
+                        binding.todoTv.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                } else {
+                    binding.todoTv.paintFlags =
+                        binding.todoTv.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+                }
+            }
+
+
         }
 
         fun bind(todo: Todo) {
@@ -94,6 +113,7 @@ class HomeFragmentAdapter(private val listener: OnTodoClickListener) :
                 todoTv.text = todo.todo
                 categoryTv.text = todo.category
                 dateTv.text = DateUtil.getRelativeTimeSpanString(todo.date)
+                todoCheckbox.isChecked = todo.isCompleted
             }
         }
     }
@@ -115,7 +135,7 @@ class HomeFragmentAdapter(private val listener: OnTodoClickListener) :
                     simpleDateFormat.format(seperator.toLong())
                 }
             }
-            binding.separatorDescription.text =day
+            binding.separatorDescription.text = day
         }
     }
 
@@ -129,6 +149,6 @@ class HomeFragmentAdapter(private val listener: OnTodoClickListener) :
 
     interface OnTodoClickListener {
         fun onTodoClick(todo: Todo)
+        fun onCheckboxListener(todo: Todo, isChecked: Boolean, textView: TextView)
     }
-
 }

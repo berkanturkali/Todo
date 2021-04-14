@@ -24,4 +24,7 @@ class TodoRepo @Inject constructor(
             pagingSourceFactory = { db.todoDao().observeTodosPaginated() }
         )
     }
+
+    suspend fun getTodo(id: String) = apiCall({ retroAPI.getTodo(id) })
+    suspend fun updateTodo(id:String,todo: Todo) = apiCall({retroAPI.updateTodo(id,todo)})
 }

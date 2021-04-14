@@ -11,4 +11,25 @@
     <string name="title">Title</string>
     <string name="category">Category</string>
     <string name="add_todo">Add your task</string>
+    <string name="importance">Importance</string>
+    <string name="completed">Complete Status</string>
+
+    <string-array name="importance_array">
+        <item>Important</item>
+        <item>Not Important</item>
+    </string-array>
+
+    <string-array name="completed_array">
+        <item>Completed</item>
+        <item>Not Completed</item>
+    </string-array>
+
+    <string-array name="category_array">
+        <item>Work</item>
+        <item>Music</item>
+        <item>Travel</item>
+        <item>Study</item>
+        <item>Home</item>
+        <item>Shopping</item>
+    </string-array>
 </resources>

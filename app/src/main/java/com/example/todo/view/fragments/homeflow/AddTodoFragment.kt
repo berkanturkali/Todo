@@ -44,7 +44,7 @@ class AddTodoFragment :
 
     private fun initWidgets() {
         if (binding.categoryEt.text.toString().isEmpty()) {
-            binding.categoryEt.setText(Consts.CATEGORIES[0])
+            binding.categoryEt.setText(resources.getStringArray(R.array.category_array)[0])
         }
         if (binding.dateEt.text.toString().isEmpty()) {
             val date = Date()
@@ -52,7 +52,7 @@ class AddTodoFragment :
         }
         val builder = AlertDialog.Builder(requireContext())
         builder.setTitle("Select a category")
-        val categories = Consts.CATEGORIES
+        val categories = resources.getStringArray(R.array.category_array)
         builder.setItems(categories) { dialog, which ->
             binding.categoryEt.setText(categories[which])
             dialog.dismiss()
@@ -137,7 +137,7 @@ class AddTodoFragment :
     private fun clearFields(){
         binding.titleEt.text = null
         binding.todoEt.text = null
-        binding.categoryEt.setText(Consts.CATEGORIES[0])
+        binding.categoryEt.setText(resources.getStringArray(R.array.category_array)[0])
         val date = Date()
         binding.dateEt.setText(dateFormat.format(date))
     }

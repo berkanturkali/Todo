@@ -17,15 +17,5 @@ class Consts {
         const val USER_ID = "userId"
         const val DB_NAME = "todo_db"
 
-        val CATEGORIES = arrayOf(
-            "Work",
-            "Music",
-            "Travel",
-            "Study",
-            "Home",
-            "Shopping",
-        )
-
-
     }
 }

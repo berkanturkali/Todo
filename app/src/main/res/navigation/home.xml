@@ -8,5 +8,28 @@
     <fragment
         android:id="@+id/homeFragment2"
         android:name="com.example.todo.view.fragments.homeflow.HomeFragment"
-        tools:layout="@layout/fragment_home_layout"/>
+        tools:layout="@layout/fragment_home_layout">
+        <action
+            android:id="@+id/action_homeFragment2_to_todoOptionsDialog"
+            app:destination="@id/todoOptionsDialog" />
+    </fragment>
+    <dialog
+        android:id="@+id/todoOptionsDialog"
+        android:name="com.example.todo.view.fragments.homeflow.TodoOptionsDialog"
+        tools:layout="@layout/dialog_todo_options_layout">
+        <argument
+            android:name="todoId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_todoOptionsDialog_to_editTodoFragment"
+            app:destination="@id/editTodoFragment" />
+    </dialog>
+    <fragment
+        android:id="@+id/editTodoFragment"
+        android:name="com.example.todo.view.fragments.homeflow.EditTodoFragment"
+        tools:layout="@layout/fragment_edit_todo_layout">
+        <argument
+            android:name="todoId"
+            app:argType="string" />
+    </fragment>
 </navigation>

@@ -1,10 +1,13 @@
 package com.example.todo.view.fragments.homeflow
 
+import android.graphics.Paint
 import android.os.Bundle
 import android.view.View
+import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -66,6 +69,7 @@ class HomeFragment : BaseFragment<FragmentHomeLayoutBinding>(FragmentHomeLayoutB
         }
     }
 
+
     private fun initRecycler() {
         binding.todoRv.apply {
             setHasFixedSize(true)
@@ -105,8 +109,12 @@ class HomeFragment : BaseFragment<FragmentHomeLayoutBinding>(FragmentHomeLayoutB
         }
     }
 
-
     override fun onTodoClick(todo: Todo) {
+        val action = HomeFragmentDirections.actionHomeFragment2ToTodoOptionsDialog(todo.id)
+        findNavController().navigate(action)
+    }
+
+    override fun onCheckboxListener(todo: Todo, isChecked: Boolean,textView: TextView) {
 
     }
 }

@@ -23,6 +23,7 @@ interface RetroAPI {
     suspend fun userInfo(
         @Path("id") id: String
     ): Response<User>
+
     @Multipart
     @PUT("user/{id}")
     suspend fun updateUser(
@@ -34,12 +35,23 @@ interface RetroAPI {
     @POST("todo/new")
     suspend fun addTodo(
         @Body todo: Todo
-    ):Response<String>
+    ): Response<String>
 
     @GET("todo/todos")
     suspend fun todos(
-        @Query("page")page:Int?,
-        @Query("limit")limit:Int
-    ):List<Todo>
+        @Query("page") page: Int?,
+        @Query("limit") limit: Int
+    ): List<Todo>
+
+    @GET("todo/{id}")
+    suspend fun getTodo(
+        @Path("id") id: String
+    ): Response<Todo>
+
+    @PATCH("todo/{id}")
+    suspend fun updateTodo(
+        @Path("id") id: String,
+        @Body todo:Todo
+    ): Response<String>
 
 }
