@@ -8,6 +8,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import com.example.todo.R
 import com.example.todo.databinding.FragmentLoginLayoutBinding
+import com.example.todo.util.GlideUtil
 import com.example.todo.util.Resource
 import com.example.todo.util.SnackUtil
 import com.example.todo.view.fragments.BaseFragment
@@ -42,6 +43,7 @@ class LoginFragment :
             loginPassword?.let {
                 binding.passwordEt.setText(it)
             }
+
         }
     }
 

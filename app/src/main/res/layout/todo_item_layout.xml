@@ -22,21 +22,15 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Title" />
 
-        <TextView
-            android:id="@+id/importantTv"
-            style="@style/TextAppearance.AppCompat.Small"
+        <ImageView
+            android:id="@+id/importantIv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Important"
-            android:textColor="@color/color_danger"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:visibility="gone"
-            android:layout_marginLeft="8dp"
-            android:drawableLeft="@drawable/ic_important"
-            app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
+            android:src="@drawable/ic_important"
+            app:layout_constraintBottom_toBottomOf="@+id/titleTv"
             app:layout_constraintStart_toEndOf="@+id/titleTv"
             app:layout_constraintTop_toTopOf="parent" />
+
 
         <LinearLayout
             android:id="@+id/linearLayout3"
@@ -51,7 +45,8 @@
                 android:id="@+id/todoCheckbox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
+                android:minHeight="0dp"
+                android:minWidth="0dp"
                 android:buttonTint="@color/black" />
 
             <TextView

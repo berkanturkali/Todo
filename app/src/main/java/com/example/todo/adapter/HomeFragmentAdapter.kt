@@ -1,9 +1,7 @@
 package com.example.todo.adapter
 
-import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.CompoundButton
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
@@ -15,6 +13,7 @@ import com.example.todo.databinding.TodoItemSeperatorLayoutBinding
 import com.example.todo.model.Todo
 import com.example.todo.model.TodoModel
 import com.example.todo.util.DateUtil
+import com.google.android.material.checkbox.MaterialCheckBox
 import java.text.SimpleDateFormat
 
 private const val TAG = "HomeFragmentAdapter"
@@ -34,6 +33,7 @@ class HomeFragmentAdapter(
                         (oldItem is TodoModel.SeperatorItem && newItem is TodoModel.SeperatorItem &&
                                 oldItem.date == newItem.date)
             }
+
             override fun areContentsTheSame(oldItem: TodoModel, newItem: TodoModel): Boolean =
                 oldItem == newItem
         }
@@ -59,7 +59,6 @@ class HomeFragmentAdapter(
                     )
                 )
             }
-
         }
     }
 
@@ -94,17 +93,12 @@ class HomeFragmentAdapter(
             binding.todoCheckbox.setOnClickListener {
                 val position = bindingAdapterPosition
                 val item = getItem(position) as TodoModel.TodoItem
-                item.todo.isCompleted = (it as CompoundButton).isChecked
-                if (item.todo.isCompleted) {
-                    binding.todoTv.paintFlags =
-                        binding.todoTv.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-                } else {
-                    binding.todoTv.paintFlags =
-                        binding.todoTv.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
-                }
+                listener.onCheckboxListener(
+                    item.todo,
+                    (it as MaterialCheckBox).isChecked,
+                    binding.todoTv
+                )
             }
-
-
         }
 
         fun bind(todo: Todo) {
@@ -114,7 +108,12 @@ class HomeFragmentAdapter(
                 categoryTv.text = todo.category
                 dateTv.text = DateUtil.getRelativeTimeSpanString(todo.date)
                 todoCheckbox.isChecked = todo.isCompleted
-                importantTv.isVisible = todo.isImportant
+                binding.todoTv.paint.isStrikeThruText = todo.isCompleted
+                importantIv.isVisible = todo.isImportant
+                if (todo.isImportant) {
+                    titleTv.setTextColor(binding.root.resources.getColor(R.color.color_danger))
+                }
+
             }
         }
     }

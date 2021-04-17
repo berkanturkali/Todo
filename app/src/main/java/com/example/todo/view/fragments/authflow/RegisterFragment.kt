@@ -14,6 +14,7 @@ import com.example.todo.databinding.FragmentRegisterLayoutBinding
 import com.example.todo.model.User
 import com.example.todo.util.Consts.Companion.FILE_NAME
 import com.example.todo.util.FileUtil
+import com.example.todo.util.GlideUtil
 import com.example.todo.util.Resource
 import com.example.todo.util.SnackUtil
 import com.example.todo.view.fragments.BaseFragment
@@ -34,6 +35,7 @@ class RegisterFragment :
     private val mViewModel: RegisterFragmentViewModel by viewModels()
     private val authFlowViewModel: AuthFlowViewModel by navGraphViewModels(R.id.navigation)
     private var photoFile: File? = null
+    private var selectedImage: Uri? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -44,6 +46,7 @@ class RegisterFragment :
         val backStackEntry = findNavController().getBackStackEntry(R.id.registerFragment)
         backStackEntry.savedStateHandle.getLiveData<Uri>("imageUri")
             .observe(viewLifecycleOwner) { result ->
+                selectedImage = result
                 photoFile = getPhotoFile(FILE_NAME)
                 val inputStream = requireContext().contentResolver.openInputStream(result)
                 val outputStream = FileOutputStream(photoFile)
@@ -67,11 +70,11 @@ class RegisterFragment :
             registerLName?.let {
                 binding.lastNameEt.setText(it)
             }
-            registerPassword.let {
+            registerPassword?.let {
                 binding.passwordEt.setText(it)
             }
-            registerProfilePic.let {
-
+            registerProfilePic?.let {
+                GlideUtil.loadImage(requireContext(), it.toString(), binding.profileImage)
             }
         }
     }
@@ -232,6 +235,9 @@ class RegisterFragment :
             authFlowViewModel.registerPassword = passwordEt.text.toString().trim()
             authFlowViewModel.registerFName = firstNameEt.text.toString().trim()
             authFlowViewModel.registerLName = lastNameEt.text.toString().trim()
+            selectedImage?.let {
+                authFlowViewModel.registerProfilePic = it
+            }
 
         }
         findNavController().navigate(R.id.action_registerFragment_to_loginFragment)

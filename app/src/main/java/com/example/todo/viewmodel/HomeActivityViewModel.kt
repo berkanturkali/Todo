@@ -21,6 +21,9 @@ class HomeActivityViewModel @Inject constructor(
     private val _userInfo = MutableLiveData<Resource<User>>()
     val userInfo: LiveData<Resource<User>> get() = _userInfo
 
+    private val _filterItemClicked = MutableLiveData<Event<Boolean>>()
+    val filterItemClicked:LiveData<Event<Boolean>> get() = _filterItemClicked
+
     private val _progress = MutableLiveData<Event<Boolean>>()
      val progress :LiveData<Event<Boolean>> get() = _progress
 
@@ -35,5 +38,9 @@ class HomeActivityViewModel @Inject constructor(
     }
     fun hideProgress(){
         _progress.value = Event(false)
+    }
+
+    fun setFilterItemClicked(isClicked:Boolean){
+        _filterItemClicked.value = Event(isClicked)
     }
 }

@@ -1,20 +1,16 @@
 package com.example.todo.viewmodel.fragments.homeflow
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingData
+import androidx.lifecycle.*
 import androidx.paging.insertSeparators
 import androidx.paging.map
+import com.example.todo.model.TodoCategory
+import com.example.todo.model.TodoFilterType
 import com.example.todo.model.TodoModel
 import com.example.todo.repo.TodoRepo
 import com.example.todo.util.Event
 import com.example.todo.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.scopes.FragmentScoped
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,34 +19,41 @@ class HomeFragmentViewModel @Inject constructor(
     private val repo: TodoRepo
 ) : ViewModel() {
 
-    lateinit var todosPaginated: Flow<PagingData<TodoModel>>
     private val _deleteStatus = MutableLiveData<Event<Resource<String>>>()
     val deleteStatus: LiveData<Event<Resource<String>>> get() = _deleteStatus
 
+    private val filterType = MutableStateFlow(TodoFilterType.ALL_TODOS.filter)
 
-    fun getTodos() {
-        todosPaginated = repo.getTodos()
-            .flow
-            .map { pagingData ->
-                pagingData.map { TodoModel.TodoItem(it) }
-            }
-            .map {
-                it.insertSeparators<TodoModel.TodoItem, TodoModel> { before, after ->
-                    if (after == null) {
-                        return@insertSeparators null
-                    }
-                    if (before == null) {
-                        return@insertSeparators TodoModel.SeperatorItem(after.todo.date.toString())
-                    }
-                    if (before.todo.date > after.todo.date) {
-                        TodoModel.SeperatorItem(after.todo.date.toString())
-                    } else {
-                        null
-                    }
-                }
-            }
+    private val selectedCategory = MutableStateFlow(TodoCategory.ALL.category)
+
+    private val todosFlow = combine(
+        filterType,
+        selectedCategory
+    ) { filter, category ->
+        Pair(filter, category)
+    }.flatMapLatest { (filter, category) ->
+        repo.getTodos(filter, category).flow
     }
 
+    val todosPaginated = todosFlow
+        .map { pagingData ->
+            pagingData.map { TodoModel.TodoItem(it) }
+        }
+        .map {
+            it.insertSeparators<TodoModel.TodoItem, TodoModel> { before, after ->
+                if (after == null) {
+                    return@insertSeparators null
+                }
+                if (before == null) {
+                    return@insertSeparators TodoModel.SeperatorItem(after.todo.date.toString())
+                }
+                if (before.todo.date > after.todo.date) {
+                    TodoModel.SeperatorItem(after.todo.date.toString())
+                } else {
+                    null
+                }
+            }
+        }
 
     fun deleteTodo(id: String) {
         viewModelScope.launch {
@@ -58,5 +61,12 @@ class HomeFragmentViewModel @Inject constructor(
         }
     }
 
+    fun setFilterType(type: TodoFilterType) {
+        filterType.value = type.filter
+    }
+
+    fun setCategory(category: TodoCategory) {
+        selectedCategory.value = category.category
+    }
 
 }

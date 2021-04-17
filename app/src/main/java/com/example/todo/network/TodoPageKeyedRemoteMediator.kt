@@ -17,7 +17,9 @@ import java.io.IOException
 class TodoPageKeyedRemoteMediator(
     private val initialPage: Int = 1,
     private val db: AppDatabase,
-    private val api: RetroAPI
+    private val api: RetroAPI,
+    private val filter: String,
+    private val category: String
 ) : RemoteMediator<Int, Todo>() {
     override suspend fun load(loadType: LoadType, state: PagingState<Int, Todo>): MediatorResult {
 
@@ -29,13 +31,11 @@ class TodoPageKeyedRemoteMediator(
             }
             LoadType.PREPEND -> {
                 val remoteKeys = getRemoteKeyForFirstItem(state)
-
                 val prevKey = remoteKeys?.prevKey
                 if (prevKey == null) {
                     return MediatorResult.Success(endOfPaginationReached = true)
                 }
                 prevKey
-
             }
             LoadType.APPEND -> {
                 val remoteKeys = getRemoteKeyForLastItem(state)
@@ -50,7 +50,9 @@ class TodoPageKeyedRemoteMediator(
             val response = withContext(Dispatchers.IO) {
                 api.todos(
                     page = page,
-                    limit = state.config.pageSize
+                    limit = state.config.pageSize,
+                    filter,
+                    category
                 )
             }
 
@@ -70,7 +72,6 @@ class TodoPageKeyedRemoteMediator(
                 db.todoRemoteKeysDao().insertAll(keys)
                 db.todoDao().insertTodosList(response)
             }
-
             return MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)
         } catch (e: IOException) {
             return MediatorResult.Error(e)

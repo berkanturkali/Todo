@@ -24,7 +24,6 @@ class FragmentCameraOptionsFragment : BottomSheetDialogFragment() {
 
     private lateinit var requestCameraPermission: ActivityResultLauncher<String>
 
-
     private lateinit var takePicture: ActivityResultLauncher<Uri>
 
     private val binding get() = mBinding!!

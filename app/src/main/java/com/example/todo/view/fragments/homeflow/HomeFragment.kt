@@ -1,9 +1,12 @@
 package com.example.todo.view.fragments.homeflow
 
+import android.graphics.Paint
 import android.os.Bundle
 import android.view.View
+import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.core.view.isVisible
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -16,12 +19,21 @@ import com.example.todo.adapter.HomeFragmentAdapter
 import com.example.todo.adapter.TodoLoadStateAdapter
 import com.example.todo.databinding.FragmentHomeLayoutBinding
 import com.example.todo.model.Todo
+import com.example.todo.model.TodoCategory
+import com.example.todo.model.TodoFilterType
 import com.example.todo.util.HeaderItemDecoration
 import com.example.todo.util.SnackUtil
+import com.example.todo.util.navigateSafe
 import com.example.todo.view.fragments.BaseFragment
+import com.example.todo.viewmodel.HomeActivityViewModel
+import com.example.todo.viewmodel.fragments.homeflow.EditTodoFragmentViewModel
 import com.example.todo.viewmodel.fragments.homeflow.HomeFragmentViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChangedBy
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.launch
 
 private const val TAG = "HomeFragment"
 
@@ -30,23 +42,26 @@ class HomeFragment : BaseFragment<FragmentHomeLayoutBinding>(FragmentHomeLayoutB
     HomeFragmentAdapter.OnTodoClickListener {
 
     private val mViewModel: HomeFragmentViewModel by viewModels()
+    private val editViewModel by viewModels<EditTodoFragmentViewModel>()
     private lateinit var mAdapter: HomeFragmentAdapter
     private lateinit var dividerItemDecoration: DividerItemDecoration
-
+    private val activityViewModel by activityViewModels<HomeActivityViewModel>()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initAdapter()
         initRecycler()
-        mViewModel.getTodos()
+        initChips()
         subscribeObserver()
         val backStackEntry = findNavController().getBackStackEntry(R.id.homeFragment2)
         backStackEntry.savedStateHandle.getLiveData<Boolean>("isDeleted")
             .observe(viewLifecycleOwner) {
                 if (it) {
                     mAdapter.refresh()
-                    backStackEntry.savedStateHandle.remove<Boolean>("isDeleted")
                 }
             }
+        binding.retryButton.setOnClickListener {
+            mAdapter.retry()
+        }
     }
 
     private fun initAdapter() {
@@ -75,7 +90,6 @@ class HomeFragment : BaseFragment<FragmentHomeLayoutBinding>(FragmentHomeLayoutB
         }
     }
 
-
     private fun initRecycler() {
         binding.todoRv.apply {
             setHasFixedSize(true)
@@ -97,11 +111,58 @@ class HomeFragment : BaseFragment<FragmentHomeLayoutBinding>(FragmentHomeLayoutB
         }
     }
 
+    private fun initChips() {
+        binding.chipGroup.setOnCheckedChangeListener { _, checkedId ->
+            when (checkedId) {
+                R.id.categoryAll -> mViewModel.setCategory(TodoCategory.ALL)
+                R.id.categoryWork -> mViewModel.setCategory(TodoCategory.WORK)
+                R.id.categoryMusic -> mViewModel.setCategory(TodoCategory.MUSIC)
+                R.id.categoryTravel -> mViewModel.setCategory(TodoCategory.TRAVEL)
+                R.id.categoryStudy -> mViewModel.setCategory(TodoCategory.STUDY)
+                R.id.categoryHome -> mViewModel.setCategory(TodoCategory.HOME)
+                R.id.categoryShopping -> mViewModel.setCategory(TodoCategory.SHOPPING)
+            }
+            viewLifecycleOwner.lifecycleScope.launch {
+                mAdapter.loadStateFlow.distinctUntilChangedBy { it.refresh }
+                    .filter { it.refresh is LoadState.NotLoading }
+                    .collect { binding.todoRv.scrollToPosition(0) }
+            }
+        }
+    }
+
     private fun subscribeObserver() {
         viewLifecycleOwner.lifecycleScope.launchWhenResumed {
             mViewModel.todosPaginated.collectLatest {
                 mAdapter.submitData(it)
             }
+        }
+        activityViewModel.filterItemClicked.observe(viewLifecycleOwner) { event ->
+            event.getContentIfNotHandled()?.let {
+                showFilterPopup()
+            }
+        }
+        editViewModel.updateStatus.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { message ->
+                SnackUtil.showSnackbar(requireContext(), requireView(), message, R.color.black)
+            }
+        }
+    }
+
+    private fun showFilterPopup() {
+        val view = requireActivity().findViewById<View>(R.id.filter)
+        PopupMenu(requireContext(), view).run {
+            menuInflater.inflate(R.menu.filter_todo_menu, menu)
+            setOnMenuItemClickListener {
+                when (it.itemId) {
+                    R.id.all -> mViewModel.setFilterType(TodoFilterType.ALL_TODOS)
+                    R.id.active -> mViewModel.setFilterType(TodoFilterType.ACTIVE_TODOS)
+                    R.id.completed -> mViewModel.setFilterType(TodoFilterType.COMPLETED_TODOS)
+                    R.id.important -> mViewModel.setFilterType(TodoFilterType.IMPORTANT_TODOS)
+                    else -> mViewModel.setFilterType(TodoFilterType.ALL_TODOS)
+                }
+                true
+            }
+            show()
         }
     }
 
@@ -117,10 +178,17 @@ class HomeFragment : BaseFragment<FragmentHomeLayoutBinding>(FragmentHomeLayoutB
 
     override fun onTodoClick(todo: Todo) {
         val action = HomeFragmentDirections.actionHomeFragment2ToTodoOptionsDialog(todo.id)
-        findNavController().navigate(action)
+        findNavController().navigateSafe(action)
     }
 
     override fun onCheckboxListener(todo: Todo, isChecked: Boolean, textView: TextView) {
-
+        todo.isCompleted = isChecked
+        editViewModel.updateTodo(todo.id, todo)
+        if (todo.isCompleted) {
+            textView.paintFlags = textView.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+        } else {
+            textView.paintFlags =
+                textView.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+        }
     }
 }

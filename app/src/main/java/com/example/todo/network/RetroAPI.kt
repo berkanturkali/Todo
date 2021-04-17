@@ -40,7 +40,9 @@ interface RetroAPI {
     @GET("todo/todos")
     suspend fun todos(
         @Query("page") page: Int?,
-        @Query("limit") limit: Int
+        @Query("limit") limit: Int,
+        @Query("filter") filter: String,
+        @Query("category") category: String
     ): List<Todo>
 
     @GET("todo/{id}")
@@ -58,5 +60,4 @@ interface RetroAPI {
     suspend fun deleteTodo(
         @Path("id") id: String
     ): Response<String>
-
 }

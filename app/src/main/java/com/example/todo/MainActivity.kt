@@ -33,7 +33,6 @@ class MainActivity : AppCompatActivity() {
             }
         navGraph.startDestination = destination
         navController.graph = navGraph
-
-
     }
+    override fun onBackPressed() {}
 }

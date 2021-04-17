@@ -3,6 +3,7 @@ package com.example.todo.view.fragments.homeflow
 import android.app.AlertDialog
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.example.todo.R
 import com.example.todo.databinding.FragmentAddTodoLayoutBinding
@@ -12,6 +13,7 @@ import com.example.todo.util.DialogUtil
 import com.example.todo.util.Resource
 import com.example.todo.util.SnackUtil
 import com.example.todo.view.fragments.BaseFragment
+import com.example.todo.viewmodel.HomeActivityViewModel
 import com.example.todo.viewmodel.fragments.homeflow.AddTodoFragmentViewModel
 import com.google.android.material.datepicker.MaterialDatePicker
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,9 +28,7 @@ class AddTodoFragment :
     BaseFragment<FragmentAddTodoLayoutBinding>(FragmentAddTodoLayoutBinding::inflate) {
 
     private val mViewModel: AddTodoFragmentViewModel by viewModels()
-
-    @Inject
-    lateinit var repo: TodoRepo
+    private val activityViewModel by activityViewModels<HomeActivityViewModel>()
 
     private lateinit var calendar: Calendar
     private lateinit var dateFormat: SimpleDateFormat
@@ -126,7 +126,9 @@ class AddTodoFragment :
         mViewModel.addedStatus.observe(viewLifecycleOwner) {
             it?.getContentIfNotHandled()?.let { resource ->
                 when (resource) {
+                    is Resource.Loading -> activityViewModel.showProgress()
                     is Resource.Success -> {
+                        activityViewModel.hideProgress()
                         SnackUtil.showSnackbar(
                             requireContext(),
                             requireView(),
@@ -136,6 +138,7 @@ class AddTodoFragment :
                         clearFields()
                     }
                     is Resource.Error -> {
+                        activityViewModel.hideProgress()
                         SnackUtil.showSnackbar(
                             requireContext(),
                             requireView(),

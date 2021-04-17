@@ -1,7 +1,12 @@
 package com.example.todo
 
+import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.IntentFilter
+import android.net.ConnectivityManager
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import androidx.activity.viewModels
@@ -19,14 +24,19 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.util.regex.Pattern
 import javax.inject.Inject
 
+private const val TAG = "HomeActivity"
+
 @AndroidEntryPoint
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity(),
+    ConnectivityBroadcastReceiver.ConnectivityReceiverListener {
     private val mViewModel: HomeActivityViewModel by viewModels()
     private lateinit var binding: ActivityHomeBinding
     private lateinit var headerView: View
     private val drawerSelectedItemIdKey = "DRAWER_SELECTED_ITEM_ID_KEY"
     private var drawerSelectedItemId = R.id.home
     private lateinit var title: String
+
+    private lateinit var connectivityBroadcastReceiver: ConnectivityBroadcastReceiver
 
     @Inject
     lateinit var storageManager: StorageManager
@@ -36,6 +46,8 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
         getUserInfo(storageManager.getUserId().toString())
         headerView = binding.navView.getHeaderView(0)
         setupNavigation()
@@ -43,9 +55,11 @@ class HomeActivity : AppCompatActivity() {
         savedInstanceState?.let {
             drawerSelectedItemId = it.getInt(drawerSelectedItemIdKey, drawerSelectedItemId)
         }
-        binding.logoutBtn.setOnClickListener {
-            logout()
-        }
+        connectivityBroadcastReceiver = ConnectivityBroadcastReceiver()
+        registerReceiver(
+            connectivityBroadcastReceiver,
+            IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        )
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -53,6 +67,21 @@ class HomeActivity : AppCompatActivity() {
         super.onSaveInstanceState(outState)
     }
 
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        menu?.clear()
+        val inflater = menuInflater
+        when (drawerSelectedItemId) {
+            R.id.home -> {
+                inflater.inflate(R.menu.home_fragment_toolbar_menu, menu)
+            }
+            else -> {
+                inflater.inflate(R.menu.home_activity_toolbar_menu, menu)
+            }
+        }
+        return true
+    }
+
+    @SuppressLint("RestrictedApi")
     private fun setupNavigation() {
         val navGraphIds =
             listOf(R.navigation.home, R.navigation.add_todo, R.navigation.edit_profile)
@@ -79,6 +108,7 @@ class HomeActivity : AppCompatActivity() {
                 binding.drawerLayout
             )
             drawerSelectedItemId = navController.graph.id
+            supportActionBar?.invalidateOptionsMenu()
         })
     }
 
@@ -126,6 +156,20 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        when (item.itemId) {
+            R.id.logout -> {
+                logout()
+                true
+            }
+            R.id.filter -> {
+                mViewModel.setFilterItemClicked(true)
+                true
+            }
+            else ->
+                super.onOptionsItemSelected(item)
+        }
+
     private fun logout() {
         storageManager.clearSharedPref()
         isLogout = true
@@ -154,6 +198,22 @@ class HomeActivity : AppCompatActivity() {
             setTitle("")
             textView.text = title
         }
+    }
+
+    override fun onNetworkConnectionChanged(isConnected: Boolean) {
+        if (isConnected) {
+            mViewModel.getUserInfo(storageManager.getUserId().toString())
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        ConnectivityBroadcastReceiver.connectivityReceiverListener = this
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(connectivityBroadcastReceiver)
     }
 }
 
