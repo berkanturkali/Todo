@@ -4,8 +4,6 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import com.example.todo.db.AppDatabase
 import com.example.todo.model.Todo
-import com.example.todo.model.TodoCategory
-import com.example.todo.model.TodoFilterType
 import com.example.todo.network.RetroAPI
 import com.example.todo.network.TodoPageKeyedRemoteMediator
 import javax.inject.Inject
@@ -21,7 +19,7 @@ class TodoRepo @Inject constructor(
     suspend fun addTodo(todo: Todo) = apiCall({ retroAPI.addTodo(todo) })
     fun getTodos(filter: String, category: String): Pager<Int, Todo> {
         return Pager(
-            config = PagingConfig(50, enablePlaceholders = false,maxSize = 300),
+            config = PagingConfig(50, enablePlaceholders = false, maxSize = 300),
             remoteMediator = TodoPageKeyedRemoteMediator(1, db, retroAPI, filter, category),
             pagingSourceFactory = { db.todoDao().observeTodosPaginated() }
         )
@@ -31,4 +29,6 @@ class TodoRepo @Inject constructor(
     suspend fun updateTodo(id: String, todo: Todo) = apiCall({ retroAPI.updateTodo(id, todo) })
 
     suspend fun deleteTodo(id: String) = apiCall({ retroAPI.deleteTodo(id) })
+
+    suspend fun deleteCompletedTodos() = apiCall({ retroAPI.deleteCompletedTodos() })
 }

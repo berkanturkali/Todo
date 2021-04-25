@@ -1,10 +1,8 @@
 package com.example.todo.view.fragments.homeflow
 
-import android.graphics.Paint
 import android.os.Bundle
 import android.view.View
 import android.widget.PopupMenu
-import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -22,6 +20,7 @@ import com.example.todo.model.Todo
 import com.example.todo.model.TodoCategory
 import com.example.todo.model.TodoFilterType
 import com.example.todo.util.HeaderItemDecoration
+import com.example.todo.util.Resource
 import com.example.todo.util.SnackUtil
 import com.example.todo.util.navigateSafe
 import com.example.todo.view.fragments.BaseFragment
@@ -46,6 +45,7 @@ class HomeFragment : BaseFragment<FragmentHomeLayoutBinding>(FragmentHomeLayoutB
     private lateinit var mAdapter: HomeFragmentAdapter
     private lateinit var dividerItemDecoration: DividerItemDecoration
     private val activityViewModel by activityViewModels<HomeActivityViewModel>()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initAdapter()
@@ -93,7 +93,6 @@ class HomeFragment : BaseFragment<FragmentHomeLayoutBinding>(FragmentHomeLayoutB
     private fun initRecycler() {
         binding.todoRv.apply {
             setHasFixedSize(true)
-            itemAnimator = null
             adapter = mAdapter.withLoadStateFooter(
                 footer = TodoLoadStateAdapter { mAdapter.retry() }
             )
@@ -106,7 +105,9 @@ class HomeFragment : BaseFragment<FragmentHomeLayoutBinding>(FragmentHomeLayoutB
             )
             addItemDecoration(dividerItemDecoration)
             addItemDecoration(HeaderItemDecoration(this, false) { position ->
-                mAdapter.getItemViewType(position) == R.layout.todo_item_seperator_layout
+                if (position >= 0 && position < mAdapter.itemCount) {
+                    mAdapter.getItemViewType(position) == R.layout.todo_item_seperator_layout
+                } else false
             })
         }
     }
@@ -144,6 +145,39 @@ class HomeFragment : BaseFragment<FragmentHomeLayoutBinding>(FragmentHomeLayoutB
         editViewModel.updateStatus.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { message ->
                 SnackUtil.showSnackbar(requireContext(), requireView(), message, R.color.black)
+                mAdapter.refresh()
+                mAdapter.stateRestorationPolicy =
+                    RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+            }
+        }
+        activityViewModel.isClicked.observe(viewLifecycleOwner) { clickEvent ->
+            clickEvent.getContentIfNotHandled()?.let { isClicked ->
+                if (isClicked) {
+                    mViewModel.deleteCompletedTodos()
+                }
+            }
+        }
+        mViewModel.deleteStatus.observe(viewLifecycleOwner) { deleteEvent ->
+            deleteEvent.getContentIfNotHandled()?.let { resource ->
+                when (resource) {
+                    is Resource.Success -> {
+                        SnackUtil.showSnackbar(
+                            requireContext(),
+                            requireView(),
+                            "Removed Successfully",
+                            R.color.color_success
+                        )
+                        mAdapter.refresh()
+                    }
+                    is Resource.Error -> {
+                        SnackUtil.showSnackbar(
+                            requireContext(),
+                            requireView(),
+                            resource.message.toString(),
+                            R.color.color_danger
+                        )
+                    }
+                }
             }
         }
     }
@@ -181,14 +215,8 @@ class HomeFragment : BaseFragment<FragmentHomeLayoutBinding>(FragmentHomeLayoutB
         findNavController().navigateSafe(action)
     }
 
-    override fun onCheckboxListener(todo: Todo, isChecked: Boolean, textView: TextView) {
+    override fun onCheckboxListener(todo: Todo, isChecked: Boolean) {
         todo.isCompleted = isChecked
         editViewModel.updateTodo(todo.id, todo)
-        if (todo.isCompleted) {
-            textView.paintFlags = textView.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-        } else {
-            textView.paintFlags =
-                textView.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
-        }
     }
 }

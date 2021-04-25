@@ -59,5 +59,8 @@ interface RetroAPI {
     @DELETE("todo/{id}")
     suspend fun deleteTodo(
         @Path("id") id: String
-    ): Response<String>
+    ): Response<Unit>
+
+    @DELETE("todo/delete-completed-todos")
+    suspend fun deleteCompletedTodos(): Response<Unit>
 }

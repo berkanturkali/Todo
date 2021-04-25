@@ -19,12 +19,13 @@ class HomeFragmentViewModel @Inject constructor(
     private val repo: TodoRepo
 ) : ViewModel() {
 
-    private val _deleteStatus = MutableLiveData<Event<Resource<String>>>()
-    val deleteStatus: LiveData<Event<Resource<String>>> get() = _deleteStatus
+    private val _deleteStatus = MutableLiveData<Event<Resource<Unit>>>()
+    val deleteStatus: LiveData<Event<Resource<Unit>>> get() = _deleteStatus
 
     private val filterType = MutableStateFlow(TodoFilterType.ALL_TODOS.filter)
 
     private val selectedCategory = MutableStateFlow(TodoCategory.ALL.category)
+
 
     private val todosFlow = combine(
         filterType,
@@ -69,4 +70,9 @@ class HomeFragmentViewModel @Inject constructor(
         selectedCategory.value = category.category
     }
 
+    fun deleteCompletedTodos() {
+        viewModelScope.launch {
+            _deleteStatus.value = Event(repo.deleteCompletedTodos())
+        }
+    }
 }

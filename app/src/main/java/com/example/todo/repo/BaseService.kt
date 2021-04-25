@@ -7,7 +7,6 @@ import kotlinx.coroutines.withContext
 import retrofit2.Response
 import retrofit2.Retrofit
 import javax.inject.Inject
-import javax.inject.Singleton
 
 
 abstract class BaseService() {
@@ -29,10 +28,14 @@ abstract class BaseService() {
             @Suppress("BlockingMethodInNonBlockingContext")
             Resource.Error(ErrorUtil.parseError(retrofit, response).message)
         } else {
-            return if (response.body() == null) {
+            return if (response.body() == null && response.code() != 204) {
                 Resource.Error("No Resource")
             } else {
-                Resource.Success(response.body()!!)
+                return if (response.code() == 204) {
+                    Resource.Success()
+                } else {
+                    Resource.Success(response.body()!!)
+                }
             }
         }
     }

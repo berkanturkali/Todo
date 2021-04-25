@@ -21,7 +21,7 @@
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
                 app:menu="@menu/home_fragment_toolbar_menu"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
                 >
 
                 <TextView

@@ -67,7 +67,7 @@ class TodoOptionsDialog : BottomSheetDialogFragment() {
                         SnackUtil.showSnackbar(
                             requireContext(),
                             requireView(),
-                            resource.data.toString(),
+                            "Removed Successfully",
                             R.color.color_success
                         ){dialog?.dismiss()}
                         findNavController().previousBackStackEntry?.savedStateHandle?.set("isDeleted",true)

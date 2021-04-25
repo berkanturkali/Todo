@@ -92,7 +92,7 @@ class HomeActivity : AppCompatActivity(),
             currentItemId = drawerSelectedItemId,
             intent = intent
         )
-        controller.observe(this, { navController ->
+        controller.observe(this) { navController ->
             navController.addOnDestinationChangedListener { controller, _, arguments ->
                 title = when (controller.graph.id) {
                     R.id.home -> "Todos"
@@ -109,7 +109,7 @@ class HomeActivity : AppCompatActivity(),
             )
             drawerSelectedItemId = navController.graph.id
             supportActionBar?.invalidateOptionsMenu()
-        })
+        }
     }
 
     private fun getUserInfo(id: String) {
@@ -164,6 +164,10 @@ class HomeActivity : AppCompatActivity(),
             }
             R.id.filter -> {
                 mViewModel.setFilterItemClicked(true)
+                true
+            }
+            R.id.remove_completed -> {
+                mViewModel.setClicked(true)
                 true
             }
             else ->

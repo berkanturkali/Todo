@@ -9,7 +9,6 @@ import com.example.todo.repo.UserRepo
 import com.example.todo.util.Event
 import com.example.todo.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.scopes.FragmentScoped
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,10 +21,13 @@ class HomeActivityViewModel @Inject constructor(
     val userInfo: LiveData<Resource<User>> get() = _userInfo
 
     private val _filterItemClicked = MutableLiveData<Event<Boolean>>()
-    val filterItemClicked:LiveData<Event<Boolean>> get() = _filterItemClicked
+    val filterItemClicked: LiveData<Event<Boolean>> get() = _filterItemClicked
 
     private val _progress = MutableLiveData<Event<Boolean>>()
-     val progress :LiveData<Event<Boolean>> get() = _progress
+    val progress: LiveData<Event<Boolean>> get() = _progress
+
+    private val _isClicked = MutableLiveData<Event<Boolean>>()
+    val isClicked: LiveData<Event<Boolean>> get() = _isClicked
 
     fun getUserInfo(id: String) {
         viewModelScope.launch(Dispatchers.Main) {
@@ -33,14 +35,19 @@ class HomeActivityViewModel @Inject constructor(
         }
     }
 
-    fun showProgress(){
+    fun showProgress() {
         _progress.value = Event(true)
     }
-    fun hideProgress(){
+
+    fun hideProgress() {
         _progress.value = Event(false)
     }
 
-    fun setFilterItemClicked(isClicked:Boolean){
+    fun setFilterItemClicked(isClicked: Boolean) {
         _filterItemClicked.value = Event(isClicked)
+    }
+
+    fun setClicked(isClicked: Boolean) {
+        _isClicked.value = Event(isClicked)
     }
 }

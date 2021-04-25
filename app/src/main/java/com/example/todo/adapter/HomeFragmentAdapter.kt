@@ -96,7 +96,7 @@ class HomeFragmentAdapter(
                 listener.onCheckboxListener(
                     item.todo,
                     (it as MaterialCheckBox).isChecked,
-                    binding.todoTv
+
                 )
             }
         }
@@ -149,6 +149,6 @@ class HomeFragmentAdapter(
 
     interface OnTodoClickListener {
         fun onTodoClick(todo: Todo)
-        fun onCheckboxListener(todo: Todo, isChecked: Boolean, textView: TextView)
+        fun onCheckboxListener(todo: Todo, isChecked: Boolean)
     }
 }
