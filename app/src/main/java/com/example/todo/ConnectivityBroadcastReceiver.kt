@@ -6,9 +6,11 @@ import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
-import androidx.annotation.RequiresApi
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class ConnectivityBroadcastReceiver : BroadcastReceiver() {
+@Singleton
+class ConnectivityBroadcastReceiver @Inject constructor() : BroadcastReceiver() {
     companion object {
         var connectivityReceiverListener: ConnectivityReceiverListener? = null
     }
@@ -23,16 +25,17 @@ class ConnectivityBroadcastReceiver : BroadcastReceiver() {
         var result = false
         val connManager =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             val networkCapabilities = connManager.activeNetwork ?: return false
-            val networkInfo = connManager.getNetworkCapabilities(networkCapabilities) ?: return false
+            val networkInfo =
+                connManager.getNetworkCapabilities(networkCapabilities) ?: return false
             result = when {
                 networkInfo.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
                 networkInfo.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
                 networkInfo.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
                 else -> false
             }
-        }else{
+        } else {
             connManager.run {
                 connManager.activeNetworkInfo?.run {
                     result = when (type) {
@@ -47,6 +50,7 @@ class ConnectivityBroadcastReceiver : BroadcastReceiver() {
         }
         return result
     }
+
     interface ConnectivityReceiverListener {
         fun onNetworkConnectionChanged(isConnected: Boolean)
     }
