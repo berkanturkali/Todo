@@ -20,8 +20,6 @@ import com.google.gson.JsonObject
 import com.jakewharton.rxbinding4.widget.textChanges
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.disposables.Disposable
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -70,12 +68,11 @@ class EditProfileFragment :
                     is Resource.Success -> {
                         setUserInfo(resource.data!!)
                     }
-                    is Resource.Error -> SnackUtil.showSnackbar(
-                        requireContext(),
-                        binding.root,
-                        resource.message.toString(),
-                        R.color.color_danger
-                    )
+                    is Resource.Error ->
+                        binding.root.snack(
+                            resource.message.toString(),
+                            R.color.color_danger
+                        )
                 }
             }
     }
@@ -140,11 +137,9 @@ class EditProfileFragment :
             it?.getContentIfNotHandled()?.let { status ->
                 val color =
                     if (status == "Profile updated successfully") R.color.color_success else R.color.color_danger
-                SnackUtil.showSnackbar(
-                    requireContext(),
-                    requireView(),
-                    status,
-                    color,
+                requireView().snack(
+                status,
+                color,
                 ) { activityViewModel.getUserInfo(storageManager.getUserId()!!) }
             }
         }

@@ -16,7 +16,8 @@ import com.example.todo.util.Consts.Companion.FILE_NAME
 import com.example.todo.util.FileUtil
 import com.example.todo.util.GlideUtil
 import com.example.todo.util.Resource
-import com.example.todo.util.SnackUtil
+import com.example.todo.util.snack
+
 import com.example.todo.view.fragments.BaseFragment
 import com.example.todo.viewmodel.fragments.authflow.AuthFlowViewModel
 import com.example.todo.viewmodel.fragments.authflow.RegisterFragmentViewModel
@@ -87,20 +88,15 @@ class RegisterFragment :
                 is Resource.Success -> {
 
                     hideProgress()
-                    SnackUtil.showSnackbar(
-                        requireContext(),
-                        requireView(),
+                    requireView().snack(
                         resource.data.toString(),
                         R.color.color_success
                     ) { clearFieldsThenNavigate() }
 
                 }
                 is Resource.Error -> {
-
                     hideProgress()
-                    SnackUtil.showSnackbar(
-                        requireContext(),
-                        requireView(),
+                    requireView().snack(
                         resource.message.toString(),
                         R.color.color_danger,
                     )

@@ -9,7 +9,7 @@ import androidx.navigation.navGraphViewModels
 import com.example.todo.R
 import com.example.todo.databinding.FragmentLoginLayoutBinding
 import com.example.todo.util.Resource
-import com.example.todo.util.SnackUtil
+import com.example.todo.util.snack
 import com.example.todo.view.fragments.BaseFragment
 import com.example.todo.viewmodel.fragments.authflow.AuthFlowViewModel
 import com.example.todo.viewmodel.fragments.authflow.LoginFragmentViewModel
@@ -112,18 +112,14 @@ class LoginFragment :
                     is Resource.Loading -> showProgress()
                     is Resource.Success -> {
                         hideProgress()
-                        SnackUtil.showSnackbar(
-                            requireContext(),
-                            requireView(),
-                            it.data.toString(),
-                            R.color.color_success
+                        requireView().snack(
+                        it.data.toString(),
+                        R.color.color_success
                         ) { navigateToHomeFlow() }
                     }
                     is Resource.Error -> {
                         hideProgress()
-                        SnackUtil.showSnackbar(
-                            requireContext(),
-                            requireView(),
+                            requireView().snack(
                             it.message.toString(),
                             R.color.color_danger,
                         )

@@ -10,7 +10,8 @@ import com.example.todo.databinding.FragmentAddTodoLayoutBinding
 import com.example.todo.model.Todo
 import com.example.todo.util.DialogUtil
 import com.example.todo.util.Resource
-import com.example.todo.util.SnackUtil
+import com.example.todo.util.snack
+
 import com.example.todo.view.fragments.BaseFragment
 import com.example.todo.viewmodel.MainTodoFragmentViewModel
 import com.example.todo.viewmodel.fragments.homeflow.AddTodoFragmentViewModel
@@ -112,9 +113,7 @@ class AddTodoFragment :
     }
 
     private fun showErrorSnack() {
-        SnackUtil.showSnackbar(
-            requireContext(),
-            requireView(),
+        requireView().snack(
             "Fields can not be empty and title should be less than 20 chars",
             R.color.color_danger
         )
@@ -127,9 +126,7 @@ class AddTodoFragment :
                     is Resource.Loading -> activityViewModel.showProgress()
                     is Resource.Success -> {
                         activityViewModel.hideProgress()
-                        SnackUtil.showSnackbar(
-                            requireContext(),
-                            requireView(),
+                        requireView().snack(
                             resource.data.toString(),
                             R.color.color_success
                         )
@@ -137,9 +134,7 @@ class AddTodoFragment :
                     }
                     is Resource.Error -> {
                         activityViewModel.hideProgress()
-                        SnackUtil.showSnackbar(
-                            requireContext(),
-                            requireView(),
+                        requireView().snack(
                             resource.message.toString(),
                             R.color.color_danger
                         )

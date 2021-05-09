@@ -20,8 +20,8 @@ import com.example.todo.model.TodoCategory
 import com.example.todo.model.TodoFilterType
 import com.example.todo.util.HeaderItemDecoration
 import com.example.todo.util.Resource
-import com.example.todo.util.SnackUtil
 import com.example.todo.util.navigateSafe
+import com.example.todo.util.snack
 import com.example.todo.view.fragments.BaseFragment
 import com.example.todo.viewmodel.MainTodoFragmentViewModel
 import com.example.todo.viewmodel.fragments.homeflow.EditTodoFragmentViewModel
@@ -79,9 +79,7 @@ class HomeFragment : BaseFragment<FragmentHomeLayoutBinding>(FragmentHomeLayoutB
                 else -> null
             }
             error?.let {
-                SnackUtil.showSnackbar(
-                    requireContext(),
-                    requireView(),
+                requireView().snack(
                     it.error.message.toString(),
                     R.color.color_danger
                 )
@@ -143,7 +141,7 @@ class HomeFragment : BaseFragment<FragmentHomeLayoutBinding>(FragmentHomeLayoutB
         }
         editViewModel.updateStatus.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { message ->
-                SnackUtil.showSnackbar(requireContext(), requireView(), message, R.color.black)
+                requireView().snack(message, R.color.black)
                 mAdapter.refresh()
                 mAdapter.stateRestorationPolicy =
                     RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
@@ -160,18 +158,15 @@ class HomeFragment : BaseFragment<FragmentHomeLayoutBinding>(FragmentHomeLayoutB
             deleteEvent.getContentIfNotHandled()?.let { resource ->
                 when (resource) {
                     is Resource.Success -> {
-                        SnackUtil.showSnackbar(
-                            requireContext(),
-                            requireView(),
+                        requireView().snack(
                             "Removed Successfully",
                             R.color.color_success
                         )
                         mAdapter.refresh()
                     }
                     is Resource.Error -> {
-                        SnackUtil.showSnackbar(
-                            requireContext(),
-                            requireView(),
+
+                        requireView().snack(
                             resource.message.toString(),
                             R.color.color_danger
                         )

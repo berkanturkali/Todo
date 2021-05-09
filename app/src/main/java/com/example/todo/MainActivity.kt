@@ -3,10 +3,13 @@ package com.example.todo
 import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.os.Bundle
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.example.todo.util.SnackUtil
+import com.example.todo.util.snack
+
 import com.example.todo.viewmodel.MainActivityViewModel
+
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -31,12 +34,8 @@ class MainActivity : AppCompatActivity(),
     override fun onNetworkConnectionChanged(isConnected: Boolean) {
         mViewModel.setConnection(isConnected)
         if (!isConnected) {
-            SnackUtil.showSnackbar(
-                this,
-                window.decorView.findViewById(android.R.id.content),
-                "No connection",
-                R.color.color_danger
-            )
+            window.decorView.findViewById<View>(android.R.id.content)
+                .snack("No Internet Connection", R.color.color_danger)
         }
     }
 

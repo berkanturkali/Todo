@@ -11,7 +11,7 @@ import androidx.navigation.fragment.navArgs
 import com.example.todo.R
 import com.example.todo.databinding.DialogTodoOptionsLayoutBinding
 import com.example.todo.util.Resource
-import com.example.todo.util.SnackUtil
+import com.example.todo.util.snack
 import com.example.todo.viewmodel.MainTodoFragmentViewModel
 import com.example.todo.viewmodel.fragments.homeflow.HomeFragmentViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -64,19 +64,18 @@ class TodoOptionsDialog : BottomSheetDialogFragment() {
                 when (resource) {
                     is Resource.Success -> {
                         activityViewModel.hideProgress()
-                        SnackUtil.showSnackbar(
-                            requireContext(),
-                            requireView(),
+                        requireView().snack(
                             "Removed Successfully",
                             R.color.color_success
-                        ){dialog?.dismiss()}
-                        findNavController().previousBackStackEntry?.savedStateHandle?.set("isDeleted",true)
+                        ) { dialog?.dismiss() }
+                        findNavController().previousBackStackEntry?.savedStateHandle?.set(
+                            "isDeleted",
+                            true
+                        )
                     }
                     is Resource.Error -> {
                         activityViewModel.hideProgress()
-                        SnackUtil.showSnackbar(
-                            requireContext(),
-                            requireView(),
+                        requireView().snack(
                             resource.message.toString(),
                             R.color.color_danger
                         )

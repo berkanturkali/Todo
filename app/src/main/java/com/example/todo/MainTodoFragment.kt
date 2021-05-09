@@ -125,9 +125,7 @@ class MainTodoFragment : Fragment(R.layout.fragment_main_todo_layout), DrawerIte
                     setUserInfo(resource.data!!)
                 }
                 is Resource.Error -> {
-                    SnackUtil.showSnackbar(
-                        requireContext(),
-                        binding.root,
+                    binding.root.snack(
                         resource.message.toString(),
                         R.color.color_danger
                     )

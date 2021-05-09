@@ -9,7 +9,7 @@ import com.example.todo.databinding.FragmentEditTodoLayoutBinding
 import com.example.todo.model.Todo
 import com.example.todo.util.DialogUtil
 import com.example.todo.util.Resource
-import com.example.todo.util.SnackUtil
+import com.example.todo.util.snack
 import com.example.todo.view.fragments.BaseFragment
 import com.example.todo.viewmodel.fragments.homeflow.EditTodoFragmentViewModel
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -62,9 +62,7 @@ class EditTodoFragment :
             if (checkFields()) {
                 updateTodo()
             } else {
-                SnackUtil.showSnackbar(
-                    requireContext(),
-                    requireView(),
+                requireView().snack(
                     "Fields can not be empty",
                     R.color.color_danger
                 )
@@ -131,9 +129,9 @@ class EditTodoFragment :
                 is Resource.Error -> showError(resource.message.toString())
             }
         }
-        mViewModel.updateStatus.observe(viewLifecycleOwner){
-            it.getContentIfNotHandled()?.let {message->
-                SnackUtil.showSnackbar(requireContext(),requireView(),message,R.color.black)
+        mViewModel.updateStatus.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { message ->
+                requireView().snack(message, R.color.black)
             }
         }
     }
@@ -148,7 +146,8 @@ class EditTodoFragment :
             importanceTv.setText(if (todo.isImportant) "Important" else "Not Important")
         }
     }
+
     private fun showError(message: String) {
-        SnackUtil.showSnackbar(requireContext(), requireView(), message, R.color.color_danger)
+        requireView().snack(message, R.color.color_danger)
     }
 }
