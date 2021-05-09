@@ -14,8 +14,8 @@ import com.example.todo.databinding.FragmentRegisterLayoutBinding
 import com.example.todo.model.User
 import com.example.todo.util.Consts.Companion.FILE_NAME
 import com.example.todo.util.FileUtil
-import com.example.todo.util.GlideUtil
 import com.example.todo.util.Resource
+import com.example.todo.util.loadImage
 import com.example.todo.util.snack
 
 import com.example.todo.view.fragments.BaseFragment
@@ -75,7 +75,7 @@ class RegisterFragment :
                 binding.passwordEt.setText(it)
             }
             registerProfilePic?.let {
-                GlideUtil.loadImage(requireContext(), it.toString(), binding.profileImage)
+                binding.profileImage.loadImage(it.toString())
             }
         }
     }

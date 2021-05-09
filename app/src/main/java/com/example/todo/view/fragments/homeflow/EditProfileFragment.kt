@@ -138,8 +138,8 @@ class EditProfileFragment :
                 val color =
                     if (status == "Profile updated successfully") R.color.color_success else R.color.color_danger
                 requireView().snack(
-                status,
-                color,
+                    status,
+                    color,
                 ) { activityViewModel.getUserInfo(storageManager.getUserId()!!) }
             }
         }
@@ -177,7 +177,8 @@ class EditProfileFragment :
     }
 
     private fun setUserInfo(user: User) {
-        GlideUtil.loadImage(requireContext(), user.profilePic, binding.profileImage)
+        binding.profileImage.loadImage(user.profilePic)
+
         binding.apply {
             firstNameEt.setText(user.firstName)
             lastNameEt.setText(user.lastName)

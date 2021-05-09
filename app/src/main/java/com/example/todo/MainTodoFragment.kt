@@ -146,11 +146,8 @@ class MainTodoFragment : Fragment(R.layout.fragment_main_todo_layout), DrawerIte
 
     private fun setUserInfo(user: User) {
         val fullName = "${user.firstName} ${user.lastName}"
-        GlideUtil.loadImage(
-            requireContext(),
-            user.profilePic,
-            headerView.findViewById<ShapeableImageView>(R.id.profileImage)
-        )
+        headerView.findViewById<ShapeableImageView>(R.id.profileImage)
+            .loadImage(user.profilePic)
         headerView.findViewById<TextView>(R.id.fullNameTv).text = fullName
         headerView.findViewById<TextView>(R.id.emailTv).text = user.email
     }
