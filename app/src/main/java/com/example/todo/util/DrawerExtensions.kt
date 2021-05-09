@@ -34,7 +34,8 @@ fun NavigationView.setupWithNavController(
     navGraphIds: List<Int>,
     containerId: Int,
     currentItemId: Int,
-    intent: Intent
+    intent: Intent,
+    listener: DrawerItemClickListener
 ): LiveData<NavController> {
 
     // Map of tags
@@ -77,6 +78,10 @@ fun NavigationView.setupWithNavController(
             false
         } else {
             val newItemId = item.itemId
+            if (newItemId == R.id.logout) {
+                listener.onLogoutClick()
+                return@setNavigationItemSelectedListener true
+            }
             if (!graphIdToTagMap.containsKey(newItemId)) {
                 // Optional: if the selected item is meant to be a destination separate
                 // to the supplied graphs, navigate to it from the parent navController

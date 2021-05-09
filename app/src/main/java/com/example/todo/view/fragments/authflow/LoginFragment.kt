@@ -135,7 +135,6 @@ class LoginFragment :
 
     private fun navigateToHomeFlow() {
         findNavController().navigate(R.id.action_loginFragment_to_mainTodoFragment)
-        requireActivity().finish()
     }
 
     private fun showProgress() {

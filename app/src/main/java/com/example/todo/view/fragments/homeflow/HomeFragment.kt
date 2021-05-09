@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import android.widget.PopupMenu
 import androidx.core.view.isVisible
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -44,7 +43,7 @@ class HomeFragment : BaseFragment<FragmentHomeLayoutBinding>(FragmentHomeLayoutB
     private val editViewModel by viewModels<EditTodoFragmentViewModel>()
     private lateinit var mAdapter: HomeFragmentAdapter
     private lateinit var dividerItemDecoration: DividerItemDecoration
-    private val activityViewModel by activityViewModels<MainTodoFragmentViewModel>()
+    private val mainTodoViewModel by viewModels<MainTodoFragmentViewModel>(ownerProducer = { requireParentFragment().requireParentFragment() })
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -137,7 +136,7 @@ class HomeFragment : BaseFragment<FragmentHomeLayoutBinding>(FragmentHomeLayoutB
                 mAdapter.submitData(it)
             }
         }
-        activityViewModel.filterItemClicked.observe(viewLifecycleOwner) { event ->
+        mainTodoViewModel.filterItemClicked.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let {
                 showFilterPopup()
             }
@@ -150,7 +149,7 @@ class HomeFragment : BaseFragment<FragmentHomeLayoutBinding>(FragmentHomeLayoutB
                     RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
             }
         }
-        activityViewModel.isClicked.observe(viewLifecycleOwner) { clickEvent ->
+        mainTodoViewModel.isRemoveCompletedItemsClicked.observe(viewLifecycleOwner) { clickEvent ->
             clickEvent.getContentIfNotHandled()?.let { isClicked ->
                 if (isClicked) {
                     mViewModel.deleteCompletedTodos()

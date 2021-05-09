@@ -79,7 +79,19 @@
         android:id="@+id/mainTodoFragment"
         android:name="com.example.todo.MainTodoFragment"
         android:label="MainTodoFragment"
-        tools:layout="@layout/fragment_main_todo_layout"/>
+        tools:layout="@layout/fragment_main_todo_layout">
+        <action
+            android:id="@+id/action_mainTodoFragment_to_navigation"
+            app:destination="@id/navigation"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"
+            app:launchSingleTop="true"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left"
+            app:popUpToInclusive="true"
+            app:popUpTo="@id/mainTodoFragment"
+            />
+    </fragment>
 
 
 </navigation>

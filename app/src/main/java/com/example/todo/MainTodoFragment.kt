@@ -1,6 +1,8 @@
 package com.example.todo
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.View
 import android.widget.TextView
 import androidx.activity.addCallback
@@ -19,7 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainTodoFragment : Fragment(R.layout.fragment_main_todo_layout) {
+class MainTodoFragment : Fragment(R.layout.fragment_main_todo_layout),DrawerItemClickListener {
     private var _binding: FragmentMainTodoLayoutBinding? = null
     private val mViewModel by viewModels<MainTodoFragmentViewModel>()
     private lateinit var drawerLayout: DrawerLayout
@@ -38,11 +40,13 @@ class MainTodoFragment : Fragment(R.layout.fragment_main_todo_layout) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentMainTodoLayoutBinding.bind(view)
+        setHasOptionsMenu(true)
         savedInstanceState?.let {
             drawerSelectedItemId = it.getInt(drawerSelectedItemIdKey, drawerSelectedItemId)
         }
         headerView = binding.navView.getHeaderView(0)
         setupDrawer()
+        initMenu()
         subscribeObservers()
         setBackPressedHandler()
     }
@@ -50,6 +54,16 @@ class MainTodoFragment : Fragment(R.layout.fragment_main_todo_layout) {
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putInt(drawerSelectedItemIdKey, drawerSelectedItemId)
         super.onSaveInstanceState(outState)
+    }
+
+    private fun initMenu(){
+        binding.drawerToolbar.setOnMenuItemClickListener {
+            when(it.itemId){
+                R.id.filter -> mViewModel.setFilterItemClicked(true)
+                R.id.remove_completed -> mViewModel.setRemoveCompletedItemsClicked(true)
+            }
+            true
+        }
     }
 
     private fun setBackPressedHandler() {
@@ -60,6 +74,11 @@ class MainTodoFragment : Fragment(R.layout.fragment_main_todo_layout) {
                 findNavController().popBackStack()
             }
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.main_todo_fragment_toolbar_menu,menu)
     }
 
     private fun setupDrawer() {
@@ -74,7 +93,8 @@ class MainTodoFragment : Fragment(R.layout.fragment_main_todo_layout) {
             containerId = R.id.drawer_container,
             currentItemId = drawerSelectedItemId,
             parentNavController = findNavController(),
-            intent = requireActivity().intent
+            intent = requireActivity().intent,
+            listener = this
         )
         controller.observe(viewLifecycleOwner) { navController ->
             NavigationUI.setupWithNavController(
@@ -83,9 +103,11 @@ class MainTodoFragment : Fragment(R.layout.fragment_main_todo_layout) {
                 drawerLayout
             )
             drawerSelectedItemId = navController.graph.id
-            navController.addOnDestinationChangedListener { controller, destination, arguments ->
+            navController.addOnDestinationChangedListener { _, destination, _ ->
                 title = destination.label.toString()
                 binding.drawerToolbarTitle.text = title
+                toolbar.menu.findItem(R.id.filter).isVisible = destination.id == R.id.homeFragment2
+                toolbar.menu.findItem(R.id.options).isVisible = destination.id == R.id.homeFragment2
             }
         }
     }
@@ -131,6 +153,11 @@ class MainTodoFragment : Fragment(R.layout.fragment_main_todo_layout) {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onLogoutClick() {
+        storageManager.clearSharedPref()
+        findNavController().navigate(R.id.action_mainTodoFragment_to_navigation)
     }
 }
 

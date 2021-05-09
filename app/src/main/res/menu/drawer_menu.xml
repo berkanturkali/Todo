@@ -3,29 +3,38 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
-    <group
-        android:id="@+id/drawerGroup"
-        android:checkableBehavior="single">
-        <item
-            android:id="@+id/home"
-            android:checked="true"
-            android:icon="@drawable/ic_home"
-            android:title="Home"
-            android:menuCategory="secondary"
-            app:showAsAction="ifRoom|withText" />
-        <item
-            android:id="@+id/add_todo"
-            android:checkable="true"
-            android:icon="@drawable/ic_add_todo"
-            android:title="Add Todo"
-            android:menuCategory="secondary"
-            app:showAsAction="ifRoom|withText" />
-        <item
-            android:id="@+id/edit_profile"
-            android:checkable="true"
-            android:icon="@drawable/ic_edit"
-            android:title="Edit Profile"
-            android:menuCategory="secondary"
-            app:showAsAction="withText|ifRoom" />
-    </group>
+
+            <group
+                android:id="@+id/drawerGroup"
+                android:checkableBehavior="single">
+                <item
+                    android:id="@+id/home"
+                    android:checked="true"
+                    android:icon="@drawable/ic_todo_list"
+                    android:menuCategory="secondary"
+                    android:title="Todos"
+                    app:showAsAction="ifRoom|withText" />
+                <item
+                    android:id="@+id/add_todo"
+                    android:checkable="true"
+                    android:icon="@drawable/ic_add_todo"
+                    android:menuCategory="secondary"
+                    android:title="Add Todo"
+                    app:showAsAction="ifRoom|withText" />
+                <item
+                    android:id="@+id/edit_profile"
+                    android:checkable="true"
+                    android:icon="@drawable/ic_edit"
+                    android:menuCategory="secondary"
+                    android:title="Edit Profile"
+                    app:showAsAction="withText|ifRoom" />
+            </group>
+    <item
+        android:id="@+id/logout"
+        android:icon="@drawable/ic_logout"
+        android:menuCategory="secondary"
+        android:title="Logout"
+        app:iconTint="@color/black"
+        app:showAsAction="ifRoom" />
+
 </menu>

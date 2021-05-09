@@ -26,8 +26,8 @@ class MainTodoFragmentViewModel @Inject constructor(
     private val _progress = MutableLiveData<Event<Boolean>>()
     val progress: LiveData<Event<Boolean>> get() = _progress
 
-    private val _isClicked = MutableLiveData<Event<Boolean>>()
-    val isClicked: LiveData<Event<Boolean>> get() = _isClicked
+    private val _isRemoveCompletedItemsClicked = MutableLiveData<Event<Boolean>>()
+    val isRemoveCompletedItemsClicked: LiveData<Event<Boolean>> get() = _isRemoveCompletedItemsClicked
 
     fun getUserInfo(id: String) {
         viewModelScope.launch(Dispatchers.Main) {
@@ -47,7 +47,7 @@ class MainTodoFragmentViewModel @Inject constructor(
         _filterItemClicked.value = Event(isClicked)
     }
 
-    fun setClicked(isClicked: Boolean) {
-        _isClicked.value = Event(isClicked)
+    fun setRemoveCompletedItemsClicked(isClicked: Boolean) {
+        _isRemoveCompletedItemsClicked.value = Event(isClicked)
     }
 }

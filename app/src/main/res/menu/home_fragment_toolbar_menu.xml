@@ -9,7 +9,6 @@
         android:title="filter"
         app:iconTint="@color/black"
         app:showAsAction="ifRoom" />
-
     <item
         android:id="@+id/options"
         android:icon="@drawable/ic_more"
@@ -22,14 +21,6 @@
                 android:id="@+id/remove_completed"
                 android:icon="@drawable/ic_delete_red"
                 android:title="Remove Completed Todos"
-                app:showAsAction="never" />
-
-            <item
-                android:id="@+id/logout"
-                android:icon="@drawable/ic_logout"
-                android:orderInCategory="100"
-                android:title="Logout"
-                app:iconTint="@color/black"
                 app:showAsAction="never" />
         </menu>
     </item>
