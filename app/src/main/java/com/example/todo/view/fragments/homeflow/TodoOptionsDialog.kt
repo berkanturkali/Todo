@@ -12,7 +12,7 @@ import com.example.todo.R
 import com.example.todo.databinding.DialogTodoOptionsLayoutBinding
 import com.example.todo.util.Resource
 import com.example.todo.util.SnackUtil
-import com.example.todo.viewmodel.HomeActivityViewModel
+import com.example.todo.viewmodel.MainTodoFragmentViewModel
 import com.example.todo.viewmodel.fragments.homeflow.HomeFragmentViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,7 +24,7 @@ class TodoOptionsDialog : BottomSheetDialogFragment() {
     private val binding get() = _binding!!
     private val args: TodoOptionsDialogArgs by navArgs()
     private val mViewModel: HomeFragmentViewModel by viewModels()
-    private val activityViewModel: HomeActivityViewModel by activityViewModels()
+    private val activityViewModel: MainTodoFragmentViewModel by activityViewModels()
 
 
     override fun onCreateView(

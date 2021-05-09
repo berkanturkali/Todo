@@ -6,6 +6,7 @@
 
     <fragment
         android:id="@+id/editProfileFragment"
+        android:label="Edit Profile"
         android:name="com.example.todo.view.fragments.homeflow.EditProfileFragment"
          >
         <action

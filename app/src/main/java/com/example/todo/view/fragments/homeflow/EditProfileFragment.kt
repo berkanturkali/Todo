@@ -14,7 +14,7 @@ import com.example.todo.databinding.FragmentProfileEditLayoutBinding
 import com.example.todo.model.User
 import com.example.todo.util.*
 import com.example.todo.view.fragments.BaseFragment
-import com.example.todo.viewmodel.HomeActivityViewModel
+import com.example.todo.viewmodel.MainTodoFragmentViewModel
 import com.example.todo.viewmodel.fragments.homeflow.EditProfileFragmentViewModel
 import com.google.gson.JsonObject
 import com.jakewharton.rxbinding4.widget.textChanges
@@ -36,7 +36,7 @@ class EditProfileFragment :
     BaseFragment<FragmentProfileEditLayoutBinding>(FragmentProfileEditLayoutBinding::inflate) {
 
     private val mViewModel by viewModels<EditProfileFragmentViewModel>()
-    private val activityViewModel by activityViewModels<HomeActivityViewModel>()
+    private val activityViewModel by activityViewModels<MainTodoFragmentViewModel>()
     private var photoFile: File? = null
 
     @Inject

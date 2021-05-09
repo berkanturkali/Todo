@@ -28,15 +28,14 @@ class SplashScreenFragment : Fragment(R.layout.fragment_splash_screen) {
             delay(3000)
             if (!storageManager.getToken().isNullOrBlank()) {
                 navigateToHomeFlow()
-                requireActivity().finish()
-            }else{
+            } else {
                 navigateToAuthFlow()
             }
-
         }
     }
+
     private fun navigateToHomeFlow() {
-        findNavController().navigate(R.id.action_splashScreenFragment_to_homeActivity)
+        findNavController().navigate(R.id.action_splashScreenFragment_to_mainTodoFragment)
     }
 
     private fun navigateToAuthFlow() {

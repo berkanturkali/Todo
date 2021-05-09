@@ -8,18 +8,16 @@ import androidx.fragment.app.viewModels
 import com.example.todo.R
 import com.example.todo.databinding.FragmentAddTodoLayoutBinding
 import com.example.todo.model.Todo
-import com.example.todo.repo.TodoRepo
 import com.example.todo.util.DialogUtil
 import com.example.todo.util.Resource
 import com.example.todo.util.SnackUtil
 import com.example.todo.view.fragments.BaseFragment
-import com.example.todo.viewmodel.HomeActivityViewModel
+import com.example.todo.viewmodel.MainTodoFragmentViewModel
 import com.example.todo.viewmodel.fragments.homeflow.AddTodoFragmentViewModel
 import com.google.android.material.datepicker.MaterialDatePicker
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.*
-import javax.inject.Inject
 
 private const val TAG = "AddTodoFragment"
 
@@ -28,7 +26,7 @@ class AddTodoFragment :
     BaseFragment<FragmentAddTodoLayoutBinding>(FragmentAddTodoLayoutBinding::inflate) {
 
     private val mViewModel: AddTodoFragmentViewModel by viewModels()
-    private val activityViewModel by activityViewModels<HomeActivityViewModel>()
+    private val activityViewModel by activityViewModels<MainTodoFragmentViewModel>()
 
     private lateinit var calendar: Calendar
     private lateinit var dateFormat: SimpleDateFormat

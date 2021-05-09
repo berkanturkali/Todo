@@ -30,6 +30,7 @@ import com.google.android.material.navigation.NavigationView
 private const val TAG = "DrawerExtensions"
 fun NavigationView.setupWithNavController(
     fragmentManager: FragmentManager,
+    parentNavController: NavController,
     navGraphIds: List<Int>,
     containerId: Int,
     currentItemId: Int,
@@ -73,13 +74,13 @@ fun NavigationView.setupWithNavController(
     setNavigationItemSelectedListener { item: MenuItem ->
         // Don't do anything if the state is state has already been saved.
         if (fragmentManager.isStateSaved) {
-
             false
         } else {
             val newItemId = item.itemId
             if (!graphIdToTagMap.containsKey(newItemId)) {
                 // Optional: if the selected item is meant to be a destination separate
                 // to the supplied graphs, navigate to it from the parent navController
+                parentNavController.navigate(newItemId)
                 return@setNavigationItemSelectedListener true
             }
 
@@ -90,7 +91,6 @@ fun NavigationView.setupWithNavController(
             // Optional: When the already selected item is re-selected
             // You can also add a call to hideDrawer() if desired
             if (checkedItem!!.itemId == newItemId) {
-                hideDrawer()
                 return@setNavigationItemSelectedListener popToStart(selectedFragment)
             }
 
@@ -104,6 +104,7 @@ fun NavigationView.setupWithNavController(
             true
         }
     }
+
     // Optional: handle deep links
     setupDeepLinks(
         fragmentManager,
@@ -240,7 +241,6 @@ private fun obtainNavHostFragment(
         .commitNow()
     return navHostFragment
 }
-
 
 private fun getFragmentTag(index: Int) = "navigationView#$index"
 

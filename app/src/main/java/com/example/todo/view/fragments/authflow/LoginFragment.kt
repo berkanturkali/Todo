@@ -8,7 +8,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import com.example.todo.R
 import com.example.todo.databinding.FragmentLoginLayoutBinding
-import com.example.todo.util.GlideUtil
 import com.example.todo.util.Resource
 import com.example.todo.util.SnackUtil
 import com.example.todo.view.fragments.BaseFragment
@@ -135,7 +134,7 @@ class LoginFragment :
     }
 
     private fun navigateToHomeFlow() {
-        findNavController().navigate(R.id.action_loginFragment_to_homeActivity)
+        findNavController().navigate(R.id.action_loginFragment_to_mainTodoFragment)
         requireActivity().finish()
     }
 

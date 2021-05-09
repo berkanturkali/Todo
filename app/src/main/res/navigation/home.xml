@@ -7,6 +7,7 @@
 
     <fragment
         android:id="@+id/homeFragment2"
+        android:label="Todos"
         android:name="com.example.todo.view.fragments.homeflow.HomeFragment"
         tools:layout="@layout/fragment_home_layout">
         <action
@@ -15,6 +16,7 @@
     </fragment>
     <dialog
         android:id="@+id/todoOptionsDialog"
+        android:label=""
         android:name="com.example.todo.view.fragments.homeflow.TodoOptionsDialog"
         tools:layout="@layout/dialog_todo_options_layout">
         <argument
@@ -26,6 +28,7 @@
     </dialog>
     <fragment
         android:id="@+id/editTodoFragment"
+        android:label="Edit Todo"
         android:name="com.example.todo.view.fragments.homeflow.EditTodoFragment"
         tools:layout="@layout/fragment_edit_todo_layout">
         <argument

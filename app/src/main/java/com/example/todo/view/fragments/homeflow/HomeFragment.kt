@@ -24,7 +24,7 @@ import com.example.todo.util.Resource
 import com.example.todo.util.SnackUtil
 import com.example.todo.util.navigateSafe
 import com.example.todo.view.fragments.BaseFragment
-import com.example.todo.viewmodel.HomeActivityViewModel
+import com.example.todo.viewmodel.MainTodoFragmentViewModel
 import com.example.todo.viewmodel.fragments.homeflow.EditTodoFragmentViewModel
 import com.example.todo.viewmodel.fragments.homeflow.HomeFragmentViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -44,7 +44,7 @@ class HomeFragment : BaseFragment<FragmentHomeLayoutBinding>(FragmentHomeLayoutB
     private val editViewModel by viewModels<EditTodoFragmentViewModel>()
     private lateinit var mAdapter: HomeFragmentAdapter
     private lateinit var dividerItemDecoration: DividerItemDecoration
-    private val activityViewModel by activityViewModels<HomeActivityViewModel>()
+    private val activityViewModel by activityViewModels<MainTodoFragmentViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

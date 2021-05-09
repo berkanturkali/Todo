@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeActivityViewModel @Inject constructor(
+class MainTodoFragmentViewModel @Inject constructor(
     private val userRepo: UserRepo
 ) : ViewModel() {
     private val _userInfo = MutableLiveData<Resource<User>>()

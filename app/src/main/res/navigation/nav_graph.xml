@@ -19,8 +19,8 @@
             app:popUpTo="@id/splashScreenFragment"
             app:popUpToInclusive="true" />
         <action
-            android:id="@+id/action_splashScreenFragment_to_homeActivity"
-            app:destination="@id/homeActivity"
+            android:id="@+id/action_splashScreenFragment_to_mainTodoFragment"
+            app:destination="@id/mainTodoFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popUpTo="@id/splashScreenFragment"
@@ -44,8 +44,8 @@
                 app:popUpTo="@id/loginFragment"
                 app:popUpToInclusive="true" />
             <action
-                android:id="@+id/action_loginFragment_to_homeActivity"
-                app:destination="@id/homeActivity"
+                android:id="@+id/action_loginFragment_to_mainTodoFragment"
+                app:destination="@id/mainTodoFragment"
                 app:enterAnim="@anim/slide_in_right"
                 app:exitAnim="@anim/slide_out_left"
                 app:popUpTo="@id/loginFragment"
@@ -75,10 +75,11 @@
             android:label="FragmentCameraOptionsFragment"
             tools:layout="@layout/fragment_camera_options_layout" />
     </navigation>
-        <activity
-            android:id="@+id/homeActivity"
-            android:name="com.example.todo.HomeActivity"
-            android:label="home_activity"
-            tools:layout="@layout/activity_home"/>
+    <fragment
+        android:id="@+id/mainTodoFragment"
+        android:name="com.example.todo.MainTodoFragment"
+        android:label="MainTodoFragment"
+        tools:layout="@layout/fragment_main_todo_layout"/>
+
 
 </navigation>
