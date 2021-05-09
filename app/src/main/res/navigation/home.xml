@@ -16,7 +16,7 @@
     </fragment>
     <dialog
         android:id="@+id/todoOptionsDialog"
-        android:label=""
+        android:label="Options"
         android:name="com.example.todo.view.fragments.homeflow.TodoOptionsDialog"
         tools:layout="@layout/dialog_todo_options_layout">
         <argument

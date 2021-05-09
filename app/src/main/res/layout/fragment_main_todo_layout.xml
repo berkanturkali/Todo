@@ -11,30 +11,45 @@
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:id="@+id/linearLayout4"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/drawer_toolbar"
+            <com.google.android.material.appbar.CollapsingToolbarLayout
+                android:id="@+id/collapsingToolbarLayout"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
-                app:menu="@menu/home_fragment_toolbar_menu"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/drawer_nav_view"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/drawer_toolbar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_collapseMode="pin"
+                    app:menu="@menu/home_fragment_toolbar_menu"
+                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
                 <TextView
-                    android:id="@+id/home_toolbar_title"
+                    android:id="@+id/drawer_toolbar_title"
                     style="@style/TextAppearance.AppCompat.Medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
+                    android:layout_gravity="center"
                     android:textColor="@color/black"
                     android:textStyle="bold"
                     tools:text="Test" />
 
-            </androidx.appcompat.widget.Toolbar>
 
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
 
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/drawer_container"

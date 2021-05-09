@@ -18,8 +18,6 @@ import com.google.android.material.imageview.ShapeableImageView
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-private const val TAG = "HomeActivity"
-
 @AndroidEntryPoint
 class MainTodoFragment : Fragment(R.layout.fragment_main_todo_layout) {
     private var _binding: FragmentMainTodoLayoutBinding? = null
@@ -87,6 +85,7 @@ class MainTodoFragment : Fragment(R.layout.fragment_main_todo_layout) {
             drawerSelectedItemId = navController.graph.id
             navController.addOnDestinationChangedListener { controller, destination, arguments ->
                 title = destination.label.toString()
+                binding.drawerToolbarTitle.text = title
             }
         }
     }
