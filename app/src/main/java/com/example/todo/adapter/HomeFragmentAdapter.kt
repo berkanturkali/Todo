@@ -2,8 +2,6 @@ package com.example.todo.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -51,7 +49,7 @@ class HomeFragmentAdapter(
                 )
             }
             else -> {
-                TodoSeperatorViewHolder(
+                TodoSeparatorViewHolder(
                     TodoItemSeperatorLayoutBinding.inflate(
                         LayoutInflater.from(parent.context),
                         parent,
@@ -70,7 +68,7 @@ class HomeFragmentAdapter(
                     (holder as TodoViewHolder).bind(todoModel.todo)
                 }
                 is TodoModel.SeperatorItem -> {
-                    (holder as TodoSeperatorViewHolder).bind(todoModel.date)
+                    (holder as TodoSeparatorViewHolder).bind(todoModel.date)
                 }
             }
         }
@@ -97,42 +95,38 @@ class HomeFragmentAdapter(
                     item.todo,
                     (it as MaterialCheckBox).isChecked,
 
-                )
+                    )
             }
         }
-
         fun bind(todo: Todo) {
             binding.apply {
-//                titleTv.text = todo.title
                 todoTv.text = todo.todo
                 categoryTv.text = todo.category
                 dateTv.text = DateUtil.getRelativeTimeSpanString(todo.date)
                 todoCheckbox.isChecked = todo.isCompleted
                 binding.todoTv.paint.isStrikeThruText = todo.isCompleted
-//                importantIv.isVisible = todo.isImportant
-//                if (todo.isImportant) {
-//                    titleTv.setTextColor(binding.root.resources.getColor(R.color.color_danger))
-//                }
-
+                if (todo.isImportant) icImportant.setImageResource(R.drawable.ic_important_star) else icImportant.setImageResource(
+                    R.drawable.ic_not_important_star
+                )
             }
         }
     }
 
-    inner class TodoSeperatorViewHolder(private val binding: TodoItemSeperatorLayoutBinding) :
+    inner class TodoSeparatorViewHolder(private val binding: TodoItemSeperatorLayoutBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(seperator: String) {
+        fun bind(separator: String) {
             var day: String? = when {
-                DateUtil.isToday(seperator.toLong()) -> {
+                DateUtil.isToday(separator.toLong()) -> {
                     "Today"
                 }
-                DateUtil.isYesterday(seperator.toLong()) -> {
+                DateUtil.isYesterday(separator.toLong()) -> {
                     "Yesterday"
                 }
-                DateUtil.isTomorrow(seperator.toLong()) -> {
+                DateUtil.isTomorrow(separator.toLong()) -> {
                     "Tomorrow"
                 }
                 else -> {
-                    simpleDateFormat.format(seperator.toLong())
+                    simpleDateFormat.format(separator.toLong())
                 }
             }
             binding.separatorDescription.text = day

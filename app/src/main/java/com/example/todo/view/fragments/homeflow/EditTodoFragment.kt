@@ -75,14 +75,13 @@ class EditTodoFragment :
     }
 
     private fun checkFields(): Boolean {
-        val title = binding.titleEt.text.toString().trim()
         val todoDesc = binding.todoEt.text.toString().trim()
-        return (title.isNotEmpty() && title.length <= 20) && todoDesc.isNotEmpty()
+        return todoDesc.isNotEmpty()
     }
 
     private fun updateTodo() {
         binding.apply {
-            val title = titleEt.text.toString().trim()
+
             val category = categoryEt.text.toString().trim()
             val importance = when (binding.importanceTv.text.toString()) {
                 "Important" -> true
