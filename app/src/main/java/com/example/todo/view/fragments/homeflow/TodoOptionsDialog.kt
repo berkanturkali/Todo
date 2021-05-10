@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -24,7 +23,7 @@ class TodoOptionsDialog : BottomSheetDialogFragment() {
     private val binding get() = _binding!!
     private val args: TodoOptionsDialogArgs by navArgs()
     private val mViewModel: HomeFragmentViewModel by viewModels()
-    private val activityViewModel: MainTodoFragmentViewModel by activityViewModels()
+    private val mainTodoViewModel by viewModels<MainTodoFragmentViewModel>(ownerProducer = { requireParentFragment().requireParentFragment() })
 
 
     override fun onCreateView(
@@ -45,11 +44,6 @@ class TodoOptionsDialog : BottomSheetDialogFragment() {
     private fun initButtons() {
         binding.apply {
             deleteItem.setOnClickListener {
-//                findNavController().previousBackStackEntry?.savedStateHandle?.set(
-//                    "id",
-//                    args.todoId
-//                )
-//                dialog?.dismiss()
                 mViewModel.deleteTodo(args.todoId)
             }
             editItem.setOnClickListener {
@@ -63,7 +57,7 @@ class TodoOptionsDialog : BottomSheetDialogFragment() {
             it.getContentIfNotHandled()?.let { resource ->
                 when (resource) {
                     is Resource.Success -> {
-                        activityViewModel.hideProgress()
+                        mainTodoViewModel.hideProgress()
                         requireView().snack(
                             "Removed Successfully",
                             R.color.color_success
@@ -74,13 +68,13 @@ class TodoOptionsDialog : BottomSheetDialogFragment() {
                         )
                     }
                     is Resource.Error -> {
-                        activityViewModel.hideProgress()
+                        mainTodoViewModel.hideProgress()
                         requireView().snack(
                             resource.message.toString(),
                             R.color.color_danger
                         )
                     }
-                    is Resource.Loading -> activityViewModel.showProgress()
+                    is Resource.Loading -> mainTodoViewModel.showProgress()
                 }
             }
         }

@@ -1,8 +1,10 @@
 package com.example.todo.view.fragments.homeflow
 
+import android.graphics.Paint
 import android.os.Bundle
 import android.view.View
 import android.widget.PopupMenu
+import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -142,7 +144,7 @@ class HomeFragment : BaseFragment<FragmentHomeLayoutBinding>(FragmentHomeLayoutB
         editViewModel.updateStatus.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { message ->
                 requireView().snack(message, R.color.black)
-                mAdapter.refresh()
+//                mAdapter.refresh()
                 mAdapter.stateRestorationPolicy =
                     RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
             }
@@ -209,8 +211,13 @@ class HomeFragment : BaseFragment<FragmentHomeLayoutBinding>(FragmentHomeLayoutB
         findNavController().navigateSafe(action)
     }
 
-    override fun onCheckboxListener(todo: Todo, isChecked: Boolean) {
+    override fun onCheckboxListener(todo: Todo, isChecked: Boolean,textview:TextView) {
         todo.isCompleted = isChecked
+        if(isChecked) {
+            textview.paintFlags = textview.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+        }else{
+            textview.paintFlags = textview.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+        }
         editViewModel.updateTodo(todo.id, todo)
     }
 }

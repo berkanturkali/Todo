@@ -5,13 +5,11 @@ import android.util.Patterns
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.navGraphViewModels
 import com.example.todo.R
 import com.example.todo.databinding.FragmentLoginLayoutBinding
 import com.example.todo.util.Resource
 import com.example.todo.util.snack
 import com.example.todo.view.fragments.BaseFragment
-import com.example.todo.viewmodel.fragments.authflow.AuthFlowViewModel
 import com.example.todo.viewmodel.fragments.authflow.LoginFragmentViewModel
 import com.google.gson.JsonObject
 import com.jakewharton.rxbinding4.widget.textChanges
@@ -23,27 +21,11 @@ import io.reactivex.rxjava3.core.Observable
 class LoginFragment :
     BaseFragment<FragmentLoginLayoutBinding>(FragmentLoginLayoutBinding::inflate) {
     private val mViewModel: LoginFragmentViewModel by viewModels()
-    private val authFlowViewModel: AuthFlowViewModel by navGraphViewModels(R.id.navigation)
-
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        applySavedFields()
         initButtons()
         observeInputFields()
         subscribeObservers()
-    }
-
-    private fun applySavedFields() {
-        authFlowViewModel.apply {
-            loginEmail.let {
-                binding.emailEt.setText(it)
-            }
-            loginPassword?.let {
-                binding.passwordEt.setText(it)
-            }
-
-        }
     }
 
     private fun initButtons() {
@@ -108,13 +90,12 @@ class LoginFragment :
                 when (event.peekContent()) {
                     is Resource.Success -> {
                         requireView().snack(
-                        it.data.toString(),
-                        R.color.color_success
+                            it.data.toString(),
+                            R.color.color_success
                         ) { navigateToHomeFlow() }
                     }
                     is Resource.Error -> {
-
-                            requireView().snack(
+                        requireView().snack(
                             it.message.toString(),
                             R.color.color_danger,
                         )
@@ -126,11 +107,6 @@ class LoginFragment :
 
     private fun navigateToHomeFlow() {
         findNavController().navigate(R.id.action_loginFragment_to_mainTodoFragment)
-    }
 
-
-    private fun navigateToRegisterFragment() {
-        authFlowViewModel.loginEmail = binding.emailEt.text.toString().trim()
-        authFlowViewModel.loginPassword = binding.passwordEt.text.toString().trim()
     }
 }

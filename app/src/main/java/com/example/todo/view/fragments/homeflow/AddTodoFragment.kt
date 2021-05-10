@@ -3,7 +3,6 @@ package com.example.todo.view.fragments.homeflow
 import android.app.AlertDialog
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.example.todo.R
 import com.example.todo.databinding.FragmentAddTodoLayoutBinding
@@ -26,7 +25,7 @@ class AddTodoFragment :
     BaseFragment<FragmentAddTodoLayoutBinding>(FragmentAddTodoLayoutBinding::inflate) {
 
     private val mViewModel: AddTodoFragmentViewModel by viewModels()
-    private val activityViewModel by activityViewModels<MainTodoFragmentViewModel>()
+    private val mainTodoViewModel by viewModels<MainTodoFragmentViewModel>(ownerProducer = { requireParentFragment().requireParentFragment() })
 
     private lateinit var calendar: Calendar
     private lateinit var dateFormat: SimpleDateFormat
@@ -116,9 +115,9 @@ class AddTodoFragment :
         mViewModel.addedStatus.observe(viewLifecycleOwner) {
             it?.getContentIfNotHandled()?.let { resource ->
                 when (resource) {
-                    is Resource.Loading -> activityViewModel.showProgress()
+                    is Resource.Loading -> mainTodoViewModel.showProgress()
                     is Resource.Success -> {
-                        activityViewModel.hideProgress()
+                        mainTodoViewModel.hideProgress()
                         requireView().snack(
                             resource.data.toString(),
                             R.color.color_success
@@ -126,7 +125,7 @@ class AddTodoFragment :
                         clearFields()
                     }
                     is Resource.Error -> {
-                        activityViewModel.hideProgress()
+                        mainTodoViewModel.hideProgress()
                         requireView().snack(
                             resource.message.toString(),
                             R.color.color_danger

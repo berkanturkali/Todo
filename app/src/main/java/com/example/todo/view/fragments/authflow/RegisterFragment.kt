@@ -7,7 +7,6 @@ import android.util.Patterns
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.navGraphViewModels
 import com.bumptech.glide.Glide
 import com.example.todo.R
 import com.example.todo.databinding.FragmentRegisterLayoutBinding
@@ -15,11 +14,8 @@ import com.example.todo.model.User
 import com.example.todo.util.Consts.Companion.FILE_NAME
 import com.example.todo.util.FileUtil
 import com.example.todo.util.Resource
-import com.example.todo.util.loadImage
 import com.example.todo.util.snack
-
 import com.example.todo.view.fragments.BaseFragment
-import com.example.todo.viewmodel.fragments.authflow.AuthFlowViewModel
 import com.example.todo.viewmodel.fragments.authflow.RegisterFragmentViewModel
 import com.jakewharton.rxbinding4.widget.textChanges
 import dagger.hilt.android.AndroidEntryPoint
@@ -34,14 +30,12 @@ import java.io.FileOutputStream
 class RegisterFragment :
     BaseFragment<FragmentRegisterLayoutBinding>(FragmentRegisterLayoutBinding::inflate) {
     private val mViewModel: RegisterFragmentViewModel by viewModels()
-    private val authFlowViewModel: AuthFlowViewModel by navGraphViewModels(R.id.navigation)
     private var photoFile: File? = null
     private var selectedImage: Uri? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initButtons()
-        applySavedFields()
         observeInputFields()
         subscribeObservers()
         val backStackEntry = findNavController().getBackStackEntry(R.id.registerFragment)
@@ -60,26 +54,6 @@ class RegisterFragment :
             }
     }
 
-    private fun applySavedFields() {
-        authFlowViewModel.apply {
-            registerEmail?.let {
-                binding.emailEt.setText(it)
-            }
-            registerFName?.let {
-                binding.firstNameEt.setText(it)
-            }
-            registerLName?.let {
-                binding.lastNameEt.setText(it)
-            }
-            registerPassword?.let {
-                binding.passwordEt.setText(it)
-            }
-            registerProfilePic?.let {
-                binding.profileImage.loadImage(it.toString())
-            }
-        }
-    }
-
     private fun subscribeObservers() {
         mViewModel.registerInfo.observe(viewLifecycleOwner) { resource ->
             when (resource) {
@@ -87,7 +61,7 @@ class RegisterFragment :
                     requireView().snack(
                         resource.data.toString(),
                         R.color.color_success
-                    ) { clearFieldsThenNavigate() }
+                    ) { navigateToMainFragment() }
 
                 }
                 is Resource.Error -> {
@@ -98,16 +72,6 @@ class RegisterFragment :
                 }
             }
         }
-    }
-
-    private fun clearFieldsThenNavigate() {
-        authFlowViewModel.apply {
-            binding.firstNameEt.text = null
-            binding.lastNameEt.text = null
-            binding.emailEt.text = null
-            binding.passwordEt.text = null
-        }
-        navigateToLoginFragment()
     }
 
     private fun registerUser() {
@@ -209,16 +173,7 @@ class RegisterFragment :
         return File.createTempFile(fileName, ".jpg", storageDirectory)
     }
 
-    private fun navigateToLoginFragment() {
-        binding.apply {
-            authFlowViewModel.registerEmail = emailEt.text.toString().trim()
-            authFlowViewModel.registerPassword = passwordEt.text.toString().trim()
-            authFlowViewModel.registerFName = firstNameEt.text.toString().trim()
-            authFlowViewModel.registerLName = lastNameEt.text.toString().trim()
-            selectedImage?.let {
-                authFlowViewModel.registerProfilePic = it
-            }
-
-        }
+    private fun navigateToMainFragment() {
+        findNavController().navigate(R.id.action_registerFragment_to_mainFragment)
     }
 }

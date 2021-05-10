@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.os.Environment
 import android.util.Patterns
 import android.view.View
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
@@ -34,7 +33,7 @@ class EditProfileFragment :
     BaseFragment<FragmentProfileEditLayoutBinding>(FragmentProfileEditLayoutBinding::inflate) {
 
     private val mViewModel by viewModels<EditProfileFragmentViewModel>()
-    private val activityViewModel by activityViewModels<MainTodoFragmentViewModel>()
+    private val mainTodoViewModel by viewModels<MainTodoFragmentViewModel>(ownerProducer = { requireParentFragment().requireParentFragment() })
     private var photoFile: File? = null
 
     @Inject
@@ -62,7 +61,7 @@ class EditProfileFragment :
     }
 
     private fun getUserInfo() {
-        activityViewModel.userInfo
+        mainTodoViewModel.userInfo
             .observe(viewLifecycleOwner) { resource ->
                 when (resource) {
                     is Resource.Success -> {
@@ -140,7 +139,7 @@ class EditProfileFragment :
                 requireView().snack(
                     status,
                     color,
-                ) { activityViewModel.getMe() }
+                ) { mainTodoViewModel.getMe() }
             }
         }
     }

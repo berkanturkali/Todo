@@ -2,6 +2,7 @@ package com.example.todo.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -94,7 +95,7 @@ class HomeFragmentAdapter(
                 listener.onCheckboxListener(
                     item.todo,
                     (it as MaterialCheckBox).isChecked,
-
+                    binding.todoTv
                     )
             }
         }
@@ -143,6 +144,6 @@ class HomeFragmentAdapter(
 
     interface OnTodoClickListener {
         fun onTodoClick(todo: Todo)
-        fun onCheckboxListener(todo: Todo, isChecked: Boolean)
+        fun onCheckboxListener(todo: Todo, isChecked: Boolean,textview:TextView)
     }
 }
