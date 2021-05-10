@@ -8,10 +8,9 @@ import androidx.fragment.app.viewModels
 import com.example.todo.R
 import com.example.todo.databinding.FragmentAddTodoLayoutBinding
 import com.example.todo.model.Todo
-import com.example.todo.util.DialogUtil
 import com.example.todo.util.Resource
+import com.example.todo.util.showDialog
 import com.example.todo.util.snack
-
 import com.example.todo.view.fragments.BaseFragment
 import com.example.todo.viewmodel.MainTodoFragmentViewModel
 import com.example.todo.viewmodel.fragments.homeflow.AddTodoFragmentViewModel
@@ -74,12 +73,8 @@ class AddTodoFragment :
             }
         }
         binding.importancePickIb.setOnClickListener {
-            DialogUtil.showDialog(
-                requireContext(),
-                "Select Importance",
-                resources.getStringArray(R.array.importance_array),
-                binding.importanceTv
-            )
+            resources.getStringArray(R.array.importance_array)
+                .showDialog(requireContext(), "SelectImportance", binding.importanceTv)
         }
         binding.addTodoBtn.setOnClickListener {
             if (isValidFields()) {
@@ -91,14 +86,12 @@ class AddTodoFragment :
     }
 
     private fun isValidFields(): Boolean {
-        val todoTitle = binding.titleEt.text.toString().capitalize().trim()
         val todo = binding.todoEt.text.toString().trim()
-        val isValidTodoTitle = todoTitle.isNotEmpty() && todoTitle.length < 20
-        return (isValidTodoTitle && todo.isNotEmpty())
+        return todo.isNotEmpty()
     }
 
     private fun addTodo() {
-        val todoTitle = binding.titleEt.text.toString().capitalize().trim()
+
         val category = binding.categoryEt.text.toString().trim()
         val todoDesc = binding.todoEt.text.toString().trim()
         var date = dateFormat.parse(binding.dateEt.text.toString())
@@ -108,7 +101,7 @@ class AddTodoFragment :
             "Not Important" -> false
             else -> null
         }
-        val todo = Todo(todoTitle, category, dateInMillis, todoDesc, isImportant = importance!!)
+        val todo = Todo(category, dateInMillis, todoDesc, isImportant = importance!!)
         mViewModel.addTodo(todo)
     }
 
@@ -145,7 +138,6 @@ class AddTodoFragment :
     }
 
     private fun clearFields() {
-        binding.titleEt.text = null
         binding.todoEt.text = null
         binding.categoryEt.setText(resources.getStringArray(R.array.category_array)[0])
         binding.importanceTv.setText(resources.getStringArray(R.array.importance_array)[1])

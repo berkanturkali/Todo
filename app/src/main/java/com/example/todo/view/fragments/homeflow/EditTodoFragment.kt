@@ -7,8 +7,9 @@ import androidx.navigation.fragment.navArgs
 import com.example.todo.R
 import com.example.todo.databinding.FragmentEditTodoLayoutBinding
 import com.example.todo.model.Todo
-import com.example.todo.util.DialogUtil
+
 import com.example.todo.util.Resource
+import com.example.todo.util.showDialog
 import com.example.todo.util.snack
 import com.example.todo.view.fragments.BaseFragment
 import com.example.todo.viewmodel.fragments.homeflow.EditTodoFragmentViewModel
@@ -39,12 +40,7 @@ class EditTodoFragment :
         dateFormat = SimpleDateFormat("dd/MM/yyyy")
         val categories = resources.getStringArray(R.array.category_array)
         binding.categoryPickerIb.setOnClickListener {
-            DialogUtil.showDialog(
-                requireContext(),
-                "Select a Category",
-                categories,
-                binding.categoryEt
-            )
+            categories.showDialog(requireContext(), "Select a Category", binding.categoryEt)
         }
         binding.datePickerIb.setOnClickListener {
             val datePicker = MaterialDatePicker.Builder.datePicker()
@@ -69,20 +65,12 @@ class EditTodoFragment :
             }
         }
         binding.importancePickIb.setOnClickListener {
-            DialogUtil.showDialog(
-                requireContext(),
-                "Select Importance",
-                resources.getStringArray(R.array.importance_array),
-                binding.importanceTv
-            )
+            resources.getStringArray(R.array.importance_array)
+                .showDialog(requireContext(), "Select Importance", binding.importanceTv)
         }
         binding.completedPickIb.setOnClickListener {
-            DialogUtil.showDialog(
-                requireContext(),
-                "Select Complete Status",
-                resources.getStringArray(R.array.completed_array),
-                binding.completedTv
-            )
+            resources.getStringArray(R.array.completed_array)
+                .showDialog(requireContext(), "Select Complete Status", binding.completedTv)
         }
     }
 
@@ -108,16 +96,19 @@ class EditTodoFragment :
             }
             val todoText = binding.todoEt.text.toString().trim()
             val date = dateFormat.parse(binding.dateEt.text.toString())
-            val dateInMillis = date.time
-            val todo = Todo(
-                title,
-                category,
-                dateInMillis,
-                todoText,
-                isCompleted = completed!!,
-                isImportant = importance!!
-            )
-            mViewModel.updateTodo(args.todoId, todo)
+            val dateInMillis = date?.time
+            val todo = dateInMillis?.let {
+                Todo(
+                    category,
+                    it,
+                    todoText,
+                    isCompleted = completed!!,
+                    isImportant = importance!!
+                )
+            }
+            if (todo != null) {
+                mViewModel.updateTodo(args.todoId, todo)
+            }
         }
     }
 
@@ -138,7 +129,6 @@ class EditTodoFragment :
 
     private fun setFields(todo: Todo) {
         binding.apply {
-            titleEt.setText(todo.title)
             categoryEt.setText(todo.category)
             dateEt.setText(dateFormat.format(todo.date))
             todoEt.setText(todo.todo)

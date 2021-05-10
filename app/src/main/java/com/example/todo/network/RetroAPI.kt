@@ -19,10 +19,8 @@ interface RetroAPI {
     @POST("user/login")
     suspend fun loginUser(@Body credentials: JsonObject): Response<TokenResponse>
 
-    @GET("user/{id}")
-    suspend fun userInfo(
-        @Path("id") id: String
-    ): Response<User>
+    @GET("user/me")
+    suspend fun getMe(): Response<User>
 
     @Multipart
     @PUT("user/{id}")

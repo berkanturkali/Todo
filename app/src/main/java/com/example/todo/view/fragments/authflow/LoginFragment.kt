@@ -48,9 +48,6 @@ class LoginFragment :
 
     private fun initButtons() {
         binding.apply {
-            registerTv.setOnClickListener {
-                navigateToRegisterFragment()
-            }
             loginBtn.setOnClickListener {
                 loginUser()
             }
@@ -109,16 +106,14 @@ class LoginFragment :
         mViewModel.loginInfo.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let {
                 when (event.peekContent()) {
-                    is Resource.Loading -> showProgress()
                     is Resource.Success -> {
-                        hideProgress()
                         requireView().snack(
                         it.data.toString(),
                         R.color.color_success
                         ) { navigateToHomeFlow() }
                     }
                     is Resource.Error -> {
-                        hideProgress()
+
                             requireView().snack(
                             it.message.toString(),
                             R.color.color_danger,
@@ -133,18 +128,9 @@ class LoginFragment :
         findNavController().navigate(R.id.action_loginFragment_to_mainTodoFragment)
     }
 
-    private fun showProgress() {
-        binding.progressBar.visibility = View.VISIBLE
-    }
-
-    private fun hideProgress() {
-        binding.progressBar.visibility = View.GONE
-    }
-
 
     private fun navigateToRegisterFragment() {
         authFlowViewModel.loginEmail = binding.emailEt.text.toString().trim()
         authFlowViewModel.loginPassword = binding.passwordEt.text.toString().trim()
-        findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
     }
 }

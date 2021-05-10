@@ -3,51 +3,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    >
+    android:layout_height="wrap_content">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/titleTv"
-            style="@style/titleStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="0dp"
-            android:textSize="25sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Title" />
-
-        <ImageView
-            android:id="@+id/importantIv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_important"
-            app:layout_constraintBottom_toBottomOf="@+id/titleTv"
-            app:layout_constraintStart_toEndOf="@+id/titleTv"
-            app:layout_constraintTop_toTopOf="parent" />
-
-
         <LinearLayout
             android:id="@+id/linearLayout3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
             android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/titleTv">
+            app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.checkbox.MaterialCheckBox
                 android:id="@+id/todoCheckbox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:minHeight="0dp"
+                android:buttonTint="@color/checkbox_bg"
                 android:minWidth="0dp"
-                android:buttonTint="@color/black" />
+                android:minHeight="0dp" />
 
             <TextView
                 android:id="@+id/todoTv"
@@ -69,7 +46,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginRight="8dp"
             android:layout_marginBottom="8dp"
-            android:drawableLeft="@drawable/ic_date"
+            android:drawableLeft="@drawable/clock_icon"
             android:drawablePadding="4dp"
             android:gravity="center_vertical"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -84,7 +61,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="8dp"
-            android:drawableLeft="@drawable/ic_category"
+            android:drawableLeft="@drawable/category_icon"
             android:drawablePadding="4dp"
             android:gravity="center_vertical"
             app:layout_constraintBottom_toBottomOf="parent"

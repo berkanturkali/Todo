@@ -18,8 +18,8 @@ class UserRepo @Inject constructor(
 
     suspend fun loginUser(credentials: JsonObject) = retroApi.loginUser(credentials)
 
-    suspend fun getUserInfo(id: String): Resource<User> =
-        apiCall({ retroApi.userInfo(id) })
+    suspend fun getMe(): Resource<User> =
+        apiCall({ retroApi.getMe() })
 
     suspend fun updateUser(credentials: JsonObject, image: MultipartBody.Part?, id: String) =
         apiCall({ retroApi.updateUser(id, credentials, image) })

@@ -83,11 +83,7 @@ class RegisterFragment :
     private fun subscribeObservers() {
         mViewModel.registerInfo.observe(viewLifecycleOwner) { resource ->
             when (resource) {
-                is Resource.Loading -> showProgress()
-
                 is Resource.Success -> {
-
-                    hideProgress()
                     requireView().snack(
                         resource.data.toString(),
                         R.color.color_success
@@ -95,7 +91,6 @@ class RegisterFragment :
 
                 }
                 is Resource.Error -> {
-                    hideProgress()
                     requireView().snack(
                         resource.message.toString(),
                         R.color.color_danger,
@@ -113,14 +108,6 @@ class RegisterFragment :
             binding.passwordEt.text = null
         }
         navigateToLoginFragment()
-    }
-
-    private fun showProgress() {
-        binding.progressBar.visibility = View.VISIBLE
-    }
-
-    private fun hideProgress() {
-        binding.progressBar.visibility = View.GONE
     }
 
     private fun registerUser() {
@@ -206,9 +193,6 @@ class RegisterFragment :
 
     private fun initButtons() {
         binding.apply {
-            loginTv.setOnClickListener {
-                navigateToLoginFragment()
-            }
             selectImage.setOnClickListener {
                 val action =
                     RegisterFragmentDirections.actionRegisterFragmentToFragmentCameraOptionsFragment()
@@ -236,6 +220,5 @@ class RegisterFragment :
             }
 
         }
-        findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
     }
 }

@@ -103,16 +103,16 @@ class HomeFragmentAdapter(
 
         fun bind(todo: Todo) {
             binding.apply {
-                titleTv.text = todo.title
+//                titleTv.text = todo.title
                 todoTv.text = todo.todo
                 categoryTv.text = todo.category
                 dateTv.text = DateUtil.getRelativeTimeSpanString(todo.date)
                 todoCheckbox.isChecked = todo.isCompleted
                 binding.todoTv.paint.isStrikeThruText = todo.isCompleted
-                importantIv.isVisible = todo.isImportant
-                if (todo.isImportant) {
-                    titleTv.setTextColor(binding.root.resources.getColor(R.color.color_danger))
-                }
+//                importantIv.isVisible = todo.isImportant
+//                if (todo.isImportant) {
+//                    titleTv.setTextColor(binding.root.resources.getColor(R.color.color_danger))
+//                }
 
             }
         }

@@ -33,6 +33,8 @@
                 <com.google.android.material.chip.Chip
                     android:id="@+id/categoryAll"
                     style="@style/CustomChipStyle"
+                    app:chipIcon="@drawable/ic_category"
+                    app:chipIconEnabled="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checked="true"
@@ -41,6 +43,8 @@
                 <com.google.android.material.chip.Chip
                     android:id="@+id/categoryWork"
                     style="@style/CustomChipStyle"
+                    app:chipIcon="@drawable/ic_category_work"
+                    app:chipIconEnabled="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Work" />
@@ -48,6 +52,8 @@
                 <com.google.android.material.chip.Chip
                     android:id="@+id/categoryMusic"
                     style="@style/CustomChipStyle"
+                    app:chipIcon="@drawable/ic_category_music"
+                    app:chipIconEnabled="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Music" />
@@ -55,6 +61,8 @@
                 <com.google.android.material.chip.Chip
                     android:id="@+id/categoryTravel"
                     style="@style/CustomChipStyle"
+                    app:chipIcon="@drawable/ic_category_travel"
+                    app:chipIconEnabled="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Travel" />
@@ -63,6 +71,8 @@
                 <com.google.android.material.chip.Chip
                     android:id="@+id/categoryStudy"
                     style="@style/CustomChipStyle"
+                    app:chipIconEnabled="true"
+                    app:chipIcon="@drawable/ic_category_study"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Study" />
@@ -70,6 +80,8 @@
                 <com.google.android.material.chip.Chip
                     android:id="@+id/categoryHome"
                     style="@style/CustomChipStyle"
+                    app:chipIcon="@drawable/ic_category_home"
+                    app:chipIconEnabled="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Home" />
@@ -77,6 +89,8 @@
                 <com.google.android.material.chip.Chip
                     android:id="@+id/categoryShopping"
                     style="@style/CustomChipStyle"
+                    app:chipIcon="@drawable/ic_category_shopping"
+                    app:chipIconEnabled="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Shopping" />

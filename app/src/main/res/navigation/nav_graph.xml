@@ -28,21 +28,12 @@
     </fragment>
     <navigation
         android:id="@+id/navigation"
-        app:startDestination="@id/loginFragment">
+        app:startDestination="@id/mainFragment">
         <fragment
             android:id="@+id/loginFragment"
             android:name="com.example.todo.view.fragments.authflow.LoginFragment"
             android:label="fragment_login_layout"
             tools:layout="@layout/fragment_login_layout">
-            <action
-                android:id="@+id/action_loginFragment_to_registerFragment"
-                app:destination="@id/registerFragment"
-                app:enterAnim="@anim/slide_in_right"
-                app:exitAnim="@anim/slide_out_left"
-                app:popEnterAnim="@anim/slide_in_left"
-                app:popExitAnim="@anim/slide_out_right"
-                app:popUpTo="@id/loginFragment"
-                app:popUpToInclusive="true" />
             <action
                 android:id="@+id/action_loginFragment_to_mainTodoFragment"
                 app:destination="@id/mainTodoFragment"
@@ -57,15 +48,6 @@
             android:label="fragment_register_layout"
             tools:layout="@layout/fragment_register_layout">
             <action
-                android:id="@+id/action_registerFragment_to_loginFragment"
-                app:destination="@id/loginFragment"
-                app:enterAnim="@anim/slide_in_left"
-                app:exitAnim="@anim/slide_out_right"
-                app:popEnterAnim="@anim/slide_in_left"
-                app:popExitAnim="@anim/slide_out_right"
-                app:popUpTo="@id/registerFragment"
-                app:popUpToInclusive="true" />
-            <action
                 android:id="@+id/action_registerFragment_to_fragmentCameraOptionsFragment"
                 app:destination="@id/fragmentCameraOptionsFragment" />
         </fragment>
@@ -74,6 +56,26 @@
             android:name="com.example.todo.view.fragments.authflow.FragmentCameraOptionsFragment"
             android:label="FragmentCameraOptionsFragment"
             tools:layout="@layout/fragment_camera_options_layout" />
+        <fragment
+            android:id="@+id/mainFragment"
+            android:name="com.example.todo.view.fragments.MainFragment"
+            android:label="MainFragment"
+            tools:layout="@layout/fragment_main_layout">
+            <action
+                android:id="@+id/action_mainFragment_to_registerFragment"
+                app:destination="@id/registerFragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+            <action
+                android:id="@+id/action_mainFragment_to_loginFragment"
+                app:destination="@id/loginFragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+        </fragment>
     </navigation>
     <fragment
         android:id="@+id/mainTodoFragment"
@@ -88,9 +90,8 @@
             app:launchSingleTop="true"
             app:popEnterAnim="@anim/slide_in_right"
             app:popExitAnim="@anim/slide_out_left"
-            app:popUpToInclusive="true"
             app:popUpTo="@id/mainTodoFragment"
-            />
+            app:popUpToInclusive="true" />
     </fragment>
 
 

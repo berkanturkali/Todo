@@ -29,9 +29,9 @@ class MainTodoFragmentViewModel @Inject constructor(
     private val _isRemoveCompletedItemsClicked = MutableLiveData<Event<Boolean>>()
     val isRemoveCompletedItemsClicked: LiveData<Event<Boolean>> get() = _isRemoveCompletedItemsClicked
 
-    fun getUserInfo(id: String) {
+    fun getMe() {
         viewModelScope.launch(Dispatchers.Main) {
-            _userInfo.value = userRepo.getUserInfo(id)
+            _userInfo.value = userRepo.getMe()
         }
     }
 

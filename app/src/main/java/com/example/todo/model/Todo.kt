@@ -7,7 +7,6 @@ import com.google.gson.annotations.SerializedName
 
 @Entity
 data class Todo(
-    val title: String,
     val category: String,
     val date: Long,
     val todo: String,

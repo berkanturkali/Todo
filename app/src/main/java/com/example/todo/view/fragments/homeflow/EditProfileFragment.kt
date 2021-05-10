@@ -140,7 +140,7 @@ class EditProfileFragment :
                 requireView().snack(
                     status,
                     color,
-                ) { activityViewModel.getUserInfo(storageManager.getUserId()!!) }
+                ) { activityViewModel.getMe() }
             }
         }
     }
@@ -178,7 +178,6 @@ class EditProfileFragment :
 
     private fun setUserInfo(user: User) {
         binding.profileImage.loadImage(user.profilePic)
-
         binding.apply {
             firstNameEt.setText(user.firstName)
             lastNameEt.setText(user.lastName)

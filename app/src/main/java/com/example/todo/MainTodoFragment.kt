@@ -46,7 +46,7 @@ class MainTodoFragment : Fragment(R.layout.fragment_main_todo_layout), DrawerIte
             drawerSelectedItemId = it.getInt(drawerSelectedItemIdKey, drawerSelectedItemId)
         }
         headerView = binding.navView.getHeaderView(0)
-        getUserInfo(storageManager.getUserId()!!)
+        getMe()
         setupDrawer()
         initMenu()
         subscribeObservers()
@@ -114,8 +114,8 @@ class MainTodoFragment : Fragment(R.layout.fragment_main_todo_layout), DrawerIte
         }
     }
 
-    private fun getUserInfo(id: String) {
-        mViewModel.getUserInfo(id)
+    private fun getMe() {
+        mViewModel.getMe()
     }
 
     private fun subscribeObservers() {
@@ -139,7 +139,7 @@ class MainTodoFragment : Fragment(R.layout.fragment_main_todo_layout), DrawerIte
         }
         activityViewModel.isConnected.observe(viewLifecycleOwner) { connectionEvent ->
             connectionEvent.getContentIfNotHandled()?.let { isConnected ->
-                if (isConnected) getUserInfo(storageManager.getUserId()!!)
+                if (isConnected) getMe()
             }
         }
     }
