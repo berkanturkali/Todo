@@ -1,9 +1,11 @@
 package com.example.todo
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.addCallback
 import androidx.core.view.isVisible
@@ -14,10 +16,19 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.example.todo.databinding.FragmentMainTodoLayoutBinding
+
 import com.example.todo.model.User
 import com.example.todo.util.*
 import com.example.todo.viewmodel.MainActivityViewModel
 import com.example.todo.viewmodel.MainTodoFragmentViewModel
+import com.github.mikephil.charting.animation.Easing
+import com.github.mikephil.charting.charts.PieChart
+import com.github.mikephil.charting.components.Legend
+import com.github.mikephil.charting.data.PieData
+import com.github.mikephil.charting.data.PieDataSet
+import com.github.mikephil.charting.data.PieEntry
+import com.github.mikephil.charting.formatter.PercentFormatter
+import com.github.mikephil.charting.utils.ColorTemplate
 import com.google.android.material.imageview.ShapeableImageView
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -33,6 +44,7 @@ class MainTodoFragment : Fragment(R.layout.fragment_main_todo_layout), DrawerIte
     private val drawerSelectedItemIdKey = "DRAWER_SELECTED_ITEM_ID_KEY"
     private var drawerSelectedItemId = R.id.home
     private lateinit var title: String
+    private lateinit var todoChart: PieChart
 
     @Inject
     lateinit var storageManager: StorageManager
@@ -46,6 +58,8 @@ class MainTodoFragment : Fragment(R.layout.fragment_main_todo_layout), DrawerIte
             drawerSelectedItemId = it.getInt(drawerSelectedItemIdKey, drawerSelectedItemId)
         }
         headerView = binding.navView.getHeaderView(0)
+        setupChart()
+        loadPieChartData()
         getMe()
         setupDrawer()
         initMenu()
@@ -81,6 +95,58 @@ class MainTodoFragment : Fragment(R.layout.fragment_main_todo_layout), DrawerIte
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.main_todo_fragment_toolbar_menu, menu)
+    }
+
+    private fun setupChart() {
+        todoChart = headerView.findViewById(R.id.todo_pie_chart)
+        todoChart.apply {
+            isDrawHoleEnabled = true
+            setUsePercentValues(true)
+            setEntryLabelTextSize(8f)
+            setEntryLabelColor(Color.BLACK)
+            centerText = "100\nTodos"
+            setCenterTextSize(11f)
+            description.isEnabled = false
+
+            val legend = legend
+            legend.verticalAlignment = Legend.LegendVerticalAlignment.CENTER
+            legend.horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
+            legend.orientation = Legend.LegendOrientation.VERTICAL
+            legend.textSize = 10f
+            legend.isEnabled = true
+            legend.form = Legend.LegendForm.CIRCLE
+            legend.yEntrySpace = 10f
+        }
+    }
+
+    private fun loadPieChartData() {
+        val entries = arrayListOf<PieEntry>()
+        entries.add(PieEntry(0.2f, "Important"))
+        entries.add(PieEntry(0.15f, "Completed"))
+        entries.add(PieEntry(0.10f, "Active"))
+
+        val colors = ArrayList<Int>()
+        for (color in ColorTemplate.MATERIAL_COLORS) {
+            colors.add(color)
+        }
+        for (color in ColorTemplate.VORDIPLOM_COLORS) {
+            colors.add(color)
+        }
+        val dataSet = PieDataSet(entries, "")
+        dataSet.colors = colors
+        val data = PieData(dataSet)
+        todoChart.setDrawEntryLabels(false)
+        data.setDrawValues(true)
+        data.setValueFormatter(PercentFormatter(todoChart))
+        data.setValueTextSize(12f)
+        data.setValueTextColor(Color.BLACK)
+        todoChart.data = data
+        val rlParams: LinearLayout.LayoutParams =
+            todoChart.layoutParams as LinearLayout.LayoutParams
+        rlParams.setMargins(0, -100, 0, -100)
+        todoChart.layoutParams = rlParams
+        todoChart.invalidate()
+        todoChart.animateY(1400, Easing.EaseInQuad)
     }
 
     private fun setupDrawer() {

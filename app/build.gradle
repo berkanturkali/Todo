@@ -110,4 +110,6 @@ dependencies {
 
     implementation 'com.jakewharton.rxbinding4:rxbinding-material:4.0.0'
     implementation 'com.jakewharton.rxbinding4:rxbinding:4.0.0'
+    //chart
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 }
