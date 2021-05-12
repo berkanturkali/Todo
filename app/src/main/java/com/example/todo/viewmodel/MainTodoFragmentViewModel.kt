@@ -4,7 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.todo.model.StatsResult
 import com.example.todo.model.User
+import com.example.todo.repo.TodoRepo
 import com.example.todo.repo.UserRepo
 import com.example.todo.util.Event
 import com.example.todo.util.Resource
@@ -15,7 +17,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainTodoFragmentViewModel @Inject constructor(
-    private val userRepo: UserRepo
+    private val userRepo: UserRepo,
+    private val todoRepo: TodoRepo
 ) : ViewModel() {
     private val _userInfo = MutableLiveData<Resource<User>>()
     val userInfo: LiveData<Resource<User>> get() = _userInfo
@@ -29,9 +32,18 @@ class MainTodoFragmentViewModel @Inject constructor(
     private val _isRemoveCompletedItemsClicked = MutableLiveData<Event<Boolean>>()
     val isRemoveCompletedItemsClicked: LiveData<Event<Boolean>> get() = _isRemoveCompletedItemsClicked
 
+    private val _stats = MutableLiveData<Resource<StatsResult>>()
+    val stats: LiveData<Resource<StatsResult>> = _stats
+
     fun getMe() {
         viewModelScope.launch(Dispatchers.Main) {
             _userInfo.value = userRepo.getMe()
+        }
+    }
+
+    fun getStats() {
+        viewModelScope.launch(Dispatchers.Main) {
+            _stats.value = todoRepo.getStats()
         }
     }
 

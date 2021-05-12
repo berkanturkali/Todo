@@ -16,6 +16,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.example.todo.databinding.FragmentMainTodoLayoutBinding
+import com.example.todo.model.StatsResult
 
 import com.example.todo.model.User
 import com.example.todo.util.*
@@ -48,7 +49,6 @@ class MainTodoFragment : Fragment(R.layout.fragment_main_todo_layout), DrawerIte
 
     @Inject
     lateinit var storageManager: StorageManager
-    private var isLogout = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -58,9 +58,6 @@ class MainTodoFragment : Fragment(R.layout.fragment_main_todo_layout), DrawerIte
             drawerSelectedItemId = it.getInt(drawerSelectedItemIdKey, drawerSelectedItemId)
         }
         headerView = binding.navView.getHeaderView(0)
-        setupChart()
-        loadPieChartData()
-        getMe()
         setupDrawer()
         initMenu()
         subscribeObservers()
@@ -97,14 +94,14 @@ class MainTodoFragment : Fragment(R.layout.fragment_main_todo_layout), DrawerIte
         inflater.inflate(R.menu.main_todo_fragment_toolbar_menu, menu)
     }
 
-    private fun setupChart() {
+    private fun setupChart(statsResult: StatsResult) {
         todoChart = headerView.findViewById(R.id.todo_pie_chart)
         todoChart.apply {
             isDrawHoleEnabled = true
             setUsePercentValues(true)
             setEntryLabelTextSize(8f)
             setEntryLabelColor(Color.BLACK)
-            centerText = "100\nTodos"
+            centerText = "${statsResult.totalCount}\nTodos"
             setCenterTextSize(11f)
             description.isEnabled = false
 
@@ -112,18 +109,27 @@ class MainTodoFragment : Fragment(R.layout.fragment_main_todo_layout), DrawerIte
             legend.verticalAlignment = Legend.LegendVerticalAlignment.CENTER
             legend.horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
             legend.orientation = Legend.LegendOrientation.VERTICAL
-            legend.textSize = 10f
+            legend.textSize = 12f
             legend.isEnabled = true
             legend.form = Legend.LegendForm.CIRCLE
             legend.yEntrySpace = 10f
         }
     }
 
-    private fun loadPieChartData() {
+    private fun loadPieChartData(statsResult: StatsResult) {
         val entries = arrayListOf<PieEntry>()
-        entries.add(PieEntry(0.2f, "Important"))
-        entries.add(PieEntry(0.15f, "Completed"))
-        entries.add(PieEntry(0.10f, "Active"))
+        entries.add(
+            PieEntry(
+                100f * statsResult.completedTasksPercent / statsResult.totalCount,
+                "Completed"
+            )
+        )
+        entries.add(
+            PieEntry(
+                100f * statsResult.activeTasksPercent / statsResult.totalCount,
+                "Active"
+            )
+        )
 
         val colors = ArrayList<Int>()
         for (color in ColorTemplate.MATERIAL_COLORS) {
@@ -180,10 +186,6 @@ class MainTodoFragment : Fragment(R.layout.fragment_main_todo_layout), DrawerIte
         }
     }
 
-    private fun getMe() {
-        mViewModel.getMe()
-    }
-
     private fun subscribeObservers() {
         mViewModel.userInfo.observe(viewLifecycleOwner) { resource ->
             when (resource) {
@@ -205,7 +207,21 @@ class MainTodoFragment : Fragment(R.layout.fragment_main_todo_layout), DrawerIte
         }
         activityViewModel.isConnected.observe(viewLifecycleOwner) { connectionEvent ->
             connectionEvent.getContentIfNotHandled()?.let { isConnected ->
-                if (isConnected) getMe()
+                if (isConnected) {
+                    mViewModel.getMe()
+                    mViewModel.getStats()
+                }
+            }
+        }
+        mViewModel.stats.observe(viewLifecycleOwner) { resource ->
+            when (resource) {
+                is Resource.Success -> {
+                    setupChart(resource.data!!)
+                    loadPieChartData(resource.data)
+                }
+                is Resource.Error -> {
+                    binding.root.snack(resource.message!!, R.color.color_danger)
+                }
             }
         }
     }

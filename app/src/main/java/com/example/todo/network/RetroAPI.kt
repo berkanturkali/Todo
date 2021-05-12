@@ -1,5 +1,6 @@
 package com.example.todo.network
 
+import com.example.todo.model.StatsResult
 import com.example.todo.model.Todo
 import com.example.todo.model.TokenResponse
 import com.example.todo.model.User
@@ -61,4 +62,7 @@ interface RetroAPI {
 
     @DELETE("todo/delete-completed-todos")
     suspend fun deleteCompletedTodos(): Response<Unit>
+
+    @GET("todo/stats")
+    suspend fun getStats():Response<StatsResult>
 }

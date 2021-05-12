@@ -58,6 +58,7 @@ class HomeFragment : BaseFragment<FragmentHomeLayoutBinding>(FragmentHomeLayoutB
             .observe(viewLifecycleOwner) {
                 if (it) {
                     mAdapter.refresh()
+                    mainTodoViewModel.getStats()
                 }
             }
         binding.retryButton.setOnClickListener {
@@ -144,9 +145,11 @@ class HomeFragment : BaseFragment<FragmentHomeLayoutBinding>(FragmentHomeLayoutB
         editViewModel.updateStatus.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { message ->
                 requireView().snack(message, R.color.black)
-//                mAdapter.refresh()
                 mAdapter.stateRestorationPolicy =
                     RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+                if (message == "Updated successfully") {
+                    mainTodoViewModel.getStats()
+                }
             }
         }
         mainTodoViewModel.isRemoveCompletedItemsClicked.observe(viewLifecycleOwner) { clickEvent ->
@@ -165,9 +168,9 @@ class HomeFragment : BaseFragment<FragmentHomeLayoutBinding>(FragmentHomeLayoutB
                             R.color.color_success
                         )
                         mAdapter.refresh()
+                        mainTodoViewModel.getStats()
                     }
                     is Resource.Error -> {
-
                         requireView().snack(
                             resource.message.toString(),
                             R.color.color_danger
@@ -211,11 +214,11 @@ class HomeFragment : BaseFragment<FragmentHomeLayoutBinding>(FragmentHomeLayoutB
         findNavController().navigateSafe(action)
     }
 
-    override fun onCheckboxListener(todo: Todo, isChecked: Boolean,textview:TextView) {
+    override fun onCheckboxListener(todo: Todo, isChecked: Boolean, textview: TextView) {
         todo.isCompleted = isChecked
-        if(isChecked) {
+        if (isChecked) {
             textview.paintFlags = textview.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-        }else{
+        } else {
             textview.paintFlags = textview.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
         }
         editViewModel.updateTodo(todo.id, todo)

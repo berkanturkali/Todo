@@ -19,7 +19,7 @@ class TodoRepo @Inject constructor(
     suspend fun addTodo(todo: Todo) = apiCall({ retroAPI.addTodo(todo) })
     fun getTodos(filter: String, category: String): Pager<Int, Todo> {
         return Pager(
-            config = PagingConfig(20, enablePlaceholders = false, maxSize = 300),
+            config = PagingConfig(50, enablePlaceholders = false, maxSize = 300),
             remoteMediator = TodoPageKeyedRemoteMediator(1, db, retroAPI, filter, category),
             pagingSourceFactory = { db.todoDao().observeTodosPaginated() }
         )
@@ -31,4 +31,6 @@ class TodoRepo @Inject constructor(
     suspend fun deleteTodo(id: String) = apiCall({ retroAPI.deleteTodo(id) })
 
     suspend fun deleteCompletedTodos() = apiCall({ retroAPI.deleteCompletedTodos() })
+
+    suspend fun getStats() = apiCall({retroAPI.getStats()})
 }

@@ -123,6 +123,7 @@ class AddTodoFragment :
                             R.color.color_success
                         )
                         clearFields()
+                        mainTodoViewModel.getStats()
                     }
                     is Resource.Error -> {
                         mainTodoViewModel.hideProgress()

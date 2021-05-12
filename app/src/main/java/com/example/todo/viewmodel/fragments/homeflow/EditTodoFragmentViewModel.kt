@@ -34,7 +34,9 @@ class EditTodoFragmentViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.Main) {
             val response = repo.updateTodo(id, todo)
             when (response) {
-                is Resource.Success -> _updateStatus.value = Event(response.data.toString())
+                is Resource.Success -> {
+                    _updateStatus.value = Event(response.data.toString())
+                }
                 is Resource.Error -> _updateStatus.value = Event(response.message.toString())
             }
         }
