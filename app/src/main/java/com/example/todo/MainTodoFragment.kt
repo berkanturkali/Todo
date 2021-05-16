@@ -54,6 +54,8 @@ class MainTodoFragment : Fragment(R.layout.fragment_main_todo_layout), DrawerIte
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentMainTodoLayoutBinding.bind(view)
         setHasOptionsMenu(true)
+        mViewModel.getMe()
+        mViewModel.getStats()
         savedInstanceState?.let {
             drawerSelectedItemId = it.getInt(drawerSelectedItemIdKey, drawerSelectedItemId)
         }

@@ -14,6 +14,8 @@ import com.example.todo.view.fragments.BaseFragment
 import com.example.todo.viewmodel.MainTodoFragmentViewModel
 import com.example.todo.viewmodel.fragments.homeflow.AddTodoFragmentViewModel
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.*
@@ -29,11 +31,12 @@ class AddTodoFragment :
 
     private lateinit var calendar: Calendar
     private lateinit var dateFormat: SimpleDateFormat
+    private val datePattern = "dd/MM/yyyy"
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
-        dateFormat = SimpleDateFormat("dd/MM/yyyy")
+        dateFormat = SimpleDateFormat(datePattern)
         initWidgets()
         subscribeObserver()
     }
@@ -82,7 +85,29 @@ class AddTodoFragment :
                 showErrorSnack()
             }
         }
+        binding.timePickerIb.setOnClickListener {
+            showTimePicker()
+        }
     }
+
+    private fun showTimePicker() {
+        val picker = MaterialTimePicker.Builder()
+            .setTimeFormat(TimeFormat.CLOCK_24H)
+            .setHour(0)
+            .setMinute(0)
+            .setTitleText("Select Appoinment time")
+            .build()
+        picker.show(childFragmentManager, "tag")
+
+        picker.addOnPositiveButtonClickListener {
+            var newHour: Int = picker.hour
+            var newMin: Int = picker.minute
+            val hourAsText = if (newHour < 10) "0$newHour" else newHour
+            val minuteAsText = if (newMin < 10) "0$newMin" else newMin
+            binding.timeEt.setText("$hourAsText : $minuteAsText")
+        }
+    }
+
 
     private fun isValidFields(): Boolean {
         val todo = binding.todoEt.text.toString().trim()
@@ -106,7 +131,7 @@ class AddTodoFragment :
 
     private fun showErrorSnack() {
         requireView().snack(
-            "Fields can not be empty and title should be less than 20 chars",
+            "Fields can not be empty",
             R.color.color_danger
         )
     }
