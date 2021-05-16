@@ -7,9 +7,7 @@ import androidx.fragment.app.viewModels
 import com.example.todo.R
 import com.example.todo.databinding.FragmentAddTodoLayoutBinding
 import com.example.todo.model.Todo
-import com.example.todo.util.Resource
-import com.example.todo.util.showDialog
-import com.example.todo.util.snack
+import com.example.todo.util.*
 import com.example.todo.view.fragments.BaseFragment
 import com.example.todo.viewmodel.MainTodoFragmentViewModel
 import com.example.todo.viewmodel.fragments.homeflow.AddTodoFragmentViewModel
@@ -19,6 +17,7 @@ import com.google.android.material.timepicker.TimeFormat
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 private const val TAG = "AddTodoFragment"
 
@@ -31,35 +30,21 @@ class AddTodoFragment :
 
     private lateinit var calendar: Calendar
     private lateinit var dateFormat: SimpleDateFormat
-    private val datePattern = "dd/MM/yyyy"
+    private lateinit var dialog: AlertDialog
+    private lateinit var date: Date
+    private var dateInMillis: Long = 0L
+    private var timeInMillis: Long = 0L
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
-        dateFormat = SimpleDateFormat(datePattern)
-        initWidgets()
+        initDialog()
+        initButtons()
+        initFields()
         subscribeObserver()
     }
 
-    private fun initWidgets() {
-        if (binding.categoryEt.text.toString().isEmpty()) {
-            binding.categoryEt.setText(resources.getStringArray(R.array.category_array)[0])
-        }
-        if (binding.dateEt.text.toString().isEmpty()) {
-            val date = Date()
-            binding.dateEt.setText(dateFormat.format(date))
-        }
-        if (binding.importanceTv.text.toString().isEmpty()) {
-            binding.importanceTv.setText(resources.getStringArray(R.array.importance_array)[1])
-        }
-        val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Select a category")
-        val categories = resources.getStringArray(R.array.category_array)
-        builder.setItems(categories) { dialog, which ->
-            binding.categoryEt.setText(categories[which])
-            dialog.dismiss()
-        }
-        val dialog = builder.create()
+    private fun initButtons() {
+        calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
         binding.categoryPickerIb.setOnClickListener {
             dialog.show()
         }
@@ -71,7 +56,8 @@ class AddTodoFragment :
             datePicker.show(requireActivity().supportFragmentManager, "tag")
             datePicker.addOnPositiveButtonClickListener {
                 calendar.timeInMillis = it
-                binding.dateEt.setText(dateFormat.format(calendar.timeInMillis))
+                binding.dateEt.setText(calendar.timeInMillis.getDate(Consts.DATE_PATTERN))
+                dateInMillis = it
             }
         }
         binding.importancePickIb.setOnClickListener {
@@ -90,12 +76,40 @@ class AddTodoFragment :
         }
     }
 
+    private fun initDialog() {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Select a category")
+        val categories = resources.getStringArray(R.array.category_array)
+        builder.setItems(categories) { dialog, which ->
+            binding.categoryEt.setText(categories[which])
+            dialog.dismiss()
+        }
+        dialog = builder.create()
+    }
+
+    private fun initFields() {
+        dateFormat = SimpleDateFormat(Consts.DATE_PATTERN, Locale.getDefault())
+        if (binding.categoryEt.text.toString().isEmpty()) {
+            binding.categoryEt.setText(resources.getStringArray(R.array.category_array)[0])
+        }
+        if (binding.dateEt.text.toString().isEmpty()) {
+            date = Date()
+            binding.dateEt.setText(dateFormat.format(date))
+        }
+        if (binding.importanceTv.text.toString().isEmpty()) {
+            binding.importanceTv.setText(resources.getStringArray(R.array.importance_array)[1])
+        }
+        if (binding.timeEt.text.toString().isEmpty()) {
+            binding.timeEt.setText(getString(R.string.default_time))
+        }
+    }
+
     private fun showTimePicker() {
         val picker = MaterialTimePicker.Builder()
             .setTimeFormat(TimeFormat.CLOCK_24H)
             .setHour(0)
             .setMinute(0)
-            .setTitleText("Select Appoinment time")
+            .setTitleText("Select Appointment time")
             .build()
         picker.show(childFragmentManager, "tag")
 
@@ -105,9 +119,12 @@ class AddTodoFragment :
             val hourAsText = if (newHour < 10) "0$newHour" else newHour
             val minuteAsText = if (newMin < 10) "0$newMin" else newMin
             binding.timeEt.setText("$hourAsText : $minuteAsText")
+
+            val hourAsMillis = TimeUnit.HOURS.toMillis(newHour.toLong())
+            val minuteAsMillis = TimeUnit.MINUTES.toMillis(newMin.toLong())
+            timeInMillis = hourAsMillis + minuteAsMillis
         }
     }
-
 
     private fun isValidFields(): Boolean {
         val todo = binding.todoEt.text.toString().trim()
@@ -115,17 +132,23 @@ class AddTodoFragment :
     }
 
     private fun addTodo() {
-
         val category = binding.categoryEt.text.toString().trim()
         val todoDesc = binding.todoEt.text.toString().trim()
-        var date = dateFormat.parse(binding.dateEt.text.toString())
-        val dateInMillis = date.time
+        val date = dateFormat.parse(binding.dateEt.text.toString())
+        dateInMillis = date.time
+        val result = dateInMillis + timeInMillis
         val importance = when (binding.importanceTv.text.toString()) {
             "Important" -> true
             "Not Important" -> false
             else -> null
         }
-        val todo = Todo(category, dateInMillis, todoDesc, isImportant = importance!!)
+        val todo = Todo(
+            category,
+            result,
+            todoDesc,
+            isImportant = importance!!,
+            notifyMe = binding.notifySwitch.isChecked
+        )
         mViewModel.addTodo(todo)
     }
 
@@ -166,8 +189,8 @@ class AddTodoFragment :
         binding.todoEt.text = null
         binding.categoryEt.setText(resources.getStringArray(R.array.category_array)[0])
         binding.importanceTv.setText(resources.getStringArray(R.array.importance_array)[1])
-        val date = Date()
         binding.dateEt.setText(dateFormat.format(date))
+        binding.timeEt.setText(getString(R.string.default_time))
     }
 }
 

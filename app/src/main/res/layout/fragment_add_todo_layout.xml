@@ -118,11 +118,11 @@
             android:clickable="false"
             android:ellipsize="end"
             android:focusable="false"
-            app:boxStrokeWidth="0dp"
             android:hint="Date"
             android:maxLines="1"
             android:textAppearance="?attr/textAppearanceSubtitle1"
             app:boxStrokeColor="@color/black"
+            app:boxStrokeWidth="0dp"
             app:hintTextColor="@color/black"
             app:startIconDrawable="@drawable/ic_calender">
 
@@ -144,6 +144,7 @@
             android:background="@null"
             android:src="@drawable/ic_down" />
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/timeLl"
         android:layout_width="match_parent"
@@ -163,11 +164,11 @@
             android:clickable="false"
             android:ellipsize="end"
             android:focusable="false"
-            app:boxStrokeWidth="0dp"
             android:hint="Time"
             android:maxLines="1"
             android:textAppearance="?attr/textAppearanceSubtitle1"
             app:boxStrokeColor="@color/black"
+            app:boxStrokeWidth="0dp"
             app:hintTextColor="@color/black"
             app:startIconDrawable="@drawable/ic_date">
 
@@ -190,21 +191,53 @@
             android:src="@drawable/ic_down" />
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/notify_me_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:gravity="center_vertical"
+        android:background="@drawable/divider"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/timeLl">
+
+        <TextView
+            style="@style/TextAppearance.AppCompat.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="Notify Me" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/notifySwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|end"
+            app:thumbTint="@color/switch_thumb_selector"
+            app:trackTint="@color/switch_track_selector" />
+    </LinearLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:layout_marginTop="8dp"
         android:ellipsize="end"
+        android:layout_marginTop="8dp"
         android:hint="@string/add_todo"
         android:inputType="textImeMultiLine"
         android:textAppearance="?attr/textAppearanceSubtitle1"
         app:boxStrokeColor="@color/black"
         app:endIconMode="clear_text"
         app:hintTextColor="@color/black"
-        app:layout_constraintTop_toBottomOf="@+id/timeLl"
+        app:layout_constraintTop_toBottomOf="@+id/notify_me_ll"
         app:startIconDrawable="@drawable/ic_todo_details"
         tools:layout_editor_absoluteX="8dp">
 

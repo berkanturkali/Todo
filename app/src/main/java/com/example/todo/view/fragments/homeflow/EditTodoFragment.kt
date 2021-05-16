@@ -7,7 +7,6 @@ import androidx.navigation.fragment.navArgs
 import com.example.todo.R
 import com.example.todo.databinding.FragmentEditTodoLayoutBinding
 import com.example.todo.model.Todo
-
 import com.example.todo.util.Resource
 import com.example.todo.util.showDialog
 import com.example.todo.util.snack
@@ -20,7 +19,9 @@ import java.util.*
 
 @AndroidEntryPoint
 class EditTodoFragment :
-    BaseFragment<FragmentEditTodoLayoutBinding>(FragmentEditTodoLayoutBinding::inflate) {
+    BaseFragment<FragmentEditTodoLayoutBinding>(
+        FragmentEditTodoLayoutBinding::inflate
+    ) {
     private val args: EditTodoFragmentArgs by navArgs()
 
     private val mViewModel: EditTodoFragmentViewModel by viewModels()
@@ -97,16 +98,16 @@ class EditTodoFragment :
             val date = dateFormat.parse(binding.dateEt.text.toString())
             val dateInMillis = date?.time
             val todo = dateInMillis?.let {
-                Todo(
-                    category,
-                    it,
-                    todoText,
-                    isCompleted = completed!!,
-                    isImportant = importance!!
-                )
+//                Todo(
+//                    category,
+//                    it,
+//                    todoText,
+//                    isCompleted = completed!!,
+//                    isImportant = importance!!
+//                )
             }
             if (todo != null) {
-                mViewModel.updateTodo(args.todoId, todo)
+//                mViewModel.updateTodo(args.todoId, todo)
             }
         }
     }

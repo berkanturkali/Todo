@@ -9,11 +9,17 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.todo.R
 import com.example.todo.databinding.TodoItemLayoutBinding
 import com.example.todo.databinding.TodoItemSeperatorLayoutBinding
+
+
 import com.example.todo.model.Todo
 import com.example.todo.model.TodoModel
-import com.example.todo.util.DateUtil
+import com.example.todo.util.Consts
+import com.example.todo.util.isToday
+import com.example.todo.util.isTomorrow
+import com.example.todo.util.isYesterday
 import com.google.android.material.checkbox.MaterialCheckBox
 import java.text.SimpleDateFormat
+import java.util.*
 
 private const val TAG = "HomeFragmentAdapter"
 
@@ -22,14 +28,15 @@ class HomeFragmentAdapter(
 ) :
     PagingDataAdapter<TodoModel, RecyclerView.ViewHolder>(TodoComparator) {
 
-    private val simpleDateFormat = SimpleDateFormat("dd/MM/yyyy")
+    private val simpleDateFormat = SimpleDateFormat(Consts.DATE_PATTERN)
+    private val timeFormatter = SimpleDateFormat(Consts.TIME_PATTERN)
 
     companion object {
         private val TodoComparator = object : DiffUtil.ItemCallback<TodoModel>() {
             override fun areItemsTheSame(oldItem: TodoModel, newItem: TodoModel): Boolean {
                 return (oldItem is TodoModel.TodoItem && newItem is TodoModel.TodoItem &&
                         oldItem.todo.id == newItem.todo.id) ||
-                        (oldItem is TodoModel.SeperatorItem && newItem is TodoModel.SeperatorItem &&
+                        (oldItem is TodoModel.SeparatorItem && newItem is TodoModel.SeparatorItem &&
                                 oldItem.date == newItem.date)
             }
 
@@ -42,7 +49,7 @@ class HomeFragmentAdapter(
         return when (viewType) {
             R.layout.todo_item_layout -> {
                 TodoViewHolder(
-                    TodoItemLayoutBinding.inflate(
+                    com.example.todo.databinding.TodoItemLayoutBinding.inflate(
                         LayoutInflater.from(parent.context),
                         parent,
                         false
@@ -51,7 +58,7 @@ class HomeFragmentAdapter(
             }
             else -> {
                 TodoSeparatorViewHolder(
-                    TodoItemSeperatorLayoutBinding.inflate(
+                    com.example.todo.databinding.TodoItemSeperatorLayoutBinding.inflate(
                         LayoutInflater.from(parent.context),
                         parent,
                         false
@@ -68,7 +75,7 @@ class HomeFragmentAdapter(
                 is TodoModel.TodoItem -> {
                     (holder as TodoViewHolder).bind(todoModel.todo)
                 }
-                is TodoModel.SeperatorItem -> {
+                is TodoModel.SeparatorItem -> {
                     (holder as TodoSeparatorViewHolder).bind(todoModel.date)
                 }
             }
@@ -96,15 +103,19 @@ class HomeFragmentAdapter(
                     item.todo,
                     (it as MaterialCheckBox).isChecked,
                     binding.todoTv
-                    )
+                )
             }
         }
+
         fun bind(todo: Todo) {
             binding.apply {
                 todoTv.text = todo.todo
                 categoryTv.text = todo.category
-                dateTv.text = DateUtil.getRelativeTimeSpanString(todo.date)
+                val date = Date(todo.date)
+                dateTv.text = timeFormatter.format(date)
                 todoCheckbox.isChecked = todo.isCompleted
+                val drawable = if(todo.notifyMe) R.drawable.alarm_icon else R.drawable.clock_icon
+                dateTv.setCompoundDrawablesRelativeWithIntrinsicBounds(drawable,0,0,0)
                 binding.todoTv.paint.isStrikeThruText = todo.isCompleted
                 if (todo.isImportant) icImportant.setImageResource(R.drawable.ic_important_star) else icImportant.setImageResource(
                     R.drawable.ic_not_important_star
@@ -117,13 +128,13 @@ class HomeFragmentAdapter(
         RecyclerView.ViewHolder(binding.root) {
         fun bind(separator: String) {
             var day: String? = when {
-                DateUtil.isToday(separator.toLong()) -> {
+                isToday(separator.toLong()) -> {
                     "Today"
                 }
-                DateUtil.isYesterday(separator.toLong()) -> {
+                isYesterday(separator.toLong()) -> {
                     "Yesterday"
                 }
-                DateUtil.isTomorrow(separator.toLong()) -> {
+                isTomorrow(separator.toLong()) -> {
                     "Tomorrow"
                 }
                 else -> {
@@ -137,13 +148,13 @@ class HomeFragmentAdapter(
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
             is TodoModel.TodoItem -> R.layout.todo_item_layout
-            is TodoModel.SeperatorItem -> R.layout.todo_item_seperator_layout
+            is TodoModel.SeparatorItem -> R.layout.todo_item_seperator_layout
             null -> throw UnsupportedOperationException("Unknown view")
         }
     }
 
     interface OnTodoClickListener {
         fun onTodoClick(todo: Todo)
-        fun onCheckboxListener(todo: Todo, isChecked: Boolean,textview:TextView)
+        fun onCheckboxListener(todo: Todo, isChecked: Boolean, textview: TextView)
     }
 }

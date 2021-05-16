@@ -19,5 +19,6 @@ data class Todo(
     var isCompleted: Boolean = false,
     @SerializedName("important")
     @Expose
-    var isImportant: Boolean = false
+    var isImportant: Boolean = false,
+    val notifyMe:Boolean
 )

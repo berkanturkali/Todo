@@ -13,6 +13,7 @@
     <string name="add_todo">Add your task</string>
     <string name="importance">Importance</string>
     <string name="completed">Complete Status</string>
+    <string name="default_time">00:00</string>
 
     <string-array name="importance_array">
         <item>Important</item>

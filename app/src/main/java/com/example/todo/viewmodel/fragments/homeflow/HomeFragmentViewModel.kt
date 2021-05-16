@@ -9,9 +9,11 @@ import com.example.todo.model.TodoModel
 import com.example.todo.repo.TodoRepo
 import com.example.todo.util.Event
 import com.example.todo.util.Resource
+import com.example.todo.util.getDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -46,10 +48,11 @@ class HomeFragmentViewModel @Inject constructor(
                     return@insertSeparators null
                 }
                 if (before == null) {
-                    return@insertSeparators TodoModel.SeperatorItem(after.todo.date.toString())
+                    return@insertSeparators TodoModel.SeparatorItem(after.todo.date.toString())
                 }
-                if (before.todo.date > after.todo.date) {
-                    TodoModel.SeperatorItem(after.todo.date.toString())
+                if (before.todo.date.getDate() > after.todo.date.getDate()
+                ) {
+                    TodoModel.SeparatorItem(after.todo.date.toString())
                 } else {
                     null
                 }
