@@ -22,7 +22,7 @@ class EditTodoFragmentViewModel @Inject constructor(
 
     private val _updateStatus = MutableLiveData<Event<String>>()
 
-    val updateStatus:LiveData<Event<String>>  get() = _updateStatus
+    val updateStatus: LiveData<Event<String>> get() = _updateStatus
 
     fun getTodo(id: String) {
         viewModelScope.launch {
@@ -30,7 +30,7 @@ class EditTodoFragmentViewModel @Inject constructor(
         }
     }
 
-    fun updateTodo(id: String,todo:Todo) {
+    fun updateTodo(id: String, todo: Todo) {
         viewModelScope.launch(Dispatchers.Main) {
             val response = repo.updateTodo(id, todo)
             when (response) {

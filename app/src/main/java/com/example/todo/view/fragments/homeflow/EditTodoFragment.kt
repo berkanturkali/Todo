@@ -7,12 +7,12 @@ import androidx.navigation.fragment.navArgs
 import com.example.todo.R
 import com.example.todo.databinding.FragmentEditTodoLayoutBinding
 import com.example.todo.model.Todo
-import com.example.todo.util.Resource
-import com.example.todo.util.showDialog
-import com.example.todo.util.snack
+import com.example.todo.util.*
 import com.example.todo.view.fragments.BaseFragment
 import com.example.todo.viewmodel.fragments.homeflow.EditTodoFragmentViewModel
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.*
@@ -25,20 +25,19 @@ class EditTodoFragment :
     private val args: EditTodoFragmentArgs by navArgs()
 
     private val mViewModel: EditTodoFragmentViewModel by viewModels()
-
     private lateinit var calendar: Calendar
     private lateinit var dateFormat: SimpleDateFormat
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initWidgets()
+        calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+        dateFormat = Consts.DATE_PATTERN.formatter()
+        initButtons()
         mViewModel.getTodo(args.todoId)
         subscribeObservers()
     }
 
-    private fun initWidgets() {
-        calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
-        dateFormat = SimpleDateFormat("dd/MM/yyyy")
+    private fun initButtons() {
         val categories = resources.getStringArray(R.array.category_array)
         binding.categoryPickerIb.setOnClickListener {
             categories.showDialog(requireContext(), "Select a Category", binding.categoryEt)
@@ -54,7 +53,6 @@ class EditTodoFragment :
                 binding.dateEt.setText(dateFormat.format(calendar.timeInMillis))
             }
         }
-
         binding.updateTodoBtn.setOnClickListener {
             if (checkFields()) {
                 updateTodo()
@@ -73,6 +71,27 @@ class EditTodoFragment :
             resources.getStringArray(R.array.completed_array)
                 .showDialog(requireContext(), "Select Complete Status", binding.completedTv)
         }
+        binding.timePickerIb.setOnClickListener {
+            showTimePicker()
+        }
+    }
+
+    private fun showTimePicker() {
+        val picker = MaterialTimePicker.Builder()
+            .setTimeFormat(TimeFormat.CLOCK_24H)
+            .setHour(0)
+            .setMinute(0)
+            .setTitleText("Select Appointment time")
+            .build()
+        picker.show(childFragmentManager, "tag")
+
+        picker.addOnPositiveButtonClickListener {
+            val newHour: Int = picker.hour
+            val newMin: Int = picker.minute
+            val hourAsText = if (newHour < 10) "0$newHour" else newHour
+            val minuteAsText = if (newMin < 10) "0$newMin" else newMin
+            binding.timeEt.setText("$hourAsText:$minuteAsText")
+        }
     }
 
     private fun checkFields(): Boolean {
@@ -82,7 +101,6 @@ class EditTodoFragment :
 
     private fun updateTodo() {
         binding.apply {
-
             val category = categoryEt.text.toString().trim()
             val importance = when (binding.importanceTv.text.toString()) {
                 "Important" -> true
@@ -95,23 +113,24 @@ class EditTodoFragment :
                 else -> null
             }
             val todoText = binding.todoEt.text.toString().trim()
-            val date = dateFormat.parse(binding.dateEt.text.toString())
-            val dateInMillis = date?.time
-            val todo = dateInMillis?.let {
-//                Todo(
-//                    category,
-//                    it,
-//                    todoText,
-//                    isCompleted = completed!!,
-//                    isImportant = importance!!
-//                )
-            }
-            if (todo != null) {
-//                mViewModel.updateTodo(args.todoId, todo)
-            }
+            val dateFormat = SimpleDateFormat(
+                "${Consts.DATE_PATTERN} ${Consts.TIME_PATTERN}",
+                Locale.getDefault()
+            )
+            val dateInMillis =
+                dateFormat.parse("${binding.dateEt.text}  ${binding.timeEt.text}").time
+            val notifyMe = binding.notifySwitch.isChecked
+            val todo = Todo(
+                category,
+                dateInMillis,
+                todoText,
+                isCompleted = completed!!,
+                isImportant = importance!!,
+                notifyMe = notifyMe
+            )
+            mViewModel.updateTodo(args.todoId, todo)
         }
     }
-
 
     private fun subscribeObservers() {
         mViewModel.todo.observe(viewLifecycleOwner) { resource ->
@@ -120,7 +139,8 @@ class EditTodoFragment :
                 is Resource.Error -> showError(resource.message.toString())
             }
         }
-        mViewModel.updateStatus.observe(viewLifecycleOwner) {
+        mViewModel.updateStatus.observe(viewLifecycleOwner)
+        {
             it.getContentIfNotHandled()?.let { message ->
                 requireView().snack(message, R.color.black)
             }
@@ -134,6 +154,8 @@ class EditTodoFragment :
             todoEt.setText(todo.todo)
             completedTv.setText(if (todo.isCompleted) "Completed" else "Not Completed")
             importanceTv.setText(if (todo.isImportant) "Important" else "Not Important")
+            timeEt.setText(Consts.TIME_PATTERN.formatter().format(todo.date))
+            notifySwitch.isChecked = todo.notifyMe
         }
     }
 

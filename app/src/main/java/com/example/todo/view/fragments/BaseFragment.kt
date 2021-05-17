@@ -16,7 +16,6 @@ abstract class BaseFragment<VB : ViewBinding>(
 ) : Fragment(), com.example.todo.util.MyDisposable {
     private var _binding: VB? = null
     val binding get() = _binding!!
-
     private val compositeDisposable = CompositeDisposable()
 
 
@@ -30,7 +29,7 @@ abstract class BaseFragment<VB : ViewBinding>(
     }
 
     override fun safeAdd(disposable: Disposable) {
-            compositeDisposable.add(disposable)
+        compositeDisposable.add(disposable)
     }
 
     override fun safeDispose() {

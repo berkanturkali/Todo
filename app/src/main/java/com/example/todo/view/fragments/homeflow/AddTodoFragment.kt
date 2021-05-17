@@ -114,11 +114,11 @@ class AddTodoFragment :
         picker.show(childFragmentManager, "tag")
 
         picker.addOnPositiveButtonClickListener {
-            var newHour: Int = picker.hour
-            var newMin: Int = picker.minute
+            val newHour: Int = picker.hour
+            val newMin: Int = picker.minute
             val hourAsText = if (newHour < 10) "0$newHour" else newHour
             val minuteAsText = if (newMin < 10) "0$newMin" else newMin
-            binding.timeEt.setText("$hourAsText : $minuteAsText")
+            binding.timeEt.setText("$hourAsText:$minuteAsText")
 
             val hourAsMillis = TimeUnit.HOURS.toMillis(newHour.toLong())
             val minuteAsMillis = TimeUnit.MINUTES.toMillis(newMin.toLong())
