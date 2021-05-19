@@ -30,7 +30,7 @@ class TodoOptionsDialog : BottomSheetDialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = DialogTodoOptionsLayoutBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -44,10 +44,10 @@ class TodoOptionsDialog : BottomSheetDialogFragment() {
     private fun initButtons() {
         binding.apply {
             deleteItem.setOnClickListener {
-                mViewModel.deleteTodo(args.todoId)
+                mViewModel.deleteTodo(args.todo.id)
             }
             editItem.setOnClickListener {
-                navigateToEditScreen(args.todoId)
+                navigateToEditScreen(args.todo.id)
             }
         }
     }
@@ -57,6 +57,7 @@ class TodoOptionsDialog : BottomSheetDialogFragment() {
             it.getContentIfNotHandled()?.let { resource ->
                 when (resource) {
                     is Resource.Success -> {
+                        if (args.todo.notificationId != -1) mainTodoViewModel.cancelNotification(args.todo.notificationId)
                         mainTodoViewModel.hideProgress()
                         requireView().snack(
                             "Removed Successfully",
@@ -79,6 +80,8 @@ class TodoOptionsDialog : BottomSheetDialogFragment() {
             }
         }
     }
+
+
 
     private fun navigateToEditScreen(id: String) {
         val action = TodoOptionsDialogDirections.actionTodoOptionsDialogToEditTodoFragment(id)

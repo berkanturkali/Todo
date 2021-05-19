@@ -19,12 +19,12 @@
         android:label="Options"
         android:name="com.example.todo.view.fragments.homeflow.TodoOptionsDialog"
         tools:layout="@layout/dialog_todo_options_layout">
-        <argument
-            android:name="todoId"
-            app:argType="string" />
         <action
             android:id="@+id/action_todoOptionsDialog_to_editTodoFragment"
             app:destination="@id/editTodoFragment" />
+        <argument
+            android:name="todo"
+            app:argType="com.example.todo.model.Todo" />
     </dialog>
     <fragment
         android:id="@+id/editTodoFragment"

@@ -1,11 +1,14 @@
 package com.example.todo.model
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
 @Entity
+@Parcelize
 data class Todo(
     val category: String,
     val date: Long,
@@ -20,5 +23,6 @@ data class Todo(
     @SerializedName("important")
     @Expose
     var isImportant: Boolean = false,
-    val notifyMe:Boolean
-)
+    val notifyMe:Boolean,
+    var notificationId:Int
+):Parcelable

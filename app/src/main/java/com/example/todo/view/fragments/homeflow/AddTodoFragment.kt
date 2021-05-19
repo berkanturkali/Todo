@@ -38,6 +38,7 @@ class AddTodoFragment :
     private var dateInMillis: Long = 0L
     private var timeInMillis: Long = 0L
     private var alarmOn = false
+    private var intentId = -1
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -95,7 +96,7 @@ class AddTodoFragment :
         dateInMillis = date.time
         val result = timeInMillis + dateInMillis
         calendar.timeInMillis = result
-        mViewModel.setAlarmTime(calendar.timeInMillis)
+        mainTodoViewModel.setNotificationTime(calendar.timeInMillis)
     }
 
     private fun initDialog() {
@@ -170,15 +171,18 @@ class AddTodoFragment :
             else -> null
         }
         if (alarmOn) {
-            mViewModel.newId()
-            mViewModel.setAlarmOn(true, todoDesc, importance!!)
+            intentId = mainTodoViewModel.newId()
+            mainTodoViewModel.setNotificationOn(todoDesc, importance!!)
+        } else {
+            intentId = -1
         }
         val todo = Todo(
             category,
             result,
             todoDesc,
             isImportant = importance!!,
-            notifyMe = binding.notifySwitch.isChecked
+            notifyMe = binding.notifySwitch.isChecked,
+            notificationId = intentId
         )
         mViewModel.addTodo(todo)
     }
@@ -205,6 +209,7 @@ class AddTodoFragment :
                         mainTodoViewModel.getStats()
                     }
                     is Resource.Error -> {
+                        if (intentId != -1) mainTodoViewModel.cancelNotification(intentId)
                         mainTodoViewModel.hideProgress()
                         requireView().snack(
                             resource.message.toString(),
@@ -214,7 +219,7 @@ class AddTodoFragment :
                 }
             }
         }
-        mViewModel.isValidDate.observe(viewLifecycleOwner) {
+        mainTodoViewModel.isValidDate.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { isValid ->
                 if (!isValid) {
                     requireView().snack(

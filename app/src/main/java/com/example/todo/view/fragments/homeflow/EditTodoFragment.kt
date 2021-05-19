@@ -120,15 +120,16 @@ class EditTodoFragment :
             val dateInMillis =
                 dateFormat.parse("${binding.dateEt.text}  ${binding.timeEt.text}").time
             val notifyMe = binding.notifySwitch.isChecked
-            val todo = Todo(
-                category,
-                dateInMillis,
-                todoText,
-                isCompleted = completed!!,
-                isImportant = importance!!,
-                notifyMe = notifyMe
-            )
-            mViewModel.updateTodo(args.todoId, todo)
+//            val todo = Todo(
+//                category,
+//                dateInMillis,
+//                todoText,
+//                isCompleted = completed!!,
+//                isImportant = importance!!,
+//                notifyMe = notifyMe,
+//
+//            )
+//            mViewModel.updateTodo(args.todoId, todo)
         }
     }
 

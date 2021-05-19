@@ -210,7 +210,7 @@ class HomeFragment : BaseFragment<FragmentHomeLayoutBinding>(FragmentHomeLayoutB
     }
 
     override fun onTodoClick(todo: Todo) {
-        val action = HomeFragmentDirections.actionHomeFragment2ToTodoOptionsDialog(todo.id)
+        val action = HomeFragmentDirections.actionHomeFragment2ToTodoOptionsDialog(todo)
         findNavController().navigateSafe(action)
     }
 
