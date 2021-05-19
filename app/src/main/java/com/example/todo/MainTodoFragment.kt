@@ -1,6 +1,9 @@
 package com.example.todo
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -64,6 +67,10 @@ class MainTodoFragment : Fragment(R.layout.fragment_main_todo_layout), DrawerIte
         initMenu()
         subscribeObservers()
         setBackPressedHandler()
+        createChannel(
+            getString(R.string.todo_notification_channel_id),
+            "todo"
+        )
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -244,6 +251,27 @@ class MainTodoFragment : Fragment(R.layout.fragment_main_todo_layout), DrawerIte
     override fun onLogoutClick() {
         storageManager.clearSharedPref()
         findNavController().navigate(R.id.action_mainTodoFragment_to_navigation)
+    }
+
+    private fun createChannel(channelId: String, channelName: String) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val notificationChannel = NotificationChannel(
+                channelId,
+                channelName,
+                NotificationManager.IMPORTANCE_HIGH
+            ).apply {
+                setShowBadge(false)
+            }
+
+            notificationChannel.enableLights(true)
+            notificationChannel.lightColor = Color.RED
+            notificationChannel.enableVibration(true)
+            notificationChannel.description = "Time for todo"
+            val notificationManager = requireActivity().getSystemService(
+                NotificationManager::class.java
+            )
+            notificationManager.createNotificationChannel(notificationChannel)
+        }
     }
 }
 

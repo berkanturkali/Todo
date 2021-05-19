@@ -9,6 +9,7 @@ import com.example.todo.databinding.FragmentEditTodoLayoutBinding
 import com.example.todo.model.Todo
 import com.example.todo.util.*
 import com.example.todo.view.fragments.BaseFragment
+import com.example.todo.viewmodel.MainTodoFragmentViewModel
 import com.example.todo.viewmodel.fragments.homeflow.EditTodoFragmentViewModel
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
@@ -25,8 +26,15 @@ class EditTodoFragment :
     private val args: EditTodoFragmentArgs by navArgs()
 
     private val mViewModel: EditTodoFragmentViewModel by viewModels()
+    private val mainTodoViewModel by viewModels<MainTodoFragmentViewModel>(ownerProducer = { requireParentFragment().requireParentFragment() })
     private lateinit var calendar: Calendar
     private lateinit var dateFormat: SimpleDateFormat
+    private var alarmOn = false
+    private val dateTimeFormat = SimpleDateFormat(
+        "${Consts.DATE_PATTERN} ${Consts.TIME_PATTERN}",
+        Locale.getDefault()
+    )
+    private var intentId = -1
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -74,6 +82,18 @@ class EditTodoFragment :
         binding.timePickerIb.setOnClickListener {
             showTimePicker()
         }
+        binding.notifySwitch.setOnCheckedChangeListener { _, isChecked ->
+            alarmOn = isChecked
+            if (isChecked) {
+                setAlarmTime()
+            }
+        }
+    }
+
+    private fun setAlarmTime() {
+        val dateInMillis =
+            dateTimeFormat.parse("${binding.dateEt.text}  ${binding.timeEt.text}")!!.time
+        mainTodoViewModel.setNotificationTime(dateInMillis)
     }
 
     private fun showTimePicker() {
@@ -113,23 +133,25 @@ class EditTodoFragment :
                 else -> null
             }
             val todoText = binding.todoEt.text.toString().trim()
-            val dateFormat = SimpleDateFormat(
-                "${Consts.DATE_PATTERN} ${Consts.TIME_PATTERN}",
-                Locale.getDefault()
-            )
             val dateInMillis =
-                dateFormat.parse("${binding.dateEt.text}  ${binding.timeEt.text}").time
-            val notifyMe = binding.notifySwitch.isChecked
-//            val todo = Todo(
-//                category,
-//                dateInMillis,
-//                todoText,
-//                isCompleted = completed!!,
-//                isImportant = importance!!,
-//                notifyMe = notifyMe,
-//
-//            )
-//            mViewModel.updateTodo(args.todoId, todo)
+                dateTimeFormat.parse("${binding.dateEt.text}  ${binding.timeEt.text}").time
+            val notifyMe = alarmOn
+            if (alarmOn) {
+                intentId = mainTodoViewModel.newId()
+                mainTodoViewModel.setNotificationOn(todoText, importance!!)
+            } else {
+                intentId = -1
+            }
+            val todo = Todo(
+                category,
+                dateInMillis,
+                todoText,
+                isCompleted = completed!!,
+                isImportant = importance!!,
+                notifyMe = notifyMe,
+                notificationId = intentId
+            )
+            mViewModel.updateTodo(args.todoId, todo)
         }
     }
 
@@ -137,13 +159,27 @@ class EditTodoFragment :
         mViewModel.todo.observe(viewLifecycleOwner) { resource ->
             when (resource) {
                 is Resource.Success -> setFields(resource.data!!)
-                is Resource.Error -> showError(resource.message.toString())
+                is Resource.Error -> {
+                    if (alarmOn && intentId != -1) mainTodoViewModel.cancelNotification(intentId)
+                    showError(resource.message.toString())
+                }
             }
         }
         mViewModel.updateStatus.observe(viewLifecycleOwner)
         {
             it.getContentIfNotHandled()?.let { message ->
                 requireView().snack(message, R.color.black)
+            }
+        }
+        mainTodoViewModel.isValidDate.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { isValid ->
+                if (!isValid) {
+                    requireView().snack(
+                        "Can not set alarm to past time.",
+                        R.color.color_danger
+                    )
+                    binding.notifySwitch.isChecked = false
+                }
             }
         }
     }
@@ -156,7 +192,8 @@ class EditTodoFragment :
             completedTv.setText(if (todo.isCompleted) "Completed" else "Not Completed")
             importanceTv.setText(if (todo.isImportant) "Important" else "Not Important")
             timeEt.setText(Consts.TIME_PATTERN.formatter().format(todo.date))
-            notifySwitch.isChecked = todo.notifyMe
+            notifySwitch.isChecked = todo.notifyMe && System.currentTimeMillis() < todo.date
+            intentId = todo.notificationId
         }
     }
 

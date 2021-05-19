@@ -171,7 +171,7 @@
             app:boxStrokeColor="@color/black"
             app:boxStrokeWidth="0dp"
             app:hintTextColor="@color/black"
-            app:startIconDrawable="@drawable/ic_date">
+            app:startIconDrawable="@drawable/ic_calender">
 
             <AutoCompleteTextView
                 android:id="@+id/dateEt"
