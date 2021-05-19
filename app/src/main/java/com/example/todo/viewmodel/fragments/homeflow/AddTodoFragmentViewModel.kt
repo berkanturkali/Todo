@@ -14,7 +14,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.todo.model.Todo
 import com.example.todo.receiver.AlarmReceiver
 import com.example.todo.repo.TodoRepo
-import com.example.todo.util.Consts.Companion.ALARM_REQUEST_CODE
 import com.example.todo.util.Event
 import com.example.todo.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,17 +27,11 @@ private const val TAG = "AddTodoFragmentViewMode"
 @HiltViewModel
 class AddTodoFragmentViewModel @Inject constructor(
     private val todoRepo: TodoRepo,
-    @ApplicationContext app: Context
+    @ApplicationContext private val app: Context
 ) : ViewModel() {
 
     private val alarmManager = app.getSystemService(Context.ALARM_SERVICE) as AlarmManager
     private val notifyIntent = Intent(app, AlarmReceiver::class.java)
-    private var notifyPendingIntent: PendingIntent = PendingIntent.getBroadcast(
-        app,
-        ALARM_REQUEST_CODE,
-        notifyIntent,
-        PendingIntent.FLAG_UPDATE_CURRENT
-    )
 
     private val _timeSelection = MutableLiveData<Long>()
     val timeSelection: LiveData<Long> get() = _timeSelection
@@ -49,6 +42,11 @@ class AddTodoFragmentViewModel @Inject constructor(
     private val _addedStatus = MutableLiveData<Event<Resource<String>>>()
     val addedStatus: LiveData<Event<Resource<String>>> get() = _addedStatus
 
+    private val _isValidDate = MutableLiveData<Event<Boolean>>()
+    val isValidDate: LiveData<Event<Boolean>> get() = _isValidDate
+
+    private var randomPendingId = (0..Int.MAX_VALUE).random()
+
     fun addTodo(todo: Todo) {
         viewModelScope.launch(Dispatchers.Main) {
             _addedStatus.value = Event(todoRepo.addTodo(todo))
@@ -56,20 +54,36 @@ class AddTodoFragmentViewModel @Inject constructor(
     }
 
     fun setAlarmTime(time: Long) {
+        if (System.currentTimeMillis() > time) {
+            _isValidDate.value = Event(false)
+            return
+        }
         _timeSelection.value = time
     }
 
-    fun setAlarmOn(isOn: Boolean) {
+    fun setAlarmOn(isOn: Boolean, message: String, isImportant: Boolean) {
         _alarmOn.value = isOn
         if (isOn) {
             timeSelection.value?.let {
                 Log.i(TAG, "setAlarmOn: $it")
-                setAlarm(it)
+                setAlarm(it, message, isImportant)
             }
         }
     }
 
-    private fun setAlarm(alarmTime: Long) {
+    fun newId() {
+        randomPendingId = (0..Int.MAX_VALUE).random()
+    }
+
+    private fun setAlarm(alarmTime: Long, todoMessage: String, isImportant: Boolean) {
+        notifyIntent.putExtra("message", todoMessage)
+        notifyIntent.putExtra("isImportant", isImportant)
+        val notifyPendingIntent: PendingIntent = PendingIntent.getBroadcast(
+            app,
+            randomPendingId,
+            notifyIntent,
+            PendingIntent.FLAG_ONE_SHOT
+        )
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             alarmManager.setExactAndAllowWhileIdle(
                 AlarmManager.RTC_WAKEUP,

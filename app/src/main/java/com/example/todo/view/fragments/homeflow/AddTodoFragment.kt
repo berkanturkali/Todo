@@ -1,8 +1,11 @@
 package com.example.todo.view.fragments.homeflow
 
 import android.app.AlertDialog
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import com.example.todo.R
@@ -20,7 +23,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-private const val TAG = "AddTodoFragment"
 
 @AndroidEntryPoint
 class AddTodoFragment :
@@ -42,7 +44,11 @@ class AddTodoFragment :
         initDialog()
         initButtons()
         initFields()
-        subscribeObserver()
+        subscribeObservers()
+        createChannel(
+            getString(R.string.todo_notification_channel_id),
+            "todo"
+        )
     }
 
     private fun initButtons() {
@@ -76,7 +82,7 @@ class AddTodoFragment :
         binding.timePickerIb.setOnClickListener {
             showTimePicker()
         }
-        binding.notifySwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+        binding.notifySwitch.setOnCheckedChangeListener { _, isChecked ->
             alarmOn = isChecked
             if (isChecked) {
                 setAlarmTime()
@@ -85,11 +91,10 @@ class AddTodoFragment :
     }
 
     private fun setAlarmTime() {
-        val date = dateFormat.parse(binding.dateEt.text.toString())
+        val date = dateFormat.parse(binding.dateEt.text.toString())!!
         dateInMillis = date.time
         val result = timeInMillis + dateInMillis
         calendar.timeInMillis = result
-        Log.i(TAG, "alarmOn: ${calendar.get(Calendar.DAY_OF_MONTH)}")
         mViewModel.setAlarmTime(calendar.timeInMillis)
     }
 
@@ -135,7 +140,13 @@ class AddTodoFragment :
             val newMin: Int = picker.minute
             val hourAsText = if (newHour < 10) "0$newHour" else newHour
             val minuteAsText = if (newMin < 10) "0$newMin" else newMin
-            binding.timeEt.setText("$hourAsText:$minuteAsText")
+            binding.timeEt.setText(
+                String.format(
+                    resources.getString(R.string.hour_seconds),
+                    hourAsText,
+                    minuteAsText
+                )
+            )
             val hourAsMillis = TimeUnit.HOURS.toMillis(newHour.toLong())
             val minuteAsMillis = TimeUnit.MINUTES.toMillis(newMin.toLong())
             timeInMillis = hourAsMillis + minuteAsMillis
@@ -150,7 +161,7 @@ class AddTodoFragment :
     private fun addTodo() {
         val category = binding.categoryEt.text.toString().trim()
         val todoDesc = binding.todoEt.text.toString().trim()
-        val date = dateFormat.parse(binding.dateEt.text.toString())
+        val date = dateFormat.parse(binding.dateEt.text.toString())!!
         dateInMillis = date.time
         val result = dateInMillis + timeInMillis
         val importance = when (binding.importanceTv.text.toString()) {
@@ -158,7 +169,10 @@ class AddTodoFragment :
             "Not Important" -> false
             else -> null
         }
-        if (alarmOn) mViewModel.setAlarmOn(true)
+        if (alarmOn) {
+            mViewModel.newId()
+            mViewModel.setAlarmOn(true, todoDesc, importance!!)
+        }
         val todo = Todo(
             category,
             result,
@@ -176,7 +190,7 @@ class AddTodoFragment :
         )
     }
 
-    private fun subscribeObserver() {
+    private fun subscribeObservers() {
         mViewModel.addedStatus.observe(viewLifecycleOwner) {
             it?.getContentIfNotHandled()?.let { resource ->
                 when (resource) {
@@ -200,6 +214,38 @@ class AddTodoFragment :
                 }
             }
         }
+        mViewModel.isValidDate.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { isValid ->
+                if (!isValid) {
+                    requireView().snack(
+                        "Can not set alarm to past time.",
+                        R.color.color_danger
+                    )
+                    binding.notifySwitch.isChecked = false
+                }
+            }
+        }
+    }
+
+    private fun createChannel(channelId: String, channelName: String) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val notificationChannel = NotificationChannel(
+                channelId,
+                channelName,
+                NotificationManager.IMPORTANCE_HIGH
+            ).apply {
+                setShowBadge(false)
+            }
+
+            notificationChannel.enableLights(true)
+            notificationChannel.lightColor = Color.RED
+            notificationChannel.enableVibration(true)
+            notificationChannel.description = "Time for todo"
+            val notificationManager = requireActivity().getSystemService(
+                NotificationManager::class.java
+            )
+            notificationManager.createNotificationChannel(notificationChannel)
+        }
     }
 
     private fun clearFields() {
@@ -208,6 +254,7 @@ class AddTodoFragment :
         binding.importanceTv.setText(resources.getStringArray(R.array.importance_array)[1])
         binding.dateEt.setText(dateFormat.format(date))
         binding.timeEt.setText(getString(R.string.default_time))
+        binding.notifySwitch.isChecked = false
     }
 }
 
