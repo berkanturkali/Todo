@@ -2,6 +2,7 @@ package com.example.todo.view.fragments.homeflow
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import com.example.todo.R
@@ -34,6 +35,7 @@ class AddTodoFragment :
     private lateinit var date: Date
     private var dateInMillis: Long = 0L
     private var timeInMillis: Long = 0L
+    private var alarmOn = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -44,7 +46,7 @@ class AddTodoFragment :
     }
 
     private fun initButtons() {
-        calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+        calendar = Calendar.getInstance()
         binding.categoryPickerIb.setOnClickListener {
             dialog.show()
         }
@@ -74,6 +76,21 @@ class AddTodoFragment :
         binding.timePickerIb.setOnClickListener {
             showTimePicker()
         }
+        binding.notifySwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+            alarmOn = isChecked
+            if (isChecked) {
+                setAlarmTime()
+            }
+        }
+    }
+
+    private fun setAlarmTime() {
+        val date = dateFormat.parse(binding.dateEt.text.toString())
+        dateInMillis = date.time
+        val result = timeInMillis + dateInMillis
+        calendar.timeInMillis = result
+        Log.i(TAG, "alarmOn: ${calendar.get(Calendar.DAY_OF_MONTH)}")
+        mViewModel.setAlarmTime(calendar.timeInMillis)
     }
 
     private fun initDialog() {
@@ -106,7 +123,7 @@ class AddTodoFragment :
 
     private fun showTimePicker() {
         val picker = MaterialTimePicker.Builder()
-            .setTimeFormat(TimeFormat.CLOCK_24H)
+            .setTimeFormat(TimeFormat.CLOCK_12H)
             .setHour(0)
             .setMinute(0)
             .setTitleText("Select Appointment time")
@@ -119,7 +136,6 @@ class AddTodoFragment :
             val hourAsText = if (newHour < 10) "0$newHour" else newHour
             val minuteAsText = if (newMin < 10) "0$newMin" else newMin
             binding.timeEt.setText("$hourAsText:$minuteAsText")
-
             val hourAsMillis = TimeUnit.HOURS.toMillis(newHour.toLong())
             val minuteAsMillis = TimeUnit.MINUTES.toMillis(newMin.toLong())
             timeInMillis = hourAsMillis + minuteAsMillis
@@ -142,6 +158,7 @@ class AddTodoFragment :
             "Not Important" -> false
             else -> null
         }
+        if (alarmOn) mViewModel.setAlarmOn(true)
         val todo = Todo(
             category,
             result,

@@ -1,4 +1,4 @@
-package com.example.todo
+package com.example.todo.receiver
 
 import android.content.BroadcastReceiver
 import android.content.Context

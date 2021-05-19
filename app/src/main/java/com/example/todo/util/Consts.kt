@@ -16,5 +16,6 @@ class Consts {
         const val DB_NAME = "todo_db"
         const val TIME_PATTERN = "HH:mm"
         const val DATE_PATTERN = "dd/MM/yyyy"
+        const val ALARM_REQUEST_CODE = 1
     }
 }
