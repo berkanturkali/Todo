@@ -18,7 +18,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
-import com.example.todo.databinding.FragmentMainTodoLayoutBinding
+import com.example.todo.databinding.FragmentHomeFlowMainLayoutBinding
 import com.example.todo.model.StatsResult
 
 import com.example.todo.model.User
@@ -38,8 +38,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainTodoFragment : Fragment(R.layout.fragment_main_todo_layout), DrawerItemClickListener {
-    private var _binding: FragmentMainTodoLayoutBinding? = null
+class HomeFlowMainFragment : Fragment(R.layout.fragment_home_flow_main_layout), DrawerItemClickListener {
+    private var _binding: FragmentHomeFlowMainLayoutBinding? = null
     private val mViewModel by viewModels<MainTodoFragmentViewModel>()
     private val activityViewModel by activityViewModels<MainActivityViewModel>()
     private lateinit var drawerLayout: DrawerLayout
@@ -55,7 +55,7 @@ class MainTodoFragment : Fragment(R.layout.fragment_main_todo_layout), DrawerIte
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        _binding = FragmentMainTodoLayoutBinding.bind(view)
+        _binding = FragmentHomeFlowMainLayoutBinding.bind(view)
         setHasOptionsMenu(true)
         mViewModel.getMe()
         mViewModel.getStats()
