@@ -1,6 +1,6 @@
 package com.example.todo.util
 
-import com.example.todo.model.ErrorResponse
+import com.example.todo.business.domain.model.ErrorResponse
 import okhttp3.ResponseBody
 import retrofit2.Converter
 import retrofit2.Response

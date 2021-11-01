@@ -6,6 +6,6 @@
     <fragment
         android:id="@+id/addTodoFragment"
         android:label="Add Todo"
-        android:name="com.example.todo.view.fragments.homeflow.AddTodoFragment"
+        android:name="com.example.todo.framework.presentation.view.fragments.homeflow.AddTodoFragment"
          />
 </navigation>

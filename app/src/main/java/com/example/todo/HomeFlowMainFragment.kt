@@ -19,12 +19,12 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.example.todo.databinding.FragmentHomeFlowMainLayoutBinding
-import com.example.todo.model.StatsResult
+import com.example.todo.business.domain.model.StatsResult
 
-import com.example.todo.model.User
+import com.example.todo.business.domain.model.User
 import com.example.todo.util.*
-import com.example.todo.viewmodel.MainActivityViewModel
-import com.example.todo.viewmodel.MainTodoFragmentViewModel
+import com.example.todo.framework.presentation.viewmodel.MainActivityViewModel
+import com.example.todo.framework.presentation.viewmodel.MainTodoFragmentViewModel
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.Legend
@@ -250,7 +250,7 @@ class HomeFlowMainFragment : Fragment(R.layout.fragment_home_flow_main_layout), 
 
     override fun onLogoutClick() {
         storageManager.clearSharedPref()
-        findNavController().navigate(R.id.action_mainTodoFragment_to_navigation)
+//        findNavController().navigate(R.id.action_mainTodoFragment_to_navigation)
     }
 
     private fun createChannel(channelId: String, channelName: String) {

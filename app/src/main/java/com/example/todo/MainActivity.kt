@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.todo.receiver.ConnectivityBroadcastReceiver
 import com.example.todo.util.snack
 
-import com.example.todo.viewmodel.MainActivityViewModel
+import com.example.todo.framework.presentation.viewmodel.MainActivityViewModel
 
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject

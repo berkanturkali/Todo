@@ -2,9 +2,9 @@ package com.example.todo.di
 
 import android.content.Context
 import androidx.room.Room
-import com.example.todo.db.AppDatabase
-import com.example.todo.db.TodoDao
-import com.example.todo.db.TodoRemoteKeyDao
+import com.example.todo.framework.datasource.cache.db.AppDatabase
+import com.example.todo.framework.datasource.cache.db.TodoDao
+import com.example.todo.framework.datasource.cache.db.TodoRemoteKeyDao
 import com.example.todo.util.Consts.Companion.DB_NAME
 import dagger.Module
 import dagger.Provides

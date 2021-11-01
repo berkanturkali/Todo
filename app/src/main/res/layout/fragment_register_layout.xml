@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.fragments.authflow.RegisterFragment">
+    tools:context=".framework.presentation.view.fragments.authflow.RegisterFragment">
 
     <TextView
         style="@style/titleStyle"

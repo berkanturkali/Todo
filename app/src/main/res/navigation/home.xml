@@ -8,31 +8,18 @@
     <fragment
         android:id="@+id/homeFragment2"
         android:label="Todos"
-        android:name="com.example.todo.view.fragments.homeflow.HomeFragment"
-        tools:layout="@layout/fragment_home_layout">
-        <action
-            android:id="@+id/action_homeFragment2_to_todoOptionsDialog"
-            app:destination="@id/todoOptionsDialog" />
-    </fragment>
+        android:name="com.example.todo.framework.presentation.view.fragments.homeflow.HomeFragment"
+        tools:layout="@layout/fragment_home_layout"/>
     <dialog
         android:id="@+id/todoOptionsDialog"
         android:label="Options"
-        android:name="com.example.todo.view.fragments.homeflow.TodoOptionsDialog"
+        android:name="com.example.todo.framework.presentation.view.fragments.homeflow.TodoOptionsDialog"
         tools:layout="@layout/dialog_todo_options_layout">
-        <action
-            android:id="@+id/action_todoOptionsDialog_to_editTodoFragment"
-            app:destination="@id/editTodoFragment" />
-        <argument
-            android:name="todo"
-            app:argType="com.example.todo.model.Todo" />
     </dialog>
     <fragment
         android:id="@+id/editTodoFragment"
         android:label="Edit Todo"
-        android:name="com.example.todo.view.fragments.homeflow.EditTodoFragment"
+        android:name="com.example.todo.framework.presentation.view.fragments.homeflow.EditTodoFragment"
         tools:layout="@layout/fragment_edit_todo_layout">
-        <argument
-            android:name="todoId"
-            app:argType="string" />
     </fragment>
 </navigation>

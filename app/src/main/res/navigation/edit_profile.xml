@@ -7,14 +7,10 @@
     <fragment
         android:id="@+id/editProfileFragment"
         android:label="Edit Profile"
-        android:name="com.example.todo.view.fragments.homeflow.EditProfileFragment"
-         >
-        <action
-            android:id="@+id/action_editProfileFragment_to_fragmentCameraOptionsFragment3"
-            app:destination="@id/fragmentCameraOptionsFragment3" />
-    </fragment>
+        android:name="com.example.todo.framework.presentation.view.fragments.homeflow.EditProfileFragment"
+         />
     <dialog
         android:id="@+id/fragmentCameraOptionsFragment3"
-        android:name="com.example.todo.view.fragments.authflow.FragmentCameraOptionsFragment"
+        android:name="com.example.todo.framework.presentation.view.fragments.authflow.FragmentCameraOptionsFragment"
         android:label="FragmentCameraOptionsFragment" />
 </navigation>

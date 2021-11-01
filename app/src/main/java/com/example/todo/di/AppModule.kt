@@ -3,7 +3,7 @@ package com.example.todo.di
 import android.content.Context
 import android.content.Intent
 import com.example.todo.MainActivity
-import com.example.todo.network.RetroAPI
+import com.example.todo.framework.datasource.network.RetroAPI
 import com.example.todo.util.Consts.Companion.BASE_URL
 import com.example.todo.util.Consts.Companion.CONNECTION_TIMEOUT
 import com.example.todo.util.Consts.Companion.READ_TIMEOUT
