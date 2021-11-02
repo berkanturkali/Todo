@@ -4,20 +4,21 @@ import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.View
+import android.widget.ProgressBar
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.example.todo.receiver.ConnectivityBroadcastReceiver
-import com.example.todo.util.snack
-
+import androidx.core.view.isVisible
+import com.example.todo.framework.presentation.UIController
 import com.example.todo.framework.presentation.viewmodel.MainActivityViewModel
-
+import com.example.todo.receiver.ConnectivityBroadcastReceiver
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(),
-    ConnectivityBroadcastReceiver.ConnectivityReceiverListener {
+    ConnectivityBroadcastReceiver.ConnectivityReceiverListener, UIController {
     @Inject
     lateinit var connectivityBroadcastReceiver: ConnectivityBroadcastReceiver
     private val mViewModel: MainActivityViewModel by viewModels()
@@ -34,8 +35,11 @@ class MainActivity : AppCompatActivity(),
     override fun onNetworkConnectionChanged(isConnected: Boolean) {
         mViewModel.setConnection(isConnected)
         if (!isConnected) {
-            window.decorView.findViewById<View>(android.R.id.content)
-                .snack("No Internet Connection", R.color.color_danger)
+            Snackbar.make(
+                window.decorView.findViewById(android.R.id.content),
+                "No Internet Connection",
+                Snackbar.LENGTH_SHORT
+            ).show()
         }
     }
 
@@ -47,5 +51,9 @@ class MainActivity : AppCompatActivity(),
     override fun onDestroy() {
         super.onDestroy()
         unregisterReceiver(connectivityBroadcastReceiver)
+    }
+
+    override fun displayProgress(isDisplayed: Boolean) {
+        findViewById<ProgressBar>(R.id.progress_bar).isVisible = isDisplayed
     }
 }

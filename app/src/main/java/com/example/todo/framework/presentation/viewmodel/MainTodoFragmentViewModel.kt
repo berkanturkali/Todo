@@ -57,13 +57,13 @@ class MainTodoFragmentViewModel @Inject constructor(
 
     fun getMe() {
         viewModelScope.launch(Dispatchers.Main) {
-            _userInfo.value = userRepo.getMe()
+//            _userInfo.value = userRepo.getMe()
         }
     }
 
     fun getStats() {
         viewModelScope.launch(Dispatchers.Main) {
-            _stats.value = todoRepo.getStats()
+//            _stats.value = todoRepo.getStats()
         }
     }
 

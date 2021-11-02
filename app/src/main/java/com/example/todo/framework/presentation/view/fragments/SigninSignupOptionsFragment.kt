@@ -4,9 +4,10 @@ import android.os.Bundle
 import android.view.View
 import androidx.navigation.fragment.findNavController
 import com.example.todo.R
-import com.example.todo.databinding.FragmentMainLayoutBinding
+import com.example.todo.databinding.FragmentSigninSignupOptionsLayoutBinding
 
-class MainFragment : BaseFragment<FragmentMainLayoutBinding>(FragmentMainLayoutBinding::inflate) {
+class SigninSignupOptionsFragment :
+    BaseFragment<FragmentSigninSignupOptionsLayoutBinding>(FragmentSigninSignupOptionsLayoutBinding::inflate) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -17,16 +18,16 @@ class MainFragment : BaseFragment<FragmentMainLayoutBinding>(FragmentMainLayoutB
         binding.loginBtn.setOnClickListener {
             navigateToLoginDest()
         }
-        binding.registerBtn.setOnClickListener {
+        binding.signupBtn.setOnClickListener {
             navigateToRegisterDest()
         }
     }
 
     private fun navigateToLoginDest() {
-//        findNavController().navigate(R.id.action_mainFragment_to_loginFragment)
+        findNavController().navigate(R.id.action_signinSignupOptionsFragment_to_loginFragment)
     }
 
     private fun navigateToRegisterDest() {
-//        findNavController().navigate(R.id.action_mainFragment_to_registerFragment)
+        findNavController().navigate(R.id.action_signinSignupOptionsFragment_to_signupFragment)
     }
 }

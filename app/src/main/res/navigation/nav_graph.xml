@@ -9,10 +9,17 @@
         android:id="@+id/splashScreenFragment"
         android:name="com.example.todo.framework.presentation.view.fragments.SplashScreenFragment"
         android:label="fragment_splash_screen"
-        tools:layout="@layout/fragment_splash_screen"/>
+        tools:layout="@layout/fragment_splash_screen">
+        <action
+            android:id="@+id/action_splashScreenFragment_to_mainTodoFragment"
+            app:destination="@id/mainTodoFragment" />
+        <action
+            android:id="@+id/action_splashScreenFragment_to_navigation"
+            app:destination="@id/navigation" />
+    </fragment>
     <navigation
         android:id="@+id/navigation"
-        app:startDestination="@id/mainFragment">
+        app:startDestination="@id/signinSignupOptionsFragment">
         <fragment
             android:id="@+id/loginFragment"
             android:name="com.example.todo.framework.presentation.view.fragments.authflow.LoginFragment"
@@ -20,20 +27,38 @@
             tools:layout="@layout/fragment_login_layout">
         </fragment>
         <fragment
-            android:id="@+id/registerFragment"
-            android:name="com.example.todo.framework.presentation.view.fragments.authflow.RegisterFragment"
-            android:label="fragment_register_layout"
-            tools:layout="@layout/fragment_register_layout"/>
+            android:id="@+id/signupFragment"
+            android:name="com.example.todo.framework.presentation.view.fragments.authflow.SignupFragment"
+            tools:layout="@layout/fragment_signup_layout">
+            <action
+                android:id="@+id/action_signupFragment_to_loginFragment"
+                app:destination="@id/loginFragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right"
+                app:popUpTo="@id/signinSignupOptionsFragment"
+                app:popUpToInclusive="false" />
+            <action
+                android:id="@+id/action_signupFragment_to_CameraOptionsFragment"
+                app:destination="@id/CameraOptionsFragment" />
+        </fragment>
         <dialog
-            android:id="@+id/fragmentCameraOptionsFragment"
-            android:name="com.example.todo.framework.presentation.view.fragments.authflow.FragmentCameraOptionsFragment"
+            android:id="@+id/CameraOptionsFragment"
+            android:name="com.example.todo.framework.presentation.view.fragments.authflow.CameraOptionsFragment"
             android:label="Camera Options"
             tools:layout="@layout/fragment_camera_options_layout" />
         <fragment
-            android:id="@+id/mainFragment"
-            android:name="com.example.todo.framework.presentation.view.fragments.MainFragment"
-            android:label="MainFragment"
-            tools:layout="@layout/fragment_main_layout"/>
+            android:id="@+id/signinSignupOptionsFragment"
+            android:name="com.example.todo.framework.presentation.view.fragments.SigninSignupOptionsFragment"
+            tools:layout="@layout/fragment_signin_signup_options_layout">
+            <action
+                android:id="@+id/action_signinSignupOptionsFragment_to_signupFragment"
+                app:destination="@id/signupFragment" />
+            <action
+                android:id="@+id/action_signinSignupOptionsFragment_to_loginFragment"
+                app:destination="@id/loginFragment" />
+        </fragment>
     </navigation>
     <fragment
         android:id="@+id/mainTodoFragment"

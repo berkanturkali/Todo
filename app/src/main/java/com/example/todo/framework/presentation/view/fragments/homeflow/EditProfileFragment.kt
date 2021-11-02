@@ -7,14 +7,13 @@ import android.util.Patterns
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.bumptech.glide.Glide
 import com.example.todo.R
-import com.example.todo.databinding.FragmentProfileEditLayoutBinding
 import com.example.todo.business.domain.model.User
-import com.example.todo.util.*
+import com.example.todo.databinding.FragmentProfileEditLayoutBinding
 import com.example.todo.framework.presentation.view.fragments.BaseFragment
 import com.example.todo.framework.presentation.viewmodel.MainTodoFragmentViewModel
 import com.example.todo.framework.presentation.viewmodel.fragments.homeflow.EditProfileFragmentViewModel
+import com.example.todo.util.*
 import com.google.gson.JsonObject
 import com.jakewharton.rxbinding4.widget.textChanges
 import dagger.hilt.android.AndroidEntryPoint
@@ -44,7 +43,6 @@ class EditProfileFragment :
         getUserInfo()
         subscribeObservers()
         initButtons()
-        observeInputFields()
         val backStackEntry = findNavController().getBackStackEntry(R.id.editProfileFragment)
         backStackEntry.savedStateHandle.getLiveData<Uri>("imageUri")
             .observe(viewLifecycleOwner) { result ->
@@ -54,9 +52,9 @@ class EditProfileFragment :
                 FileUtil.copyStream(inputStream, outputStream)
                 outputStream.close()
                 inputStream?.close()
-                Glide.with(requireContext())
-                    .load(result)
-                    .into(binding.profileImage)
+//                Glide.with(requireContext())
+//                    .load(result)
+//                    .into(binding.profileImage)
             }
     }
 
@@ -68,9 +66,8 @@ class EditProfileFragment :
                         setUserInfo(resource.data!!)
                     }
                     is Resource.Error ->
-                        binding.root.snack(
-                            resource.message.toString(),
-                            R.color.color_danger
+                        showSnack(
+                            resource.message.toString()
                         )
                 }
             }
@@ -78,9 +75,9 @@ class EditProfileFragment :
 
     private fun initButtons() {
         binding.apply {
-            selectImage.setOnClickListener {
-
-            }
+//            selectImage.setOnClickListener {
+//
+//            }
             updateBtn.setOnClickListener {
                 updateUser()
             }
@@ -98,76 +95,22 @@ class EditProfileFragment :
         if (photoFile != null) {
             val imageBody = photoFile?.asRequestBody("image/*".toMediaType())
             val body = MultipartBody.Part.createFormData("image", photoFile?.name, imageBody!!)
-            mViewModel.updateUser(credentials, body, storageManager.getUserId()!!)
+//            mViewModel.updateUser(credentials, body, storageManager.getUserId()!!)
         } else {
-            mViewModel.updateUser(credentials, null, storageManager.getUserId()!!)
+//            mViewModel.updateUser(credentials, null, storageManager.getUserId()!!)
         }
     }
-
-    private fun observeInputFields() {
-        val fNameObservable = binding.firstNameEt.textChanges()
-            .map { firstName -> firstName.toString() }
-            .distinctUntilChanged()
-
-        val lNameObservable = binding.lastNameEt.textChanges()
-            .map { lastName -> lastName.toString() }
-            .distinctUntilChanged()
-
-        val emailObservable = binding.emailEt.textChanges()
-            .map { email -> email.toString() }
-            .distinctUntilChanged()
-
-        val isEnabledObservable =
-            Observable.combineLatest(
-                fNameObservable,
-                lNameObservable,
-                emailObservable,
-                { firstName, lastName, email ->
-                    checkFields(firstName, lastName, email)
-                })
-                .distinctUntilChanged()
-        safeAdd(isEnabledObservable.subscribe { isEnabled ->
-            binding.updateBtn.isEnabled = isEnabled
-        })
-    }
-
     private fun subscribeObservers() {
-        mViewModel.updatedInfo.observe(viewLifecycleOwner) {
-            it?.getContentIfNotHandled()?.let { status ->
-                val color =
-                    if (status == "Profile updated successfully") R.color.color_success else R.color.color_danger
-                requireView().snack(
-                    status,
-                    color,
-                ) { mainTodoViewModel.getMe() }
-            }
-        }
-    }
-
-    private fun checkFields(
-        firstName: String,
-        lastName: String,
-        email: String
-    ): Boolean {
-        val isValidFName = firstName.isNotBlank()
-        val isValidLName = lastName.isNotBlank()
-        val isValidEmail = email.isNotEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches()
-        if (!isValidFName) {
-            binding.firstnameTextinput.error = "Please provide a valid firstname"
-        } else {
-            binding.firstnameTextinput.error = null
-        }
-        if (!isValidLName) {
-            binding.lastnameTextinput.error = "Please provide a valid lastname"
-        } else {
-            binding.lastnameTextinput.error = null
-        }
-        if (!isValidEmail) {
-            binding.emailTextInput.error = "Please provide a valid email"
-        } else {
-            binding.emailTextInput.error = null
-        }
-        return isValidFName && isValidLName && isValidEmail
+//        mViewModel.updatedInfo.observe(viewLifecycleOwner) {
+//            it?.getContentIfNotHandled()?.let { status ->
+//                val color =
+//                    if (status == "Profile updated successfully") R.color.color_success else R.color.color_danger
+//                showSnack(
+//                    status,
+//                    color
+//                ) { mainTodoViewModel.getMe() }
+//            }
+//        }
     }
 
     private fun getPhotoFile(fileName: String): File {
@@ -176,7 +119,7 @@ class EditProfileFragment :
     }
 
     private fun setUserInfo(user: User) {
-        binding.profileImage.loadImage(user.profilePic)
+//        binding.profileImage.loadImage(user.profilePic)
         binding.apply {
             firstNameEt.setText(user.firstName)
             lastNameEt.setText(user.lastName)

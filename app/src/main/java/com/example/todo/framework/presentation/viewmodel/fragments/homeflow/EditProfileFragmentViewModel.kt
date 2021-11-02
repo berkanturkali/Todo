@@ -18,18 +18,18 @@ import javax.inject.Inject
 class EditProfileFragmentViewModel @Inject constructor(
     private val userRepo: UserRepo
 ) : ViewModel() {
-    private val _updatedInfo = MutableLiveData<Event<String>>()
-     val updatedInfo: LiveData<Event<String>> get() = _updatedInfo
-    fun updateUser(credentials: JsonObject, image: MultipartBody.Part?, id: String) {
-        viewModelScope.launch(Dispatchers.Main) {
-            when (val resource = userRepo.updateUser(credentials, image, id)) {
-                is Resource.Success -> {
-                    _updatedInfo.value = Event("Profile updated successfully")
-                }
-                is Resource.Error -> {
-                    _updatedInfo.value = Event(resource.message.toString())
-                }
-            }
-        }
-    }
+//    private val _updatedInfo = MutableLiveData<Event<String>>()
+//     val updatedInfo: LiveData<Event<String>> get() = _updatedInfo
+//    fun updateUser(credentials: JsonObject, image: MultipartBody.Part?, id: String) {
+//        viewModelScope.launch(Dispatchers.Main) {
+//            when (val resource = userRepo.updateUser(credentials, image, id)) {
+//                is Resource.Success -> {
+//                    _updatedInfo.value = Event("Profile updated successfully")
+//                }
+//                is Resource.Error -> {
+//                    _updatedInfo.value = Event(resource.message.toString())
+//                }
+//            }
+//        }
+//    }
 }

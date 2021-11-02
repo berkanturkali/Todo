@@ -20,7 +20,7 @@
         android:orientation="horizontal">
 
         <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/profileImage"
+            android:id="@+id/profile_image_iv"
             android:layout_width="40dp"
             android:layout_height="40dp"
             app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize50Percent"
@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:orientation="vertical"
-            app:layout_constraintStart_toEndOf="@+id/profileImage"
+            app:layout_constraintStart_toEndOf="@+id/profile_image_iv"
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView

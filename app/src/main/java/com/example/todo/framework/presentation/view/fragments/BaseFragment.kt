@@ -1,24 +1,24 @@
 package com.example.todo.framework.presentation.view.fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.disposables.Disposable
+import com.example.todo.MainActivity
+import com.example.todo.framework.presentation.UIController
 
 typealias Inflate<T> = (LayoutInflater, ViewGroup?, Boolean) -> T
 
 abstract class BaseFragment<VB : ViewBinding>(
     private val inflate: Inflate<VB>
-) : Fragment(), com.example.todo.util.MyDisposable {
+) : Fragment() {
     private var _binding: VB? = null
     val binding get() = _binding!!
-    private val compositeDisposable = CompositeDisposable()
 
-
+    private lateinit var controller: UIController
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -28,18 +28,20 @@ abstract class BaseFragment<VB : ViewBinding>(
         return binding.root
     }
 
-    override fun safeAdd(disposable: Disposable) {
-        compositeDisposable.add(disposable)
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        setUIController()
     }
 
-    override fun safeDispose() {
-        compositeDisposable.clear()
+    private fun setUIController() {
+        controller = requireActivity() as UIController
     }
 
+    fun showProgress(show:Boolean){
+        controller.displayProgress(show)
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        safeDispose()
     }
-
 }

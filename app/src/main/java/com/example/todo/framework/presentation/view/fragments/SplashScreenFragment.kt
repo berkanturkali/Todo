@@ -35,11 +35,11 @@ class SplashScreenFragment : Fragment(R.layout.fragment_splash_screen) {
     }
 
     private fun navigateToHomeFlow() {
-
+        findNavController().navigate(R.id.action_splashScreenFragment_to_mainTodoFragment)
     }
 
     private fun navigateToAuthFlow() {
-
+        findNavController().navigate(R.id.action_splashScreenFragment_to_navigation)
     }
 
     override fun onDestroyView() {

@@ -32,24 +32,24 @@ class LoginFragmentViewModel @Inject constructor(
 
     val loginInfo: LiveData<Event<Resource<String>>> get() = _loginInfo
 
-    fun loginUser(credentials: JsonObject) {
-        viewModelScope.launch(Dispatchers.Main) {
-            try {
-                val response = withContext(Dispatchers.IO) { userRepo.loginUser(credentials) }
-                if (response.isSuccessful) {
-                    response.body()?.let {
-                        Log.i(TAG, "loginUser: $it")
-                        storageManager.setTokenAndUserId(it.token,it.userId)
-                        _loginInfo.value = Event(Resource.Success("Successfully logged in"))
-                    }
-                } else {
-                    _loginInfo.value =
-                        Event(Resource.Error(ErrorUtil.parseError(retrofit, response).message))
-                }
-            } catch (e: Exception) {
-                _loginInfo.value = Event(Resource.Error(e.message.toString()))
-            }
-        }
-    }
+//    fun loginUser(credentials: JsonObject) {
+//        viewModelScope.launch(Dispatchers.Main) {
+//            try {
+//                val response = withContext(Dispatchers.IO) { userRepo.loginUser(credentials) }
+//                if (response.isSuccessful) {
+//                    response.body()?.let {
+//                        Log.i(TAG, "loginUser: $it")
+//                        storageManager.setTokenAndUserId(it.token,it.userId)
+//                        _loginInfo.value = Event(Resource.Success("Successfully logged in"))
+//                    }
+//                } else {
+//                    _loginInfo.value =
+//                        Event(Resource.Error(ErrorUtil.parseError(retrofit, response).message))
+//                }
+//            } catch (e: Exception) {
+//                _loginInfo.value = Event(Resource.Error(e.message.toString()))
+//            }
+//        }
+//    }
 
 }

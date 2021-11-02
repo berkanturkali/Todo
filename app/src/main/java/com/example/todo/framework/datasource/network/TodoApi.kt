@@ -1,35 +1,10 @@
 package com.example.todo.framework.datasource.network
 
-import com.example.todo.business.domain.model.StatsResult
 import com.example.todo.business.domain.model.Todo
-import com.example.todo.business.domain.model.TokenResponse
-import com.example.todo.business.domain.model.User
-import com.google.gson.JsonObject
-import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.*
 
-interface RetroAPI {
-    @Multipart
-    @POST("user/register")
-    suspend fun registerUser(
-        @Part("user") user: User,
-        @Part profilePic: MultipartBody.Part?
-    ): Response<Unit>
-
-    @POST("user/login")
-    suspend fun loginUser(@Body credentials: JsonObject): Response<TokenResponse>
-
-    @GET("user/me")
-    suspend fun getMe(): Response<User>
-
-    @Multipart
-    @PUT("user/{id}")
-    suspend fun updateUser(
-        @Path("id") id: String,
-        @Part("credentials") credentials: JsonObject,
-        @Part profilePic: MultipartBody.Part?
-    ): Response<Unit>
+interface TodoApi {
 
     @POST("todo/new")
     suspend fun addTodo(
@@ -63,6 +38,4 @@ interface RetroAPI {
     @DELETE("todo/delete-completed-todos")
     suspend fun deleteCompletedTodos(): Response<Unit>
 
-    @GET("todo/stats")
-    suspend fun getStats():Response<StatsResult>
 }

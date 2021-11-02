@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content">
 
                 <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/profileImage"
+                    android:id="@+id/profile_image_iv"
                     android:layout_width="70dp"
                     android:layout_height="70dp"
                     android:layout_centerInParent="true"
@@ -39,12 +39,12 @@
                     app:srcCompat="@mipmap/ic_launcher_round" />
 
                 <ImageButton
-                    android:id="@+id/selectImage"
+                    android:id="@+id/select_image_btn"
                     android:layout_width="35dp"
                     android:layout_height="35dp"
-                    android:layout_alignEnd="@+id/profileImage"
-                    android:layout_alignRight="@+id/profileImage"
-                    android:layout_alignBottom="@id/profileImage"
+                    android:layout_alignEnd="@+id/profile_image_iv"
+                    android:layout_alignRight="@+id/profile_image_iv"
+                    android:layout_alignBottom="@id/profile_image_iv"
                     android:background="@android:color/transparent"
                     android:clickable="true"
                     android:elevation="8dp"
@@ -52,7 +52,7 @@
             </RelativeLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/firstnameTextinput"
+                android:id="@+id/first_name_til"
                 style="@style/textInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -63,7 +63,7 @@
                 app:startIconDrawable="@drawable/ic_person">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/firstNameEt"
+                    android:id="@+id/first_name_et"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:inputType="text"
@@ -72,7 +72,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/lastnameTextinput"
+                android:id="@+id/last_name_til"
                 style="@style/textInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -83,7 +83,7 @@
                 app:startIconDrawable="@drawable/ic_person">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/lastNameEt"
+                    android:id="@+id/last_name_et"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:inputType="text"
@@ -93,7 +93,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/emailTextInput"
+                android:id="@+id/email_til"
                 style="@style/textInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -104,7 +104,7 @@
                 app:startIconDrawable="@drawable/ic_email">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/emailEt"
+                    android:id="@+id/email_et"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:inputType="textEmailAddress"

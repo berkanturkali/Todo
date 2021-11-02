@@ -6,11 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import com.example.todo.R
 import com.example.todo.databinding.DialogTodoOptionsLayoutBinding
 import com.example.todo.util.Resource
-import com.example.todo.util.snack
+import com.example.todo.util.showSnack
 import com.example.todo.framework.presentation.viewmodel.MainTodoFragmentViewModel
 import com.example.todo.framework.presentation.viewmodel.fragments.homeflow.HomeFragmentViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -53,32 +52,31 @@ class TodoOptionsDialog : BottomSheetDialogFragment() {
     }
 
     private fun subscribeObserver() {
-        mViewModel.deleteStatus.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let { resource ->
-                when (resource) {
-                    is Resource.Success -> {
-//                        if (args.todo.notificationId != -1) mainTodoViewModel.cancelNotification(args.todo.notificationId)
-                        mainTodoViewModel.hideProgress()
-                        requireView().snack(
-                            "Removed Successfully",
-                            R.color.color_success
-                        ) { dialog?.dismiss() }
-                        findNavController().previousBackStackEntry?.savedStateHandle?.set(
-                            "isDeleted",
-                            true
-                        )
-                    }
-                    is Resource.Error -> {
-                        mainTodoViewModel.hideProgress()
-                        requireView().snack(
-                            resource.message.toString(),
-                            R.color.color_danger
-                        )
-                    }
-                    is Resource.Loading -> mainTodoViewModel.showProgress()
-                }
-            }
-        }
+//        mViewModel.deleteStatus.observe(viewLifecycleOwner) {
+//            it.getContentIfNotHandled()?.let { resource ->
+//                when (resource) {
+//                    is Resource.Success -> {
+////                        if (args.todo.notificationId != -1) mainTodoViewModel.cancelNotification(args.todo.notificationId)
+//                        mainTodoViewModel.hideProgress()
+//                        requireView().showSnack(
+//                            "Removed Successfully",
+//                            R.color.color_success
+//                        ) { dialog?.dismiss() }
+//                        findNavController().previousBackStackEntry?.savedStateHandle?.set(
+//                            "isDeleted",
+//                            true
+//                        )
+//                    }
+//                    is Resource.Error -> {
+//                        mainTodoViewModel.hideProgress()
+//                        showSnack(
+//                            resource.message.toString()
+//                        )
+//                    }
+//                    is Resource.Loading -> mainTodoViewModel.showProgress()
+//                }
+//            }
+//        }
     }
 
 

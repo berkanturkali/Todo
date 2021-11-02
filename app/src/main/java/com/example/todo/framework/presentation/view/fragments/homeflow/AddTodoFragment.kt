@@ -181,9 +181,8 @@ class AddTodoFragment :
     }
 
     private fun showErrorSnack() {
-        requireView().snack(
-            "Fields can not be empty",
-            R.color.color_danger
+            showSnack(
+            "Fields can not be empty"
         )
     }
 
@@ -194,7 +193,7 @@ class AddTodoFragment :
                     is Resource.Loading -> mainTodoViewModel.showProgress()
                     is Resource.Success -> {
                         mainTodoViewModel.hideProgress()
-                        requireView().snack(
+                       showSnack(
                             resource.data.toString(),
                             R.color.color_success
                         )
@@ -204,9 +203,8 @@ class AddTodoFragment :
                     is Resource.Error -> {
                         if (intentId != -1) mainTodoViewModel.cancelNotification(intentId)
                         mainTodoViewModel.hideProgress()
-                        requireView().snack(
-                            resource.message.toString(),
-                            R.color.color_danger
+                        showSnack(
+                            resource.message.toString()
                         )
                     }
                 }
@@ -215,9 +213,8 @@ class AddTodoFragment :
         mainTodoViewModel.isValidDate.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { isValid ->
                 if (!isValid) {
-                    requireView().snack(
-                        "Can not set alarm to past time.",
-                        R.color.color_danger
+                  showSnack(
+                        "Can not set alarm to past time."
                     )
                     binding.notifySwitch.isChecked = false
                 }

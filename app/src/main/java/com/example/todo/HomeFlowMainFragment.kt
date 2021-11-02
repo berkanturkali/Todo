@@ -202,9 +202,8 @@ class HomeFlowMainFragment : Fragment(R.layout.fragment_home_flow_main_layout), 
                     setUserInfo(resource.data!!)
                 }
                 is Resource.Error -> {
-                    binding.root.snack(
-                        resource.message.toString(),
-                        R.color.color_danger
+                    showSnack(
+                        resource.message.toString()
                     )
                 }
             }
@@ -229,7 +228,7 @@ class HomeFlowMainFragment : Fragment(R.layout.fragment_home_flow_main_layout), 
                     loadPieChartData(resource.data)
                 }
                 is Resource.Error -> {
-                    binding.root.snack(resource.message!!, R.color.color_danger)
+                    showSnack(resource.message!!)
                 }
             }
         }
@@ -237,7 +236,7 @@ class HomeFlowMainFragment : Fragment(R.layout.fragment_home_flow_main_layout), 
 
     private fun setUserInfo(user: User) {
         val fullName = "${user.firstName} ${user.lastName}"
-        headerView.findViewById<ShapeableImageView>(R.id.profileImage)
+        headerView.findViewById<ShapeableImageView>(R.id.profile_image_iv)
             .loadImage(user.profilePic)
         headerView.findViewById<TextView>(R.id.fullNameTv).text = fullName
         headerView.findViewById<TextView>(R.id.emailTv).text = user.email

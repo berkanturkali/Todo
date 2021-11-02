@@ -28,7 +28,7 @@ class AddTodoFragmentViewModel @Inject constructor(
 
     fun addTodo(todo: Todo) {
         viewModelScope.launch(Dispatchers.Main) {
-            _addedStatus.value = Event(todoRepo.addTodo(todo))
+//            _addedStatus.value = Event(todoRepo.addTodo(todo))
         }
     }
 }

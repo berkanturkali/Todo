@@ -18,7 +18,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import java.io.File
 
 
-class FragmentCameraOptionsFragment : BottomSheetDialogFragment() {
+class CameraOptionsFragment : BottomSheetDialogFragment() {
 
     private var mBinding: FragmentCameraOptionsLayoutBinding? = null
 

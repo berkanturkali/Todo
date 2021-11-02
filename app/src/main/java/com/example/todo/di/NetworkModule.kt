@@ -3,11 +3,10 @@ package com.example.todo.di
 import android.content.Context
 import android.content.Intent
 import com.example.todo.MainActivity
-import com.example.todo.framework.datasource.network.RetroAPI
-import com.example.todo.util.Consts.Companion.BASE_URL
-import com.example.todo.util.Consts.Companion.CONNECTION_TIMEOUT
-import com.example.todo.util.Consts.Companion.READ_TIMEOUT
-import com.example.todo.util.Consts.Companion.WRITE_TIMEOUT
+import com.example.todo.framework.datasource.network.AuthApi
+import com.example.todo.framework.datasource.network.TodoApi
+import com.example.todo.framework.datasource.network.UserApi
+import com.example.todo.util.Consts
 import com.example.todo.util.StorageManager
 import dagger.Module
 import dagger.Provides
@@ -26,12 +25,14 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object AppModule {
+object NetworkModule {
+
     @Singleton
     @Provides
     fun provideHttpInterceptor(): HttpLoggingInterceptor {
         return HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
     }
+
 
     @Provides
     @Singleton
@@ -52,10 +53,10 @@ object AppModule {
                 context.startActivity(intent)
                 response
             }
-
             response
         }
     }
+
 
     @Singleton
     @Provides
@@ -64,30 +65,43 @@ object AppModule {
         interceptor: Interceptor,
     ): OkHttpClient {
         return OkHttpClient.Builder()
-            .connectTimeout(CONNECTION_TIMEOUT, TimeUnit.SECONDS)
-            .writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)
-            .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
+            .connectTimeout(Consts.CONNECTION_TIMEOUT, TimeUnit.SECONDS)
+            .writeTimeout(Consts.WRITE_TIMEOUT, TimeUnit.SECONDS)
+            .readTimeout(Consts.READ_TIMEOUT, TimeUnit.SECONDS)
             .addInterceptor(interceptor)
             .addInterceptor(loggingInterceptor)
             .retryOnConnectionFailure(true)
             .build()
     }
 
+
     @Singleton
     @Provides
-    fun provideRetroInstance(client: OkHttpClient): Retrofit {
+    fun provideRetrofit(client: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(Consts.BASE_URL)
             .client(client)
             .addConverterFactory(ScalarsConverterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
 
+
     @Singleton
     @Provides
-    fun provideRetroApi(retrofit: Retrofit): RetroAPI {
-        return retrofit.create(RetroAPI::class.java)
+    fun provideAuthApi(retrofit: Retrofit): AuthApi {
+        return retrofit.create(AuthApi::class.java)
     }
 
+    @Singleton
+    @Provides
+    fun provideTodoApi(retrofit: Retrofit): TodoApi {
+        return retrofit.create(TodoApi::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideUserApi(retrofit: Retrofit): UserApi {
+        return retrofit.create(UserApi::class.java)
+    }
 }

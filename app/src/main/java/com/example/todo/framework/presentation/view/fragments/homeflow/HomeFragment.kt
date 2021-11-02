@@ -22,12 +22,11 @@ import com.example.todo.business.domain.model.TodoCategory
 import com.example.todo.business.domain.model.TodoFilterType
 import com.example.todo.util.HeaderItemDecoration
 import com.example.todo.util.Resource
-import com.example.todo.util.navigateSafe
-import com.example.todo.util.snack
 import com.example.todo.framework.presentation.view.fragments.BaseFragment
 import com.example.todo.framework.presentation.viewmodel.MainTodoFragmentViewModel
 import com.example.todo.framework.presentation.viewmodel.fragments.homeflow.EditTodoFragmentViewModel
 import com.example.todo.framework.presentation.viewmodel.fragments.homeflow.HomeFragmentViewModel
+import com.example.todo.util.showSnack
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
@@ -82,9 +81,8 @@ class HomeFragment : BaseFragment<FragmentHomeLayoutBinding>(FragmentHomeLayoutB
                 else -> null
             }
             error?.let {
-                requireView().snack(
-                    it.error.message.toString(),
-                    R.color.color_danger
+                showSnack(
+                    it.error.message.toString()
                 )
             }
         }
@@ -115,13 +113,13 @@ class HomeFragment : BaseFragment<FragmentHomeLayoutBinding>(FragmentHomeLayoutB
     private fun initChips() {
         binding.chipGroup.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
-                R.id.categoryAll -> mViewModel.setCategory(TodoCategory.ALL)
-                R.id.categoryWork -> mViewModel.setCategory(TodoCategory.WORK)
-                R.id.categoryMusic -> mViewModel.setCategory(TodoCategory.MUSIC)
-                R.id.categoryTravel -> mViewModel.setCategory(TodoCategory.TRAVEL)
-                R.id.categoryStudy -> mViewModel.setCategory(TodoCategory.STUDY)
-                R.id.categoryHome -> mViewModel.setCategory(TodoCategory.HOME)
-                R.id.categoryShopping -> mViewModel.setCategory(TodoCategory.SHOPPING)
+//                R.id.categoryAll -> mViewModel.setCategory(TodoCategory.ALL)
+//                R.id.categoryWork -> mViewModel.setCategory(TodoCategory.WORK)
+//                R.id.categoryMusic -> mViewModel.setCategory(TodoCategory.MUSIC)
+//                R.id.categoryTravel -> mViewModel.setCategory(TodoCategory.TRAVEL)
+//                R.id.categoryStudy -> mViewModel.setCategory(TodoCategory.STUDY)
+//                R.id.categoryHome -> mViewModel.setCategory(TodoCategory.HOME)
+//                R.id.categoryShopping -> mViewModel.setCategory(TodoCategory.SHOPPING)
             }
             viewLifecycleOwner.lifecycleScope.launch {
                 mAdapter.loadStateFlow.distinctUntilChangedBy { it.refresh }
@@ -132,53 +130,53 @@ class HomeFragment : BaseFragment<FragmentHomeLayoutBinding>(FragmentHomeLayoutB
     }
 
     private fun subscribeObserver() {
-        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
-            mViewModel.todosPaginated.collectLatest {
-                mAdapter.submitData(it)
-            }
-        }
+//        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+//            mViewModel.todosPaginated.collectLatest {
+//                mAdapter.submitData(it)
+//            }
+//        }
         mainTodoViewModel.filterItemClicked.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let {
                 showFilterPopup()
             }
         }
-        editViewModel.updateStatus.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let { message ->
-                requireView().snack(message, R.color.black)
-                mAdapter.stateRestorationPolicy =
-                    RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
-                if (message == "Updated successfully") {
-                    mainTodoViewModel.getStats()
-                }
-            }
-        }
+//        editViewModel.updateStatus.observe(viewLifecycleOwner) {
+//            it.getContentIfNotHandled()?.let { message ->
+//                requireView().snack(message, R.color.black)
+//                mAdapter.stateRestorationPolicy =
+//                    RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+//                if (message == "Updated successfully") {
+//                    mainTodoViewModel.getStats()
+//                }
+//            }
+//        }
         mainTodoViewModel.isRemoveCompletedItemsClicked.observe(viewLifecycleOwner) { clickEvent ->
             clickEvent.getContentIfNotHandled()?.let { isClicked ->
                 if (isClicked) {
-                    mViewModel.deleteCompletedTodos()
+//                    mViewModel.deleteCompletedTodos()
                 }
             }
         }
-        mViewModel.deleteStatus.observe(viewLifecycleOwner) { deleteEvent ->
-            deleteEvent.getContentIfNotHandled()?.let { resource ->
-                when (resource) {
-                    is Resource.Success -> {
-                        requireView().snack(
-                            "Removed Successfully",
-                            R.color.color_success
-                        )
-                        mAdapter.refresh()
-                        mainTodoViewModel.getStats()
-                    }
-                    is Resource.Error -> {
-                        requireView().snack(
-                            resource.message.toString(),
-                            R.color.color_danger
-                        )
-                    }
-                }
-            }
-        }
+//        mViewModel.deleteStatus.observe(viewLifecycleOwner) { deleteEvent ->
+//            deleteEvent.getContentIfNotHandled()?.let { resource ->
+//                when (resource) {
+//                    is Resource.Success -> {
+//                        requireView().snack(
+//                            "Removed Successfully",
+//                            R.color.color_success
+//                        )
+//                        mAdapter.refresh()
+//                        mainTodoViewModel.getStats()
+//                    }
+//                    is Resource.Error -> {
+//                        requireView().snack(
+//                            resource.message.toString(),
+//                            R.color.color_danger
+//                        )
+//                    }
+//                }
+//            }
+//        }
     }
 
     private fun showFilterPopup() {
@@ -187,11 +185,11 @@ class HomeFragment : BaseFragment<FragmentHomeLayoutBinding>(FragmentHomeLayoutB
             menuInflater.inflate(R.menu.filter_todo_menu, menu)
             setOnMenuItemClickListener {
                 when (it.itemId) {
-                    R.id.all -> mViewModel.setFilterType(TodoFilterType.ALL_TODOS)
-                    R.id.active -> mViewModel.setFilterType(TodoFilterType.ACTIVE_TODOS)
-                    R.id.completed -> mViewModel.setFilterType(TodoFilterType.COMPLETED_TODOS)
-                    R.id.important -> mViewModel.setFilterType(TodoFilterType.IMPORTANT_TODOS)
-                    else -> mViewModel.setFilterType(TodoFilterType.ALL_TODOS)
+//                    R.id.all -> mViewModel.setFilterType(TodoFilterType.ALL_TODOS)
+//                    R.id.active -> mViewModel.setFilterType(TodoFilterType.ACTIVE_TODOS)
+//                    R.id.completed -> mViewModel.setFilterType(TodoFilterType.COMPLETED_TODOS)
+//                    R.id.important -> mViewModel.setFilterType(TodoFilterType.IMPORTANT_TODOS)
+//                    else -> mViewModel.setFilterType(TodoFilterType.ALL_TODOS)
                 }
                 true
             }
@@ -220,6 +218,6 @@ class HomeFragment : BaseFragment<FragmentHomeLayoutBinding>(FragmentHomeLayoutB
         } else {
             textview.paintFlags = textview.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
         }
-        editViewModel.updateTodo(todo.id, todo)
+//        editViewModel.updateTodo(todo.id, todo)
     }
 }

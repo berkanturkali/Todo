@@ -65,9 +65,8 @@ class EditTodoFragment :
             if (checkFields()) {
                 updateTodo()
             } else {
-                requireView().snack(
-                    "Fields can not be empty",
-                    R.color.color_danger
+              showSnack(
+                    "Fields can not be empty"
                 )
             }
         }
@@ -156,27 +155,26 @@ class EditTodoFragment :
     }
 
     private fun subscribeObservers() {
-        mViewModel.todo.observe(viewLifecycleOwner) { resource ->
-            when (resource) {
-                is Resource.Success -> setFields(resource.data!!)
-                is Resource.Error -> {
-                    if (alarmOn && intentId != -1) mainTodoViewModel.cancelNotification(intentId)
-                    showError(resource.message.toString())
-                }
-            }
-        }
-        mViewModel.updateStatus.observe(viewLifecycleOwner)
-        {
-            it.getContentIfNotHandled()?.let { message ->
-                requireView().snack(message, R.color.black)
-            }
-        }
+//        mViewModel.todo.observe(viewLifecycleOwner) { resource ->
+//            when (resource) {
+//                is Resource.Success -> setFields(resource.data!!)
+//                is Resource.Error -> {
+//                    if (alarmOn && intentId != -1) mainTodoViewModel.cancelNotification(intentId)
+//                    showError(resource.message.toString())
+//                }
+//            }
+//        }
+//        mViewModel.updateStatus.observe(viewLifecycleOwner)
+//        {
+//            it.getContentIfNotHandled()?.let { message ->
+//                showSnack(message, R.color.black)
+//            }
+//        }
         mainTodoViewModel.isValidDate.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { isValid ->
                 if (!isValid) {
-                    requireView().snack(
-                        "Can not set alarm to past time.",
-                        R.color.color_danger
+                    showSnack(
+                        "Can not set alarm to past time."
                     )
                     binding.notifySwitch.isChecked = false
                 }
@@ -198,6 +196,6 @@ class EditTodoFragment :
     }
 
     private fun showError(message: String) {
-        requireView().snack(message, R.color.color_danger)
+        showSnack(message)
     }
 }
