@@ -6,11 +6,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.todo.business.domain.model.TokenResponse
 import com.example.todo.business.repo.UserRepo
-import com.example.todo.util.ErrorUtil
-import com.example.todo.util.Event
-import com.example.todo.util.Resource
-import com.example.todo.util.StorageManager
+import com.example.todo.business.repo.abstraction.AuthRepo
+import com.example.todo.util.*
 import com.google.gson.JsonObject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -23,33 +22,21 @@ private const val TAG = "LoginFragmentViewModel"
 
 @HiltViewModel
 class LoginFragmentViewModel @Inject constructor(
-    private val userRepo: UserRepo,
-    private val storageManager: StorageManager,
-    private val retrofit: Retrofit
+    private val userRepo: AuthRepo
 ) : ViewModel() {
 
-    private val _loginInfo = MutableLiveData<Event<Resource<String>>>()
+    private val _loginInfo = MutableLiveData<Event<Resource<TokenResponse>?>>()
 
-    val loginInfo: LiveData<Event<Resource<String>>> get() = _loginInfo
+    val loginInfo: LiveData<Event<Resource<TokenResponse>?>> get() = _loginInfo
 
-//    fun loginUser(credentials: JsonObject) {
-//        viewModelScope.launch(Dispatchers.Main) {
-//            try {
-//                val response = withContext(Dispatchers.IO) { userRepo.loginUser(credentials) }
-//                if (response.isSuccessful) {
-//                    response.body()?.let {
-//                        Log.i(TAG, "loginUser: $it")
-//                        storageManager.setTokenAndUserId(it.token,it.userId)
-//                        _loginInfo.value = Event(Resource.Success("Successfully logged in"))
-//                    }
-//                } else {
-//                    _loginInfo.value =
-//                        Event(Resource.Error(ErrorUtil.parseError(retrofit, response).message))
-//                }
-//            } catch (e: Exception) {
-//                _loginInfo.value = Event(Resource.Error(e.message.toString()))
-//            }
-//        }
-//    }
+    fun loginUser(credentials: JsonObject) {
+        viewModelScope.launch(Dispatchers.Main) {
+            _loginInfo.value = Event(Resource.Loading())
+            val resource = userRepo.loginUser(credentials)
+            _loginInfo.value = Event(resource)
+        }
+    }
+
+    fun credentialsAreValid(email:String,password:String) = email.isValidEmail() && password.isValidPassword()
 
 }

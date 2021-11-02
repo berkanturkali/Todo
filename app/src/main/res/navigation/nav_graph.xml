@@ -25,6 +25,10 @@
             android:name="com.example.todo.framework.presentation.view.fragments.authflow.LoginFragment"
             android:label="fragment_login_layout"
             tools:layout="@layout/fragment_login_layout">
+            <action
+                android:id="@+id/action_loginFragment_to_mainTodoFragment"
+                app:destination="@id/mainTodoFragment"
+                />
         </fragment>
         <fragment
             android:id="@+id/signupFragment"

@@ -17,7 +17,7 @@
     <string name="todo_notification_channel_id" translatable="false">todo_channel</string>
     <string name="hour_seconds">%1$s : %2$s</string>
     <string name="invalid_fields">Invalid Fields</string>
-    <string name="signup_success">Signed Up Successfully</string>
+    <string name="login_success">Successfully logged in</string>
     <string-array name="importance_array">
         <item>Important</item>
         <item>Not Important</item>

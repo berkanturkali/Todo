@@ -12,16 +12,16 @@ suspend fun <T> safeApiCall(
     dispatcher: CoroutineDispatcher,
     apiCall: suspend () -> Response<T>
 ): Resource<T> {
-   return  try {
+    return try {
         val response = withContext(dispatcher) { apiCall.invoke() }
         if (response.isSuccessful) {
             Resource.Success(response.body())
         } else {
             Resource.Error(response.errorBody()?.string() ?: "")
         }
-    }catch (throwable: Throwable) {
-            throwable.printStackTrace()
-         when (throwable) {
+    } catch (throwable: Throwable) {
+        throwable.printStackTrace()
+        when (throwable) {
             is TimeoutCancellationException -> {
                 Resource.Error("Timeout")
             }
@@ -36,7 +36,7 @@ suspend fun <T> safeApiCall(
                 Resource.Error("Unknown Error")
             }
         }
-        }
+    }
 }
 
 
