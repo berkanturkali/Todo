@@ -5,12 +5,12 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
 import com.example.todo.R
-import com.example.todo.databinding.FragmentAddTodoLayoutBinding
 import com.example.todo.business.domain.model.Todo
-import com.example.todo.util.*
+import com.example.todo.databinding.FragmentAddTodoLayoutBinding
 import com.example.todo.framework.presentation.view.fragments.BaseFragment
-import com.example.todo.framework.presentation.viewmodel.MainTodoFragmentViewModel
+import com.example.todo.framework.presentation.viewmodel.HomeFlowContainerViewModel
 import com.example.todo.framework.presentation.viewmodel.fragments.homeflow.AddTodoFragmentViewModel
+import com.example.todo.util.*
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
@@ -18,6 +18,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 
 @AndroidEntryPoint
@@ -25,8 +26,10 @@ class AddTodoFragment :
     BaseFragment<FragmentAddTodoLayoutBinding>(FragmentAddTodoLayoutBinding::inflate) {
 
     private val mViewModel: AddTodoFragmentViewModel by viewModels()
-    private val mainTodoViewModel by viewModels<MainTodoFragmentViewModel>(ownerProducer = { requireParentFragment().requireParentFragment() })
+    private val mainTodoViewModel by viewModels<HomeFlowContainerViewModel>(ownerProducer = { requireParentFragment().requireParentFragment() })
 
+    @Inject
+    lateinit var storageManager: StorageManager
     private lateinit var calendar: Calendar
     private lateinit var dateFormat: SimpleDateFormat
     private lateinit var dialog: AlertDialog
@@ -42,7 +45,6 @@ class AddTodoFragment :
         initButtons()
         initFields()
         subscribeObservers()
-
     }
 
     private fun initButtons() {
@@ -58,19 +60,21 @@ class AddTodoFragment :
             datePicker.show(requireActivity().supportFragmentManager, "tag")
             datePicker.addOnPositiveButtonClickListener {
                 calendar.timeInMillis = it
-                binding.dateEt.setText(calendar.timeInMillis.getDate(Consts.DATE_PATTERN))
+                binding.dateEt.setText(calendar.timeInMillis.toDate())
                 dateInMillis = it
             }
         }
         binding.importancePickIb.setOnClickListener {
             resources.getStringArray(R.array.importance_array)
-                .showDialog(requireContext(), "SelectImportance", binding.importanceTv)
+                .showDialog(requireContext(), binding.importanceTv)
         }
         binding.addTodoBtn.setOnClickListener {
-            if (isValidFields()) {
+            if (fieldsAreValid()) {
                 addTodo()
             } else {
-                showErrorSnack()
+                showSnack(
+                    getString(R.string.invalid_fields)
+                )
             }
         }
         binding.timePickerIb.setOnClickListener {
@@ -89,7 +93,7 @@ class AddTodoFragment :
         dateInMillis = date.time
         val result = timeInMillis + dateInMillis
         calendar.timeInMillis = result
-        mainTodoViewModel.setNotificationTime(calendar.timeInMillis)
+        mainTodoViewModel.setNotificationDate(calendar.timeInMillis)
     }
 
     private fun initDialog() {
@@ -147,7 +151,7 @@ class AddTodoFragment :
         }
     }
 
-    private fun isValidFields(): Boolean {
+    private fun fieldsAreValid(): Boolean {
         val todo = binding.todoEt.text.toString().trim()
         return todo.isNotEmpty()
     }
@@ -175,34 +179,30 @@ class AddTodoFragment :
             todoDesc,
             isImportant = importance!!,
             notifyMe = binding.notifySwitch.isChecked,
-            notificationId = intentId
+            notificationId = intentId,
+            user = storageManager.getId()!!,
+            id = null
         )
         mViewModel.addTodo(todo)
     }
 
-    private fun showErrorSnack() {
-            showSnack(
-            "Fields can not be empty"
-        )
-    }
-
     private fun subscribeObservers() {
-        mViewModel.addedStatus.observe(viewLifecycleOwner) {
+        mViewModel.addedInfo.observe(viewLifecycleOwner) {
             it?.getContentIfNotHandled()?.let { resource ->
                 when (resource) {
-                    is Resource.Loading -> mainTodoViewModel.showProgress()
+                    is Resource.Loading -> showProgress(true)
                     is Resource.Success -> {
-                        mainTodoViewModel.hideProgress()
-                       showSnack(
+                        showProgress(false)
+                        showSnack(
                             resource.data.toString(),
                             R.color.color_success
                         )
                         clearFields()
-                        mainTodoViewModel.getStats()
+                        mainTodoViewModel.setShouldFetchDataFromNetwork(true)
                     }
                     is Resource.Error -> {
                         if (intentId != -1) mainTodoViewModel.cancelNotification(intentId)
-                        mainTodoViewModel.hideProgress()
+                        showProgress(false)
                         showSnack(
                             resource.message.toString()
                         )
@@ -213,7 +213,7 @@ class AddTodoFragment :
         mainTodoViewModel.isValidDate.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { isValid ->
                 if (!isValid) {
-                  showSnack(
+                    showSnack(
                         "Can not set alarm to past time."
                     )
                     binding.notifySwitch.isChecked = false

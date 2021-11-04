@@ -10,5 +10,5 @@ interface AuthRepo {
 
     suspend fun signupUser(user: User, body: MultipartBody.Part? = null): Resource<String>
 
-    suspend fun loginUser(credentials: JsonObject): Resource<TokenResponse>?
+    suspend fun loginUser(credentials: JsonObject): Resource<TokenResponse>
 }

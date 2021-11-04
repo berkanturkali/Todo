@@ -2,8 +2,8 @@ package com.example.todo.util
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.example.todo.util.Consts.Companion.PREF_NAME
-import com.example.todo.util.Consts.Companion.USER_ID
+import com.example.todo.util.Consts.Companion.ID
+import com.example.todo.util.Consts.Companion.TOKEN
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -11,18 +11,18 @@ import javax.inject.Singleton
 @Singleton
 class StorageManager @Inject constructor(@ApplicationContext context: Context) {
     private var preferences: SharedPreferences =
-        context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        context.getSharedPreferences(TOKEN, Context.MODE_PRIVATE)
     private var editor: SharedPreferences.Editor = preferences.edit()
 
-    fun setTokenAndUserId(token: String, id:String) {
-        editor.putString(PREF_NAME, token)
-        editor.putString(USER_ID,id)
+    fun cacheTokenAndId(token: String,id:String) {
+        editor.putString(TOKEN, token)
+        editor.putString(ID,id)
         editor.commit()
     }
 
-    fun getToken() = preferences.getString(PREF_NAME, "")
+    fun getToken() = preferences.getString(TOKEN, "")
 
-    fun getUserId() = preferences.getString(USER_ID,"")
+    fun getId() = preferences.getString(ID,"")
 
     fun clearSharedPref() {
         editor.clear()

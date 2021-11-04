@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.viewbinding.ViewBinding
 import com.example.todo.MainActivity
 import com.example.todo.framework.presentation.UIController
@@ -36,6 +37,11 @@ abstract class BaseFragment<VB : ViewBinding>(
     private fun setUIController() {
         controller = requireActivity() as UIController
     }
+
+    fun launchOnLifecycleScope(execute: suspend () -> Unit) =
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            execute()
+        }
 
     fun showProgress(show:Boolean){
         controller.displayProgress(show)

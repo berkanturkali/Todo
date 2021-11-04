@@ -6,11 +6,11 @@ import android.widget.TextView
 
 fun Array<String>.showDialog(
     context: Context,
-    title: String,
-    textView: TextView
+    textView: TextView,
+    title: String? = null,
 ) {
     val builder = AlertDialog.Builder(context)
-    builder.setTitle(title)
+    title?.let { builder.setTitle(title) }
     builder.setItems(this) { dialog, which ->
         textView.text = this[which]
         dialog.dismiss()

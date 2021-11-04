@@ -12,20 +12,20 @@ import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.todo.R
-import com.example.todo.framework.adapter.HomeFragmentAdapter
-import com.example.todo.framework.adapter.TodoLoadStateAdapter
-import com.example.todo.databinding.FragmentHomeLayoutBinding
 import com.example.todo.business.domain.model.Todo
 import com.example.todo.business.domain.model.TodoCategory
 import com.example.todo.business.domain.model.TodoFilterType
+import com.example.todo.databinding.FragmentHomeLayoutBinding
+import com.example.todo.framework.adapter.HomeFragmentAdapter
+import com.example.todo.framework.adapter.TodoLoadStateAdapter
+import com.example.todo.framework.presentation.view.fragments.BaseFragment
+import com.example.todo.framework.presentation.viewmodel.HomeFlowContainerViewModel
+import com.example.todo.framework.presentation.viewmodel.fragments.homeflow.HomeFragmentViewModel
+import com.example.todo.util.Consts.Companion.ID
 import com.example.todo.util.HeaderItemDecoration
 import com.example.todo.util.Resource
-import com.example.todo.framework.presentation.view.fragments.BaseFragment
-import com.example.todo.framework.presentation.viewmodel.MainTodoFragmentViewModel
-import com.example.todo.framework.presentation.viewmodel.fragments.homeflow.EditTodoFragmentViewModel
-import com.example.todo.framework.presentation.viewmodel.fragments.homeflow.HomeFragmentViewModel
+import com.example.todo.util.getNavigationResult
 import com.example.todo.util.showSnack
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -40,11 +40,10 @@ private const val TAG = "HomeFragment"
 class HomeFragment : BaseFragment<FragmentHomeLayoutBinding>(FragmentHomeLayoutBinding::inflate),
     HomeFragmentAdapter.OnTodoClickListener {
 
-    private val mViewModel: HomeFragmentViewModel by viewModels()
-    private val editViewModel by viewModels<EditTodoFragmentViewModel>()
     private lateinit var mAdapter: HomeFragmentAdapter
     private lateinit var dividerItemDecoration: DividerItemDecoration
-    private val mainTodoViewModel by viewModels<MainTodoFragmentViewModel>(ownerProducer = { requireParentFragment().requireParentFragment() })
+    private val mViewModel by viewModels<HomeFragmentViewModel>()
+    private val mainTodoViewModel by viewModels<HomeFlowContainerViewModel>(ownerProducer = { requireParentFragment().requireParentFragment() })
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -52,14 +51,6 @@ class HomeFragment : BaseFragment<FragmentHomeLayoutBinding>(FragmentHomeLayoutB
         initRecycler()
         initChips()
         subscribeObserver()
-        val backStackEntry = findNavController().getBackStackEntry(R.id.homeFragment2)
-        backStackEntry.savedStateHandle.getLiveData<Boolean>("isDeleted")
-            .observe(viewLifecycleOwner) {
-                if (it) {
-                    mAdapter.refresh()
-                    mainTodoViewModel.getStats()
-                }
-            }
         binding.retryButton.setOnClickListener {
             mAdapter.retry()
         }
@@ -70,9 +61,8 @@ class HomeFragment : BaseFragment<FragmentHomeLayoutBinding>(FragmentHomeLayoutB
         mAdapter.addLoadStateListener { loadState ->
             val isListEmpty = loadState.refresh is LoadState.NotLoading && mAdapter.itemCount == 0
             showEmptyList(isListEmpty)
-
             binding.todoRv.isVisible = loadState.mediator?.refresh is LoadState.NotLoading
-            binding.progressBar.isVisible = loadState.mediator?.refresh is LoadState.Loading
+            showProgress(loadState.mediator?.refresh is LoadState.Loading)
             binding.retryButton.isVisible = loadState.mediator?.refresh is LoadState.Error
             val error = when {
                 loadState.prepend is LoadState.Error -> loadState.prepend as? LoadState.Error
@@ -95,10 +85,8 @@ class HomeFragment : BaseFragment<FragmentHomeLayoutBinding>(FragmentHomeLayoutB
                 footer = TodoLoadStateAdapter { mAdapter.retry() }
             )
             layoutManager = LinearLayoutManager(requireContext())
-            mAdapter.stateRestorationPolicy =
-                RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
             dividerItemDecoration = DividerItemDecoration(
-                context,
+                requireContext(),
                 (layoutManager as LinearLayoutManager).orientation
             )
             addItemDecoration(dividerItemDecoration)
@@ -113,13 +101,13 @@ class HomeFragment : BaseFragment<FragmentHomeLayoutBinding>(FragmentHomeLayoutB
     private fun initChips() {
         binding.chipGroup.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
-//                R.id.categoryAll -> mViewModel.setCategory(TodoCategory.ALL)
-//                R.id.categoryWork -> mViewModel.setCategory(TodoCategory.WORK)
-//                R.id.categoryMusic -> mViewModel.setCategory(TodoCategory.MUSIC)
-//                R.id.categoryTravel -> mViewModel.setCategory(TodoCategory.TRAVEL)
-//                R.id.categoryStudy -> mViewModel.setCategory(TodoCategory.STUDY)
-//                R.id.categoryHome -> mViewModel.setCategory(TodoCategory.HOME)
-//                R.id.categoryShopping -> mViewModel.setCategory(TodoCategory.SHOPPING)
+                R.id.all -> mViewModel.setCategory(TodoCategory.ALL)
+                R.id.work -> mViewModel.setCategory(TodoCategory.WORK)
+                R.id.music -> mViewModel.setCategory(TodoCategory.MUSIC)
+                R.id.travel -> mViewModel.setCategory(TodoCategory.TRAVEL)
+                R.id.study -> mViewModel.setCategory(TodoCategory.STUDY)
+                R.id.home -> mViewModel.setCategory(TodoCategory.HOME)
+                R.id.shopping -> mViewModel.setCategory(TodoCategory.SHOPPING)
             }
             viewLifecycleOwner.lifecycleScope.launch {
                 mAdapter.loadStateFlow.distinctUntilChangedBy { it.refresh }
@@ -130,14 +118,21 @@ class HomeFragment : BaseFragment<FragmentHomeLayoutBinding>(FragmentHomeLayoutB
     }
 
     private fun subscribeObserver() {
-//        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
-//            mViewModel.todosPaginated.collectLatest {
-//                mAdapter.submitData(it)
-//            }
-//        }
+        launchOnLifecycleScope {
+            mViewModel.todos.collectLatest {
+                mAdapter.submitData(it)
+            }
+        }
         mainTodoViewModel.filterItemClicked.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let {
                 showFilterPopup()
+            }
+        }
+        mainTodoViewModel.shouldFetchDataFromNetwork.observe(viewLifecycleOwner){
+            it?.getContentIfNotHandled()?.let { shouldFetch->
+                if(shouldFetch){
+                    mAdapter.refresh()
+                }
             }
         }
 //        editViewModel.updateStatus.observe(viewLifecycleOwner) {
@@ -157,26 +152,31 @@ class HomeFragment : BaseFragment<FragmentHomeLayoutBinding>(FragmentHomeLayoutB
                 }
             }
         }
-//        mViewModel.deleteStatus.observe(viewLifecycleOwner) { deleteEvent ->
-//            deleteEvent.getContentIfNotHandled()?.let { resource ->
-//                when (resource) {
-//                    is Resource.Success -> {
-//                        requireView().snack(
-//                            "Removed Successfully",
-//                            R.color.color_success
-//                        )
-//                        mAdapter.refresh()
-//                        mainTodoViewModel.getStats()
-//                    }
-//                    is Resource.Error -> {
-//                        requireView().snack(
-//                            resource.message.toString(),
-//                            R.color.color_danger
-//                        )
-//                    }
-//                }
-//            }
-//        }
+        mViewModel.deleteInfo.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { resource ->
+                when (resource) {
+                    is Resource.Success -> {
+                        showProgress(false)
+                        if (resource.data != -1) mainTodoViewModel.cancelNotification(resource.data as Int)
+                        showSnack(
+                            "Removed Successfully",
+                            R.color.color_success
+                        )
+                    }
+                    is Resource.Error -> {
+                        showProgress(false)
+                        showSnack(
+                            resource.message.toString()
+                        )
+                    }
+                    is Resource.Loading -> showProgress(true)
+                }
+            }
+        }
+
+        getNavigationResult<String>(R.id.homeFragment, ID) {
+            mViewModel.deleteTodo(it)
+        }
     }
 
     private fun showFilterPopup() {
@@ -185,11 +185,11 @@ class HomeFragment : BaseFragment<FragmentHomeLayoutBinding>(FragmentHomeLayoutB
             menuInflater.inflate(R.menu.filter_todo_menu, menu)
             setOnMenuItemClickListener {
                 when (it.itemId) {
-//                    R.id.all -> mViewModel.setFilterType(TodoFilterType.ALL_TODOS)
-//                    R.id.active -> mViewModel.setFilterType(TodoFilterType.ACTIVE_TODOS)
-//                    R.id.completed -> mViewModel.setFilterType(TodoFilterType.COMPLETED_TODOS)
-//                    R.id.important -> mViewModel.setFilterType(TodoFilterType.IMPORTANT_TODOS)
-//                    else -> mViewModel.setFilterType(TodoFilterType.ALL_TODOS)
+                    R.id.all -> mViewModel.setFilterType(TodoFilterType.ALL_TODOS)
+                    R.id.active -> mViewModel.setFilterType(TodoFilterType.ACTIVE_TODOS)
+                    R.id.completed -> mViewModel.setFilterType(TodoFilterType.COMPLETED_TODOS)
+                    R.id.important -> mViewModel.setFilterType(TodoFilterType.IMPORTANT_TODOS)
+                    else -> mViewModel.setFilterType(TodoFilterType.ALL_TODOS)
                 }
                 true
             }
@@ -208,7 +208,8 @@ class HomeFragment : BaseFragment<FragmentHomeLayoutBinding>(FragmentHomeLayoutB
     }
 
     override fun onTodoClick(todo: Todo) {
-
+        val action = HomeFragmentDirections.actionHomeFragmentToTodoOptionsDialog(todo)
+        findNavController().navigate(action)
     }
 
     override fun onCheckboxListener(todo: Todo, isChecked: Boolean, textview: TextView) {

@@ -10,10 +10,10 @@ import com.example.todo.business.domain.model.TodoRemoteKeys
 interface TodoRemoteKeyDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(remoteKey: List<TodoRemoteKeys>)
+    suspend fun insertAll(remoteKey: List<TodoRemoteKeys>)
 
     @Query("SELECT * FROM TodoRemoteKeys WHERE todoId = :todoId")
-    fun remoteKeysByTodoId(todoId: String): TodoRemoteKeys?
+    suspend fun remoteKeysByTodoId(todoId: String): TodoRemoteKeys?
 
     @Query("DELETE FROM TodoRemoteKeys")
     fun clearRemoteKeys()

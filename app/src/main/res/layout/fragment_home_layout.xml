@@ -31,76 +31,76 @@
                 app:singleSelection="true">
 
                 <com.google.android.material.chip.Chip
-                    android:id="@+id/categoryAll"
+                    android:id="@+id/all"
                     style="@style/CustomChipStyle"
                     app:chipIcon="@drawable/ic_category"
                     app:chipIconEnabled="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checked="true"
-                    android:text="All" />
+                    android:text="@string/all" />
 
                 <com.google.android.material.chip.Chip
-                    android:id="@+id/categoryWork"
+                    android:id="@+id/work"
                     style="@style/CustomChipStyle"
                     app:chipIcon="@drawable/ic_category_work"
                     app:chipIconEnabled="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Work" />
+                    android:text="@string/work" />
 
                 <com.google.android.material.chip.Chip
-                    android:id="@+id/categoryMusic"
+                    android:id="@+id/music"
                     style="@style/CustomChipStyle"
                     app:chipIcon="@drawable/ic_category_music"
                     app:chipIconEnabled="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Music" />
+                    android:text="@string/music" />
 
                 <com.google.android.material.chip.Chip
-                    android:id="@+id/categoryTravel"
+                    android:id="@+id/travel"
                     style="@style/CustomChipStyle"
                     app:chipIcon="@drawable/ic_category_travel"
                     app:chipIconEnabled="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Travel" />
+                    android:text="@string/travel" />
 
 
                 <com.google.android.material.chip.Chip
-                    android:id="@+id/categoryStudy"
+                    android:id="@+id/study"
                     style="@style/CustomChipStyle"
                     app:chipIconEnabled="true"
                     app:chipIcon="@drawable/ic_category_study"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Study" />
+                    android:text="@string/study" />
 
                 <com.google.android.material.chip.Chip
-                    android:id="@+id/categoryHome"
+                    android:id="@+id/home"
                     style="@style/CustomChipStyle"
                     app:chipIcon="@drawable/ic_category_home"
                     app:chipIconEnabled="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Home" />
+                    android:text="@string/home" />
 
                 <com.google.android.material.chip.Chip
-                    android:id="@+id/categoryShopping"
+                    android:id="@+id/shopping"
                     style="@style/CustomChipStyle"
                     app:chipIcon="@drawable/ic_category_shopping"
                     app:chipIconEnabled="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Shopping" />
+                    android:text="@string/shopping" />
 
             </com.google.android.material.chip.ChipGroup>
         </HorizontalScrollView>
 
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/todoRv"
+            android:id="@+id/todo_rv"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:scrollbars="vertical"
@@ -111,24 +111,12 @@
             app:layout_constraintTop_toBottomOf="@+id/horizontalScroll"
             tools:listitem="@layout/todo_item_layout" />
 
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:elevation="8dp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:visibility="visible" />
-
         <Button
             android:id="@+id/retry_button"
             style="@style/buttonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Retry"
+            android:text="@string/retry"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -140,7 +128,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:gravity="center"
-            android:text="No Results"
+            android:text="@string/no_result"
             android:textColor="@android:color/holo_red_dark"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"

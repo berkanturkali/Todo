@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/add_todo"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/add_todo"
     app:startDestination="@id/addTodoFragment">
 
     <fragment
         android:id="@+id/addTodoFragment"
         android:label="Add Todo"
+        tools:layout="@layout/fragment_add_todo_layout"
         android:name="com.example.todo.framework.presentation.view.fragments.homeflow.AddTodoFragment"
          />
 </navigation>

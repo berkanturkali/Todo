@@ -3,7 +3,6 @@ package com.example.todo.framework.presentation.view.fragments.homeflow
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
-import android.util.Patterns
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -11,13 +10,11 @@ import com.example.todo.R
 import com.example.todo.business.domain.model.User
 import com.example.todo.databinding.FragmentProfileEditLayoutBinding
 import com.example.todo.framework.presentation.view.fragments.BaseFragment
-import com.example.todo.framework.presentation.viewmodel.MainTodoFragmentViewModel
+import com.example.todo.framework.presentation.viewmodel.HomeFlowContainerViewModel
 import com.example.todo.framework.presentation.viewmodel.fragments.homeflow.EditProfileFragmentViewModel
 import com.example.todo.util.*
 import com.google.gson.JsonObject
-import com.jakewharton.rxbinding4.widget.textChanges
 import dagger.hilt.android.AndroidEntryPoint
-import io.reactivex.rxjava3.core.Observable
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -32,7 +29,7 @@ class EditProfileFragment :
     BaseFragment<FragmentProfileEditLayoutBinding>(FragmentProfileEditLayoutBinding::inflate) {
 
     private val mViewModel by viewModels<EditProfileFragmentViewModel>()
-    private val mainTodoViewModel by viewModels<MainTodoFragmentViewModel>(ownerProducer = { requireParentFragment().requireParentFragment() })
+    private val mainTodoViewModel by viewModels<HomeFlowContainerViewModel>(ownerProducer = { requireParentFragment().requireParentFragment() })
     private var photoFile: File? = null
 
     @Inject

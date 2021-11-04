@@ -60,7 +60,7 @@ fun NavigationView.setupWithNavController(
         val graphId = navHostFragment.navController.graph.id
 
         // Save to the map
-        graphIdToTagMap[graphId] = fragmentTag
+        graphIdToTagMap.append(graphId,fragmentTag)
 
         // Attach or detach nav host fragment depending on whether it's the selected item
         if (graphId == currentItemId) {

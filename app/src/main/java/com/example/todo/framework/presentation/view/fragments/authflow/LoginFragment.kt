@@ -57,9 +57,9 @@ class LoginFragment :
                 when (resource) {
                     is Resource.Success -> {
                         showProgress(false)
-                        storageManager.setTokenAndUserId(
+                        storageManager.cacheTokenAndId(
                             resource.data!!.token,
-                            resource.data.userId
+                            resource.data.id
                         )
                         showSnack(
                             getString(R.string.login_success),

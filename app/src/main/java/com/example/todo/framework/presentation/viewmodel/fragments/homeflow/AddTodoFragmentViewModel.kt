@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.todo.business.domain.model.Todo
-import com.example.todo.business.repo.TodoRepo
+import com.example.todo.business.repo.abstraction.TodoRepo
 import com.example.todo.util.Event
 import com.example.todo.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,12 +23,12 @@ class AddTodoFragmentViewModel @Inject constructor(
     @ApplicationContext private val app: Context
 ) : ViewModel() {
 
-    private val _addedStatus = MutableLiveData<Event<Resource<String>>>()
-    val addedStatus: LiveData<Event<Resource<String>>> get() = _addedStatus
+    private val _addedInfo = MutableLiveData<Event<Resource<String>>>()
+    val addedInfo: LiveData<Event<Resource<String>>> get() = _addedInfo
 
     fun addTodo(todo: Todo) {
         viewModelScope.launch(Dispatchers.Main) {
-//            _addedStatus.value = Event(todoRepo.addTodo(todo))
+            _addedInfo.value = Event(todoRepo.add(todo))
         }
     }
 }

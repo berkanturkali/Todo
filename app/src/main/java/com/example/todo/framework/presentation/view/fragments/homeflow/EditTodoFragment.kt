@@ -3,14 +3,15 @@ package com.example.todo.framework.presentation.view.fragments.homeflow
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.todo.R
-import com.example.todo.databinding.FragmentEditTodoLayoutBinding
 import com.example.todo.business.domain.model.Todo
-import com.example.todo.util.*
+import com.example.todo.databinding.FragmentEditTodoLayoutBinding
 import com.example.todo.framework.presentation.view.fragments.BaseFragment
-import com.example.todo.framework.presentation.viewmodel.MainTodoFragmentViewModel
+import com.example.todo.framework.presentation.viewmodel.HomeFlowContainerViewModel
 import com.example.todo.framework.presentation.viewmodel.fragments.homeflow.EditTodoFragmentViewModel
+import com.example.todo.util.*
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
@@ -23,32 +24,31 @@ class EditTodoFragment :
     BaseFragment<FragmentEditTodoLayoutBinding>(
         FragmentEditTodoLayoutBinding::inflate
     ) {
-//    private val args: EditTodoFragmentArgs by navArgs()
-
+    private val args: EditTodoFragmentArgs by navArgs()
     private val mViewModel: EditTodoFragmentViewModel by viewModels()
-    private val mainTodoViewModel by viewModels<MainTodoFragmentViewModel>(ownerProducer = { requireParentFragment().requireParentFragment() })
+    private val mainTodoViewModel by viewModels<HomeFlowContainerViewModel>(ownerProducer = { requireParentFragment().requireParentFragment() })
     private lateinit var calendar: Calendar
     private lateinit var dateFormat: SimpleDateFormat
     private var alarmOn = false
     private val dateTimeFormat = SimpleDateFormat(
-        "${Consts.DATE_PATTERN} ${Consts.TIME_PATTERN}",
+        Consts.DATE_TIME_PATTERN,
         Locale.getDefault()
     )
     private var intentId = -1
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setFields(args.todo)
         calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
         dateFormat = Consts.DATE_PATTERN.formatter()
         initButtons()
-//        mViewModel.getTodo(args.todoId)
         subscribeObservers()
     }
 
     private fun initButtons() {
         val categories = resources.getStringArray(R.array.category_array)
         binding.categoryPickerIb.setOnClickListener {
-            categories.showDialog(requireContext(), "Select a Category", binding.categoryEt)
+            categories.showDialog(requireContext(),  binding.categoryEt,"Select a Category",)
         }
         binding.datePickerIb.setOnClickListener {
             val datePicker = MaterialDatePicker.Builder.datePicker()
@@ -62,21 +62,21 @@ class EditTodoFragment :
             }
         }
         binding.updateTodoBtn.setOnClickListener {
-            if (checkFields()) {
+            if (mViewModel.isDescriptionValid(binding.todoEt.text.toString())) {
                 updateTodo()
             } else {
-              showSnack(
-                    "Fields can not be empty"
+                showSnack(
+                    getString(R.string.invalid_fields)
                 )
             }
         }
         binding.importancePickIb.setOnClickListener {
             resources.getStringArray(R.array.importance_array)
-                .showDialog(requireContext(), "Select Importance", binding.importanceTv)
+                .showDialog(requireContext(), binding.importanceTv, "Select Importance")
         }
         binding.completedPickIb.setOnClickListener {
             resources.getStringArray(R.array.completed_array)
-                .showDialog(requireContext(), "Select Complete Status", binding.completedTv)
+                .showDialog(requireContext(), binding.completedTv)
         }
         binding.timePickerIb.setOnClickListener {
             showTimePicker()
@@ -92,7 +92,7 @@ class EditTodoFragment :
     private fun setAlarmTime() {
         val dateInMillis =
             dateTimeFormat.parse("${binding.dateEt.text}  ${binding.timeEt.text}")!!.time
-        mainTodoViewModel.setNotificationTime(dateInMillis)
+        mainTodoViewModel.setNotificationDate(dateInMillis)
     }
 
     private fun showTimePicker() {
@@ -100,7 +100,7 @@ class EditTodoFragment :
             .setTimeFormat(TimeFormat.CLOCK_24H)
             .setHour(0)
             .setMinute(0)
-            .setTitleText("Select Appointment time")
+            .setTitleText("Select Todo Time")
             .build()
         picker.show(childFragmentManager, "tag")
 
@@ -111,11 +111,6 @@ class EditTodoFragment :
             val minuteAsText = if (newMin < 10) "0$newMin" else newMin
             binding.timeEt.setText("$hourAsText:$minuteAsText")
         }
-    }
-
-    private fun checkFields(): Boolean {
-        val todoDesc = binding.todoEt.text.toString().trim()
-        return todoDesc.isNotEmpty()
     }
 
     private fun updateTodo() {
@@ -148,28 +143,32 @@ class EditTodoFragment :
                 isCompleted = completed!!,
                 isImportant = importance!!,
                 notifyMe = notifyMe,
-                notificationId = intentId
+                notificationId = intentId,
+                user = args.todo.user,
+                id = args.todo.id
             )
-//            mViewModel.updateTodo(args.todoId, todo)
+            mViewModel.updateTodo(todo)
         }
     }
 
     private fun subscribeObservers() {
-//        mViewModel.todo.observe(viewLifecycleOwner) { resource ->
-//            when (resource) {
-//                is Resource.Success -> setFields(resource.data!!)
-//                is Resource.Error -> {
-//                    if (alarmOn && intentId != -1) mainTodoViewModel.cancelNotification(intentId)
-//                    showError(resource.message.toString())
-//                }
-//            }
-//        }
-//        mViewModel.updateStatus.observe(viewLifecycleOwner)
-//        {
-//            it.getContentIfNotHandled()?.let { message ->
-//                showSnack(message, R.color.black)
-//            }
-//        }
+        mViewModel.updateInfo.observe(viewLifecycleOwner)
+        {
+            it.getContentIfNotHandled()?.let { resource ->
+                when (resource) {
+                    is Resource.Error -> {
+                        showProgress(false)
+                        showError(resource.message!!)
+                    }
+                    is Resource.Loading -> showProgress(true)
+                    is Resource.Success -> {
+                        showProgress(false)
+                        showSnack(resource.data!!, R.color.color_success)
+                        findNavController().navigateUp()
+                    }
+                }
+            }
+        }
         mainTodoViewModel.isValidDate.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { isValid ->
                 if (!isValid) {

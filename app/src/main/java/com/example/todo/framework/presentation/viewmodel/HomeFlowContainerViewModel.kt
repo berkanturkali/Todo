@@ -9,25 +9,17 @@ import androidx.core.app.AlarmManagerCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.example.todo.business.domain.model.StatsResult
 import com.example.todo.business.domain.model.User
 import com.example.todo.receiver.AlarmReceiver
-import com.example.todo.business.repo.TodoRepo
-import com.example.todo.business.repo.UserRepo
 import com.example.todo.util.Event
 import com.example.todo.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MainTodoFragmentViewModel @Inject constructor(
-    private val userRepo: UserRepo,
-    private val todoRepo: TodoRepo,
-    @ApplicationContext val app: Context
+class HomeFlowContainerViewModel @Inject constructor(
+    @ApplicationContext private val app: Context
 ) : ViewModel() {
 
     private val alarmManager = app.getSystemService(Context.ALARM_SERVICE) as AlarmManager
@@ -41,46 +33,25 @@ class MainTodoFragmentViewModel @Inject constructor(
     private val _filterItemClicked = MutableLiveData<Event<Boolean>>()
     val filterItemClicked: LiveData<Event<Boolean>> get() = _filterItemClicked
 
-    private val _progress = MutableLiveData<Event<Boolean>>()
-    val progress: LiveData<Event<Boolean>> get() = _progress
-
     private val _isRemoveCompletedItemsClicked = MutableLiveData<Event<Boolean>>()
     val isRemoveCompletedItemsClicked: LiveData<Event<Boolean>> get() = _isRemoveCompletedItemsClicked
-
-    private val _stats = MutableLiveData<Resource<StatsResult>>()
-    val stats: LiveData<Resource<StatsResult>> = _stats
 
     private var randomPendingId = (0..Int.MAX_VALUE).random()
 
     private val _isValidDate = MutableLiveData<Event<Boolean>>()
     val isValidDate: LiveData<Event<Boolean>> get() = _isValidDate
 
-    fun getMe() {
-        viewModelScope.launch(Dispatchers.Main) {
-//            _userInfo.value = userRepo.getMe()
-        }
-    }
+    private val _shouldFetchDataFromNetwork = MutableLiveData<Event<Boolean>>()
 
-    fun getStats() {
-        viewModelScope.launch(Dispatchers.Main) {
-//            _stats.value = todoRepo.getStats()
-        }
-    }
+    val shouldFetchDataFromNetwork: LiveData<Event<Boolean>> get() = _shouldFetchDataFromNetwork
 
-    fun setNotificationTime(time: Long) {
+
+    fun setNotificationDate(time: Long) {
         if (System.currentTimeMillis() > time) {
             _isValidDate.value = Event(false)
             return
         }
         _timeSelection.value = time
-    }
-
-    fun showProgress() {
-        _progress.value = Event(true)
-    }
-
-    fun hideProgress() {
-        _progress.value = Event(false)
     }
 
     fun setFilterItemClicked(isClicked: Boolean) {
@@ -97,10 +68,13 @@ class MainTodoFragmentViewModel @Inject constructor(
         }
     }
 
-
     fun newId(): Int {
         randomPendingId = (0..Int.MAX_VALUE).random()
         return randomPendingId
+    }
+
+    fun setShouldFetchDataFromNetwork(shouldFetch: Boolean) {
+        _shouldFetchDataFromNetwork.value = Event(shouldFetch)
     }
 
     private fun setNotification(

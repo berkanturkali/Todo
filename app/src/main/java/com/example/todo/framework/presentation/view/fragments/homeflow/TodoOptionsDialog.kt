@@ -5,13 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
-import com.example.todo.R
+import androidx.navigation.fragment.navArgs
+import com.example.todo.business.domain.model.Todo
 import com.example.todo.databinding.DialogTodoOptionsLayoutBinding
-import com.example.todo.util.Resource
-import com.example.todo.util.showSnack
-import com.example.todo.framework.presentation.viewmodel.MainTodoFragmentViewModel
-import com.example.todo.framework.presentation.viewmodel.fragments.homeflow.HomeFragmentViewModel
+import com.example.todo.framework.presentation.viewmodel.HomeFlowContainerViewModel
+import com.example.todo.util.Consts.Companion.ID
+import com.example.todo.util.setNavigationResult
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -20,9 +19,8 @@ class TodoOptionsDialog : BottomSheetDialogFragment() {
 
     private var _binding: DialogTodoOptionsLayoutBinding? = null
     private val binding get() = _binding!!
-//    private val args: TodoOptionsDialogArgs by navArgs()
-    private val mViewModel: HomeFragmentViewModel by viewModels()
-    private val mainTodoViewModel by viewModels<MainTodoFragmentViewModel>(ownerProducer = { requireParentFragment().requireParentFragment() })
+    private val args: TodoOptionsDialogArgs by navArgs()
+    private val mainTodoViewModel by viewModels<HomeFlowContainerViewModel>(ownerProducer = { requireParentFragment().requireParentFragment() })
 
 
     override fun onCreateView(
@@ -37,51 +35,21 @@ class TodoOptionsDialog : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initButtons()
-        subscribeObserver()
     }
 
     private fun initButtons() {
         binding.apply {
             deleteItem.setOnClickListener {
-//                mViewModel.deleteTodo(args.todo.id)
+                setNavigationResult(ID, args.todo.id)
+                dialog?.dismiss()
             }
             editItem.setOnClickListener {
-//                navigateToEditScreen(args.todo.id)
+                navigateToEditScreen(args.todo)
             }
         }
     }
 
-    private fun subscribeObserver() {
-//        mViewModel.deleteStatus.observe(viewLifecycleOwner) {
-//            it.getContentIfNotHandled()?.let { resource ->
-//                when (resource) {
-//                    is Resource.Success -> {
-////                        if (args.todo.notificationId != -1) mainTodoViewModel.cancelNotification(args.todo.notificationId)
-//                        mainTodoViewModel.hideProgress()
-//                        requireView().showSnack(
-//                            "Removed Successfully",
-//                            R.color.color_success
-//                        ) { dialog?.dismiss() }
-//                        findNavController().previousBackStackEntry?.savedStateHandle?.set(
-//                            "isDeleted",
-//                            true
-//                        )
-//                    }
-//                    is Resource.Error -> {
-//                        mainTodoViewModel.hideProgress()
-//                        showSnack(
-//                            resource.message.toString()
-//                        )
-//                    }
-//                    is Resource.Loading -> mainTodoViewModel.showProgress()
-//                }
-//            }
-//        }
-    }
-
-
-
-    private fun navigateToEditScreen(id: String) {
+    private fun navigateToEditScreen(todo:Todo) {
 
     }
 

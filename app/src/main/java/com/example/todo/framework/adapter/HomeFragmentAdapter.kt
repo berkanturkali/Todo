@@ -1,5 +1,6 @@
 package com.example.todo.framework.adapter
 
+
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
@@ -7,16 +8,11 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todo.R
-import com.example.todo.databinding.TodoItemLayoutBinding
-import com.example.todo.databinding.TodoItemSeperatorLayoutBinding
-
-
 import com.example.todo.business.domain.model.Todo
 import com.example.todo.business.domain.model.TodoModel
-import com.example.todo.util.Consts
-import com.example.todo.util.isToday
-import com.example.todo.util.isTomorrow
-import com.example.todo.util.isYesterday
+import com.example.todo.databinding.TodoItemLayoutBinding
+import com.example.todo.databinding.TodoItemSeperatorLayoutBinding
+import com.example.todo.util.*
 import com.google.android.material.checkbox.MaterialCheckBox
 import java.text.SimpleDateFormat
 import java.util.*
@@ -28,8 +24,7 @@ class HomeFragmentAdapter(
 ) :
     PagingDataAdapter<TodoModel, RecyclerView.ViewHolder>(TodoComparator) {
 
-    private val simpleDateFormat = SimpleDateFormat(Consts.DATE_PATTERN)
-    private val timeFormatter = SimpleDateFormat(Consts.TIME_PATTERN)
+    private val timeFormatter = SimpleDateFormat(Consts.TIME_PATTERN, Locale.getDefault())
 
     companion object {
         private val TodoComparator = object : DiffUtil.ItemCallback<TodoModel>() {
@@ -49,7 +44,7 @@ class HomeFragmentAdapter(
         return when (viewType) {
             R.layout.todo_item_layout -> {
                 TodoViewHolder(
-                    com.example.todo.databinding.TodoItemLayoutBinding.inflate(
+                    TodoItemLayoutBinding.inflate(
                         LayoutInflater.from(parent.context),
                         parent,
                         false
@@ -58,7 +53,7 @@ class HomeFragmentAdapter(
             }
             else -> {
                 TodoSeparatorViewHolder(
-                    com.example.todo.databinding.TodoItemSeperatorLayoutBinding.inflate(
+                    TodoItemSeperatorLayoutBinding.inflate(
                         LayoutInflater.from(parent.context),
                         parent,
                         false
@@ -114,8 +109,8 @@ class HomeFragmentAdapter(
                 val date = Date(todo.date)
                 dateTv.text = timeFormatter.format(date)
                 todoCheckbox.isChecked = todo.isCompleted
-                val drawable = if(todo.notifyMe) R.drawable.alarm_icon else R.drawable.clock_icon
-                dateTv.setCompoundDrawablesRelativeWithIntrinsicBounds(drawable,0,0,0)
+                val drawable = if (todo.notifyMe) R.drawable.alarm_icon else R.drawable.clock_icon
+                dateTv.setCompoundDrawablesRelativeWithIntrinsicBounds(drawable, 0, 0, 0)
                 binding.todoTv.paint.isStrikeThruText = todo.isCompleted
                 if (todo.isImportant) icImportant.setImageResource(R.drawable.ic_important_star) else icImportant.setImageResource(
                     R.drawable.ic_not_important_star
@@ -127,21 +122,7 @@ class HomeFragmentAdapter(
     inner class TodoSeparatorViewHolder(private val binding: TodoItemSeperatorLayoutBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(separator: String) {
-            var day: String? = when {
-                isToday(separator.toLong()) -> {
-                    "Today"
-                }
-                isYesterday(separator.toLong()) -> {
-                    "Yesterday"
-                }
-                isTomorrow(separator.toLong()) -> {
-                    "Tomorrow"
-                }
-                else -> {
-                    simpleDateFormat.format(separator.toLong())
-                }
-            }
-            binding.separatorDescription.text = day
+            binding.separatorDescription.text = separator.toLong().getDate()
         }
     }
 

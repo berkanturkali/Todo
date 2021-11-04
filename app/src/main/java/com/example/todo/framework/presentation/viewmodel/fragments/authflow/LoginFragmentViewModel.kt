@@ -1,21 +1,17 @@
 package com.example.todo.framework.presentation.viewmodel.fragments.authflow
 
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.todo.business.domain.model.TokenResponse
-import com.example.todo.business.repo.UserRepo
 import com.example.todo.business.repo.abstraction.AuthRepo
 import com.example.todo.util.*
 import com.google.gson.JsonObject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import retrofit2.Retrofit
 import javax.inject.Inject
 
 private const val TAG = "LoginFragmentViewModel"
@@ -25,9 +21,9 @@ class LoginFragmentViewModel @Inject constructor(
     private val userRepo: AuthRepo
 ) : ViewModel() {
 
-    private val _loginInfo = MutableLiveData<Event<Resource<TokenResponse>?>>()
+    private val _loginInfo = MutableLiveData<Event<Resource<TokenResponse>>>()
 
-    val loginInfo: LiveData<Event<Resource<TokenResponse>?>> get() = _loginInfo
+    val loginInfo: LiveData<Event<Resource<TokenResponse>>> get() = _loginInfo
 
     fun loginUser(credentials: JsonObject) {
         viewModelScope.launch(Dispatchers.Main) {

@@ -3,23 +3,36 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/home"
-    app:startDestination="@id/homeFragment2">
+    app:startDestination="@id/homeFragment">
 
     <fragment
-        android:id="@+id/homeFragment2"
+        android:id="@+id/homeFragment"
         android:label="Todos"
         android:name="com.example.todo.framework.presentation.view.fragments.homeflow.HomeFragment"
-        tools:layout="@layout/fragment_home_layout"/>
+        tools:layout="@layout/fragment_home_layout">
+        <action
+            android:id="@+id/action_homeFragment_to_todoOptionsDialog"
+            app:destination="@id/todoOptionsDialog" />
+    </fragment>
     <dialog
         android:id="@+id/todoOptionsDialog"
         android:label="Options"
         android:name="com.example.todo.framework.presentation.view.fragments.homeflow.TodoOptionsDialog"
         tools:layout="@layout/dialog_todo_options_layout">
+        <action
+            android:id="@+id/action_todoOptionsDialog_to_editTodoFragment"
+            app:destination="@id/editTodoFragment" />
+        <argument
+            android:name="todo"
+            app:argType="com.example.todo.business.domain.model.Todo" />
     </dialog>
     <fragment
         android:id="@+id/editTodoFragment"
         android:label="Edit Todo"
         android:name="com.example.todo.framework.presentation.view.fragments.homeflow.EditTodoFragment"
         tools:layout="@layout/fragment_edit_todo_layout">
+        <argument
+            android:name="todo"
+            app:argType="com.example.todo.business.domain.model.Todo" />
     </fragment>
 </navigation>

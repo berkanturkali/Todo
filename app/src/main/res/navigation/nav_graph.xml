@@ -12,7 +12,7 @@
         tools:layout="@layout/fragment_splash_screen">
         <action
             android:id="@+id/action_splashScreenFragment_to_mainTodoFragment"
-            app:destination="@id/mainTodoFragment" />
+            app:destination="@id/HomeFlowContainerFragment" />
         <action
             android:id="@+id/action_splashScreenFragment_to_navigation"
             app:destination="@id/navigation" />
@@ -27,7 +27,7 @@
             tools:layout="@layout/fragment_login_layout">
             <action
                 android:id="@+id/action_loginFragment_to_mainTodoFragment"
-                app:destination="@id/mainTodoFragment"
+                app:destination="@id/HomeFlowContainerFragment"
                 />
         </fragment>
         <fragment
@@ -65,10 +65,15 @@
         </fragment>
     </navigation>
     <fragment
-        android:id="@+id/mainTodoFragment"
-        android:name="com.example.todo.HomeFlowMainFragment"
+        android:id="@+id/HomeFlowContainerFragment"
+        android:name="com.example.todo.HomeFlowContainerFragment"
         android:label="MainTodoFragment"
-        tools:layout="@layout/fragment_home_flow_main_layout"/>
+        tools:layout="@layout/fragment_home_flow_container_layout">
+
+        <action
+            android:id="@+id/action_HomeFlowContainerFragment_to_navigation"
+            app:destination="@id/navigation" />
+    </fragment>
 
 
 </navigation>

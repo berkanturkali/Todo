@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.todo.business.domain.model.Todo
-import com.example.todo.business.repo.TodoRepo
+import com.example.todo.business.repo.abstraction.TodoRepo
 import com.example.todo.util.Event
 import com.example.todo.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,28 +17,17 @@ import javax.inject.Inject
 class EditTodoFragmentViewModel @Inject constructor(
     private val repo: TodoRepo
 ) : ViewModel() {
-//    private val _todo = MutableLiveData<Resource<Todo>>()
-//    val todo: LiveData<Resource<Todo>> get() = _todo
-//
-//    private val _updateStatus = MutableLiveData<Event<String>>()
-//
-//    val updateStatus: LiveData<Event<String>> get() = _updateStatus
-//
-//    fun getTodo(id: String) {
-//        viewModelScope.launch {
-//            _todo.value = repo.getTodo(id)
-//        }
-//    }
-//
-//    fun updateTodo(id: String, todo: Todo) {
-//        viewModelScope.launch(Dispatchers.Main) {
-//            val response = repo.updateTodo(id, todo)
-//            when (response) {
-//                is Resource.Success -> {
-//                    _updateStatus.value = Event(response.data.toString())
-//                }
-//                is Resource.Error -> _updateStatus.value = Event(response.message.toString())
-//            }
-//        }
-//    }
+
+    private val _updateInfo = MutableLiveData<Event<Resource<String>>>()
+
+    val updateInfo: LiveData<Event<Resource<String>>> get() = _updateInfo
+
+    fun updateTodo(todo: Todo) {
+        viewModelScope.launch(Dispatchers.Main) {
+            val response = repo.update(todo)
+            _updateInfo.value = Event(response)
+        }
+    }
+
+    fun isDescriptionValid(description:String) = description.isNotEmpty()
 }

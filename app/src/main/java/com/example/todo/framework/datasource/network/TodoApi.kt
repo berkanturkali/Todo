@@ -1,6 +1,7 @@
 package com.example.todo.framework.datasource.network
 
 import com.example.todo.business.domain.model.Todo
+import com.example.todo.framework.datasource.network.model.TodoDTO
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -17,7 +18,7 @@ interface TodoApi {
         @Query("limit") limit: Int,
         @Query("filter") filter: String,
         @Query("category") category: String
-    ): List<Todo>
+    ): List<TodoDTO>
 
     @GET("todo/{id}")
     suspend fun getTodo(
@@ -27,15 +28,15 @@ interface TodoApi {
     @PATCH("todo/{id}")
     suspend fun updateTodo(
         @Path("id") id: String,
-        @Body todo: Todo
+        @Body() todo: TodoDTO
     ): Response<String>
 
     @DELETE("todo/{id}")
     suspend fun deleteTodo(
         @Path("id") id: String
-    ): Response<Unit>
+    ): Response<Any>
 
     @DELETE("todo/delete-completed-todos")
-    suspend fun deleteCompletedTodos(): Response<Unit>
+    suspend fun deleteCompletedTodos(): Response<String>
 
 }
