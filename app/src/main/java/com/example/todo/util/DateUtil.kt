@@ -1,11 +1,10 @@
 package com.example.todo.util
 
 import android.text.format.DateUtils
-import com.example.todo.util.Consts.Companion.DATE_PATTERN
+import com.example.todo.util.Constants.DATE_PATTERN
 import java.text.SimpleDateFormat
 import java.util.*
 
-private const val TAG = "DateUtil"
 fun Long.toDate(pattern: String = DATE_PATTERN): String {
     return pattern.formatter().format(this)
 }

@@ -28,6 +28,16 @@
     <string name="home">Home</string>
     <string name="shopping">Shopping</string>
     <string name="retry">Retry</string>
+    <string name="new_todo">New Todo</string>
+    <string name="add">Add</string>
+    <string name="add_edit_todo">Add Edit Todo</string>
+    <string name="cancel">Cancel</string>
+    <string name="select">Select</string>
+    <string name="statistics">Statistics</string>
+    <string name="nothing_here">Nothing Here</string>
+    <string name="profile">Profile</string>
+    <string name="logout">Logout</string>
+    <string name="something_went_wrong_please_try_again">Something went wrong please try again</string>
     <string-array name="importance_array">
         <item>Important</item>
         <item>Not Important</item>

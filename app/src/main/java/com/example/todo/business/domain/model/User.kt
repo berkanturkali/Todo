@@ -8,9 +8,6 @@ data class User(
     val lastName: String,
     val email: String,
     val password: String,
-    @SerializedName("userImage")
-    @Expose
-    val profilePic: String = "",
     @SerializedName("_id")
     @Expose
     var _id:String? = null,

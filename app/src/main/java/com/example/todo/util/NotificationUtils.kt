@@ -31,7 +31,7 @@ fun NotificationManager.sendNotification(
         .setAutoCancel(true)
         .setPriority(NotificationCompat.PRIORITY_HIGH)
 
-    notify(Consts.NOTIFICATION_ID, builder.build())
+    notify(Constants.NOTIFICATION_ID, builder.build())
 }
 
 fun NotificationManager.cancelNotification() {

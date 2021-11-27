@@ -3,10 +3,9 @@ package com.example.todo.di
 import android.content.Context
 import android.content.Intent
 import com.example.todo.MainActivity
-import com.example.todo.framework.datasource.network.AuthApi
-import com.example.todo.framework.datasource.network.TodoApi
-import com.example.todo.framework.datasource.network.UserApi
-import com.example.todo.util.Consts
+import com.example.todo.framework.datasource.network.api.AuthApi
+import com.example.todo.framework.datasource.network.api.TodoApi
+import com.example.todo.util.Constants
 import com.example.todo.util.StorageManager
 import dagger.Module
 import dagger.Provides
@@ -65,9 +64,9 @@ object NetworkModule {
         interceptor: Interceptor,
     ): OkHttpClient {
         return OkHttpClient.Builder()
-            .connectTimeout(Consts.CONNECTION_TIMEOUT, TimeUnit.SECONDS)
-            .writeTimeout(Consts.WRITE_TIMEOUT, TimeUnit.SECONDS)
-            .readTimeout(Consts.READ_TIMEOUT, TimeUnit.SECONDS)
+            .connectTimeout(Constants.CONNECTION_TIMEOUT, TimeUnit.SECONDS)
+            .writeTimeout(Constants.WRITE_TIMEOUT, TimeUnit.SECONDS)
+            .readTimeout(Constants.READ_TIMEOUT, TimeUnit.SECONDS)
             .addInterceptor(interceptor)
             .addInterceptor(loggingInterceptor)
             .retryOnConnectionFailure(true)
@@ -79,7 +78,7 @@ object NetworkModule {
     @Provides
     fun provideRetrofit(client: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(Consts.BASE_URL)
+            .baseUrl(Constants.BASE_URL)
             .client(client)
             .addConverterFactory(ScalarsConverterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
@@ -97,11 +96,5 @@ object NetworkModule {
     @Provides
     fun provideTodoApi(retrofit: Retrofit): TodoApi {
         return retrofit.create(TodoApi::class.java)
-    }
-
-    @Singleton
-    @Provides
-    fun provideUserApi(retrofit: Retrofit): UserApi {
-        return retrofit.create(UserApi::class.java)
     }
 }

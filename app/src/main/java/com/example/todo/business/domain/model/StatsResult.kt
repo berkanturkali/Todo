@@ -1,7 +1,10 @@
 package com.example.todo.business.domain.model
 
-data class StatsResult(
-    val activeTasksPercent: Float,
-    val completedTasksPercent: Float,
-    val totalCount:Int
+data class Stat(
+    val total: Int,
+    val important: Int,
+    val notImportant: Int,
+    val completed: Int,
+    val active: Int,
+    val category: String
 )

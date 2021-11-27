@@ -2,7 +2,6 @@ package com.example.todo.framework.datasource.network.mapper
 
 import com.example.todo.business.DtoDomainMapper
 import com.example.todo.business.domain.model.Todo
-import com.example.todo.framework.datasource.cache.model.TodoEntity
 import com.example.todo.framework.datasource.network.model.TodoDTO
 import javax.inject.Inject
 import javax.inject.Singleton

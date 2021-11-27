@@ -15,25 +15,24 @@
             app:destination="@id/HomeFlowContainerFragment" />
         <action
             android:id="@+id/action_splashScreenFragment_to_navigation"
-            app:destination="@id/navigation" />
+            app:destination="@id/auth_graph" />
     </fragment>
     <navigation
-        android:id="@+id/navigation"
-        app:startDestination="@id/signinSignupOptionsFragment">
+        android:id="@+id/auth_graph"
+        app:startDestination="@id/loginSignupOptionsFragment">
         <fragment
             android:id="@+id/loginFragment"
             android:name="com.example.todo.framework.presentation.view.fragments.authflow.LoginFragment"
             android:label="fragment_login_layout"
-            tools:layout="@layout/fragment_login_layout">
+            tools:layout="@layout/fragment_login">
             <action
                 android:id="@+id/action_loginFragment_to_mainTodoFragment"
-                app:destination="@id/HomeFlowContainerFragment"
-                />
+                app:destination="@id/HomeFlowContainerFragment" />
         </fragment>
         <fragment
             android:id="@+id/signupFragment"
             android:name="com.example.todo.framework.presentation.view.fragments.authflow.SignupFragment"
-            tools:layout="@layout/fragment_signup_layout">
+            tools:layout="@layout/fragment_signup">
             <action
                 android:id="@+id/action_signupFragment_to_loginFragment"
                 app:destination="@id/loginFragment"
@@ -41,38 +40,42 @@
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right"
-                app:popUpTo="@id/signinSignupOptionsFragment"
+                app:popUpTo="@id/loginSignupOptionsFragment"
                 app:popUpToInclusive="false" />
-            <action
-                android:id="@+id/action_signupFragment_to_CameraOptionsFragment"
-                app:destination="@id/CameraOptionsFragment" />
         </fragment>
-        <dialog
-            android:id="@+id/CameraOptionsFragment"
-            android:name="com.example.todo.framework.presentation.view.fragments.authflow.CameraOptionsFragment"
-            android:label="Camera Options"
-            tools:layout="@layout/fragment_camera_options_layout" />
         <fragment
-            android:id="@+id/signinSignupOptionsFragment"
-            android:name="com.example.todo.framework.presentation.view.fragments.SigninSignupOptionsFragment"
-            tools:layout="@layout/fragment_signin_signup_options_layout">
+            android:id="@+id/loginSignupOptionsFragment"
+            android:name="com.example.todo.framework.presentation.view.fragments.LoginSignupOptionsFragment"
+            tools:layout="@layout/fragment_login_signup_options">
             <action
-                android:id="@+id/action_signinSignupOptionsFragment_to_signupFragment"
-                app:destination="@id/signupFragment" />
+                android:id="@+id/action_loginSignupOptionsFragment_to_signupFragment"
+                app:destination="@id/signupFragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
             <action
-                android:id="@+id/action_signinSignupOptionsFragment_to_loginFragment"
-                app:destination="@id/loginFragment" />
+                android:id="@+id/action_loginSignupOptionsFragment_to_loginFragment"
+                app:destination="@id/loginFragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
         </fragment>
     </navigation>
     <fragment
         android:id="@+id/HomeFlowContainerFragment"
-        android:name="com.example.todo.HomeFlowContainerFragment"
+        android:name="com.example.todo.framework.presentation.view.HomeFlowContainerFragment"
         android:label="MainTodoFragment"
-        tools:layout="@layout/fragment_home_flow_container_layout">
+        tools:layout="@layout/fragment_home_flow_container">
 
         <action
             android:id="@+id/action_HomeFlowContainerFragment_to_navigation"
-            app:destination="@id/navigation" />
+            app:destination="@id/auth_graph"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
     </fragment>
 
 

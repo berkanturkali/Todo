@@ -1,48 +1,50 @@
 package com.example.todo.framework.presentation.view.fragments.homeflow
 
-import android.graphics.Paint
+import android.app.AlarmManager
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.PopupMenu
-import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
-import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.todo.R
-import com.example.todo.business.domain.model.Todo
-import com.example.todo.business.domain.model.TodoCategory
-import com.example.todo.business.domain.model.TodoFilterType
-import com.example.todo.databinding.FragmentHomeLayoutBinding
-import com.example.todo.framework.adapter.HomeFragmentAdapter
-import com.example.todo.framework.adapter.TodoLoadStateAdapter
-import com.example.todo.framework.presentation.view.fragments.BaseFragment
+import com.example.todo.business.domain.model.*
+import com.example.todo.business.util.HomeMenuClickEvent
+import com.example.todo.databinding.FragmentHomeBinding
+import com.example.todo.framework.presentation.adapter.HomeFragmentAdapter
+import com.example.todo.framework.presentation.adapter.TodoLoadStateAdapter
+import com.example.todo.framework.presentation.base.BaseFragment
 import com.example.todo.framework.presentation.viewmodel.HomeFlowContainerViewModel
 import com.example.todo.framework.presentation.viewmodel.fragments.homeflow.HomeFragmentViewModel
-import com.example.todo.util.Consts.Companion.ID
-import com.example.todo.util.HeaderItemDecoration
-import com.example.todo.util.Resource
-import com.example.todo.util.getNavigationResult
-import com.example.todo.util.showSnack
+import com.example.todo.util.*
+import com.example.todo.util.Constants.ID
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-private const val TAG = "HomeFragment"
 
 @AndroidEntryPoint
-class HomeFragment : BaseFragment<FragmentHomeLayoutBinding>(FragmentHomeLayoutBinding::inflate),
+class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate),
     HomeFragmentAdapter.OnTodoClickListener {
 
+    @Inject
+    lateinit var alarmManager: AlarmManager
+
+    @Inject
+    lateinit var notifyIntent: Intent
+
     private lateinit var mAdapter: HomeFragmentAdapter
-    private lateinit var dividerItemDecoration: DividerItemDecoration
     private val mViewModel by viewModels<HomeFragmentViewModel>()
+    private var position = -1
     private val mainTodoViewModel by viewModels<HomeFlowContainerViewModel>(ownerProducer = { requireParentFragment().requireParentFragment() })
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -54,6 +56,17 @@ class HomeFragment : BaseFragment<FragmentHomeLayoutBinding>(FragmentHomeLayoutB
         binding.retryButton.setOnClickListener {
             mAdapter.retry()
         }
+        binding.root.setOnRefreshListener {
+            mAdapter.refresh()
+            binding.root.isRefreshing = false
+        }
+        binding.statisticsBtn.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_statisticsFragment)
+        }
+        binding.addTodoBtn.setOnClickListener {
+            val action = HomeFragmentDirections.actionHomeFragmentToAddEditTodoFragment()
+            findNavController().navigate(action)
+        }
     }
 
     private fun initAdapter() {
@@ -61,9 +74,9 @@ class HomeFragment : BaseFragment<FragmentHomeLayoutBinding>(FragmentHomeLayoutB
         mAdapter.addLoadStateListener { loadState ->
             val isListEmpty = loadState.refresh is LoadState.NotLoading && mAdapter.itemCount == 0
             showEmptyList(isListEmpty)
-            binding.todoRv.isVisible = loadState.mediator?.refresh is LoadState.NotLoading
-            showProgress(loadState.mediator?.refresh is LoadState.Loading)
-            binding.retryButton.isVisible = loadState.mediator?.refresh is LoadState.Error
+            binding.todoRv.isVisible = loadState.refresh is LoadState.NotLoading
+            showProgress(loadState.refresh is LoadState.Loading)
+            binding.retryButton.isVisible = loadState.refresh is LoadState.Error
             val error = when {
                 loadState.prepend is LoadState.Error -> loadState.prepend as? LoadState.Error
                 loadState.append is LoadState.Error -> loadState.append as? LoadState.Error
@@ -80,21 +93,44 @@ class HomeFragment : BaseFragment<FragmentHomeLayoutBinding>(FragmentHomeLayoutB
 
     private fun initRecycler() {
         binding.todoRv.apply {
+            val itemTouchHelper = object : ItemTouchHelper.SimpleCallback(
+                ItemTouchHelper.UP or ItemTouchHelper.DOWN,
+                ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+            ) {
+                override fun onMove(
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder,
+                    target: RecyclerView.ViewHolder
+                ): Boolean = true
+
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                    val position = viewHolder.bindingAdapterPosition
+                    if (mAdapter.snapshot()[position] is TodoModel.TodoItem) {
+                        val item = mAdapter.snapshot()[position] as TodoModel.TodoItem
+                        this@HomeFragment.position = position
+                        mViewModel.deleteTodo(item.todo.id!!)
+                    }
+                }
+
+                override fun getSwipeDirs(
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder
+                ): Int {
+                    return if (viewHolder is HomeFragmentAdapter.TodoSeparatorViewHolder) 0 else super.getSwipeDirs(
+                        recyclerView,
+                        viewHolder
+                    )
+
+                }
+            }
+            ItemTouchHelper(itemTouchHelper).apply {
+                attachToRecyclerView(binding.todoRv)
+            }
             setHasFixedSize(true)
             adapter = mAdapter.withLoadStateFooter(
                 footer = TodoLoadStateAdapter { mAdapter.retry() }
             )
             layoutManager = LinearLayoutManager(requireContext())
-            dividerItemDecoration = DividerItemDecoration(
-                requireContext(),
-                (layoutManager as LinearLayoutManager).orientation
-            )
-            addItemDecoration(dividerItemDecoration)
-            addItemDecoration(HeaderItemDecoration(this, false) { position ->
-                if (position >= 0 && position < mAdapter.itemCount) {
-                    mAdapter.getItemViewType(position) == R.layout.todo_item_seperator_layout
-                } else false
-            })
         }
     }
 
@@ -123,32 +159,24 @@ class HomeFragment : BaseFragment<FragmentHomeLayoutBinding>(FragmentHomeLayoutB
                 mAdapter.submitData(it)
             }
         }
-        mainTodoViewModel.filterItemClicked.observe(viewLifecycleOwner) { event ->
-            event.getContentIfNotHandled()?.let {
-                showFilterPopup()
-            }
-        }
-        mainTodoViewModel.shouldFetchDataFromNetwork.observe(viewLifecycleOwner){
-            it?.getContentIfNotHandled()?.let { shouldFetch->
-                if(shouldFetch){
-                    mAdapter.refresh()
-                }
-            }
-        }
-//        editViewModel.updateStatus.observe(viewLifecycleOwner) {
-//            it.getContentIfNotHandled()?.let { message ->
-//                requireView().snack(message, R.color.black)
-//                mAdapter.stateRestorationPolicy =
-//                    RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
-//                if (message == "Updated successfully") {
-//                    mainTodoViewModel.getStats()
-//                }
-//            }
-//        }
-        mainTodoViewModel.isRemoveCompletedItemsClicked.observe(viewLifecycleOwner) { clickEvent ->
-            clickEvent.getContentIfNotHandled()?.let { isClicked ->
-                if (isClicked) {
-//                    mViewModel.deleteCompletedTodos()
+        mainTodoViewModel.homeMenuClickEvent.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { clickEvent ->
+                when (clickEvent) {
+                    is HomeMenuClickEvent.AllFilterClickEvent -> mViewModel.setFilterType(
+                        TodoFilterType.ALL_TODOS
+                    )
+                    is HomeMenuClickEvent.ActiveFilterClickEvent -> mViewModel.setFilterType(
+                        TodoFilterType.ACTIVE_TODOS
+                    )
+                    is HomeMenuClickEvent.CompletedFilterClickEvent -> mViewModel.setFilterType(
+                        TodoFilterType.COMPLETED_TODOS
+                    )
+                    is HomeMenuClickEvent.ImportantFilterClickEvent -> mViewModel.setFilterType(
+                        TodoFilterType.IMPORTANT_TODOS
+                    )
+                    is HomeMenuClickEvent.RemoveAllCompletedClickEvent -> {
+                        mViewModel.deleteCompletedTodos()
+                    }
                 }
             }
         }
@@ -157,11 +185,12 @@ class HomeFragment : BaseFragment<FragmentHomeLayoutBinding>(FragmentHomeLayoutB
                 when (resource) {
                     is Resource.Success -> {
                         showProgress(false)
-                        if (resource.data != -1) mainTodoViewModel.cancelNotification(resource.data as Int)
-                        showSnack(
-                            "Removed Successfully",
-                            R.color.color_success
+                        if (resource.data!!.toInt() != -1) alarmManager.cancel(
+                            (resource.data.toDouble()).toInt(),
+                            requireContext(),
+                            notifyIntent
                         )
+                        mAdapter.refresh()
                     }
                     is Resource.Error -> {
                         showProgress(false)
@@ -173,27 +202,38 @@ class HomeFragment : BaseFragment<FragmentHomeLayoutBinding>(FragmentHomeLayoutB
                 }
             }
         }
+        mViewModel.deleteCompletedInfo.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { resource ->
+                when (resource) {
+                    is Resource.Error -> {
+                        showProgress(false)
+                        showSnack(resource.message!!)
+                    }
+                    is Resource.Loading -> showProgress(true)
+                    is Resource.Success -> {
+                        showProgress(false)
+                        cancelAlarms(resource.data!!)
+                        mAdapter.refresh()
+                    }
+                }
+            }
+        }
 
         getNavigationResult<String>(R.id.homeFragment, ID) {
             mViewModel.deleteTodo(it)
         }
+        mainTodoViewModel.shouldRefresh.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { shouldRefresh ->
+                if (shouldRefresh) mAdapter.refresh()
+            }
+        }
     }
 
-    private fun showFilterPopup() {
-        val view = requireActivity().findViewById<View>(R.id.filter)
-        PopupMenu(requireContext(), view).run {
-            menuInflater.inflate(R.menu.filter_todo_menu, menu)
-            setOnMenuItemClickListener {
-                when (it.itemId) {
-                    R.id.all -> mViewModel.setFilterType(TodoFilterType.ALL_TODOS)
-                    R.id.active -> mViewModel.setFilterType(TodoFilterType.ACTIVE_TODOS)
-                    R.id.completed -> mViewModel.setFilterType(TodoFilterType.COMPLETED_TODOS)
-                    R.id.important -> mViewModel.setFilterType(TodoFilterType.IMPORTANT_TODOS)
-                    else -> mViewModel.setFilterType(TodoFilterType.ALL_TODOS)
-                }
-                true
-            }
-            show()
+    private fun cancelAlarms(ids: List<NotificationId>) {
+        ids.filter {
+            it.notificationId != -1
+        }.forEach {
+            alarmManager.cancel(it.notificationId, requireContext(), notifyIntent)
         }
     }
 
@@ -207,18 +247,9 @@ class HomeFragment : BaseFragment<FragmentHomeLayoutBinding>(FragmentHomeLayoutB
         }
     }
 
-    override fun onTodoClick(todo: Todo) {
-        val action = HomeFragmentDirections.actionHomeFragmentToTodoOptionsDialog(todo)
+    override fun onTodoClick(todo: Todo, position: Int) {
+        this.position = position
+        val action = HomeFragmentDirections.actionHomeFragmentToAddEditTodoFragment(todo)
         findNavController().navigate(action)
-    }
-
-    override fun onCheckboxListener(todo: Todo, isChecked: Boolean, textview: TextView) {
-        todo.isCompleted = isChecked
-        if (isChecked) {
-            textview.paintFlags = textview.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-        } else {
-            textview.paintFlags = textview.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
-        }
-//        editViewModel.updateTodo(todo.id, todo)
     }
 }

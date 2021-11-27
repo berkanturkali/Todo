@@ -7,7 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.todo.business.domain.model.TokenResponse
 import com.example.todo.business.repo.abstraction.AuthRepo
-import com.example.todo.util.*
+import com.example.todo.util.Event
+import com.example.todo.util.Resource
 import com.google.gson.JsonObject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -32,7 +33,4 @@ class LoginFragmentViewModel @Inject constructor(
             _loginInfo.value = Event(resource)
         }
     }
-
-    fun credentialsAreValid(email:String,password:String) = email.isValidEmail() && password.isValidPassword()
-
 }

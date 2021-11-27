@@ -8,7 +8,7 @@ import okhttp3.MultipartBody
 
 interface AuthRepo {
 
-    suspend fun signupUser(user: User, body: MultipartBody.Part? = null): Resource<String>
+    suspend fun signupUser(user: User): Resource<String>
 
     suspend fun loginUser(credentials: JsonObject): Resource<TokenResponse>
 }

@@ -2,7 +2,12 @@ package com.example.todo.business.util
 
 import com.example.todo.util.Resource
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import retrofit2.Response
@@ -10,7 +15,7 @@ import java.io.IOException
 
 suspend fun <T> safeApiCall(
     dispatcher: CoroutineDispatcher,
-    apiCall: suspend () -> Response<T>
+    apiCall: suspend () -> Response<T>,
 ): Resource<T> {
     return try {
         val response = withContext(dispatcher) { apiCall.invoke() }

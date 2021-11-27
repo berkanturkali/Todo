@@ -2,6 +2,9 @@ package com.example.todo.business.repo.abstraction
 
 import androidx.paging.Pager
 import androidx.paging.PagingData
+import com.example.todo.business.domain.model.NotificationId
+import com.example.todo.business.domain.model.Profile
+import com.example.todo.business.domain.model.Stat
 import com.example.todo.business.domain.model.Todo
 import com.example.todo.framework.datasource.network.model.TodoDTO
 import com.example.todo.util.Resource
@@ -18,9 +21,13 @@ interface TodoRepo {
 
     suspend fun update(todo:Todo):Resource<String>
 
-    suspend fun delete(id:String):Resource<Any>
+    suspend fun delete(id:String):Resource<String>
 
-    suspend fun deleteCompletedTodos():Resource<String>
+    suspend fun deleteCompletedTodos():Resource<List<NotificationId>>
+
+    suspend fun getAllStats():Resource<List<Stat>>
+
+    suspend fun geyMyStats():Resource<Profile>
 
 
 

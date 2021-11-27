@@ -3,18 +3,23 @@ package com.example.todo
 import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.os.Bundle
-import android.view.View
-import android.widget.ProgressBar
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
+import androidx.fragment.app.DialogFragment
+import com.example.todo.databinding.ActivityMainBinding
 import com.example.todo.framework.presentation.UIController
+import com.example.todo.framework.presentation.view.fragments.LottieDialogFragment
 import com.example.todo.framework.presentation.viewmodel.MainActivityViewModel
 import com.example.todo.receiver.ConnectivityBroadcastReceiver
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+private const val TAG = "MainActivity"
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(),
@@ -23,9 +28,12 @@ class MainActivity : AppCompatActivity(),
     lateinit var connectivityBroadcastReceiver: ConnectivityBroadcastReceiver
     private val mViewModel: MainActivityViewModel by viewModels()
 
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         registerReceiver(
             connectivityBroadcastReceiver,
             IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
@@ -54,6 +62,16 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun displayProgress(isDisplayed: Boolean) {
-        findViewById<ProgressBar>(R.id.progress_bar).isVisible = isDisplayed
+        val dialog = LottieDialogFragment()
+        if (isDisplayed) {
+            dialog.show(supportFragmentManager, "")
+        } else {
+            CoroutineScope(Dispatchers.Main).launch {
+                delay(1500L)
+                supportFragmentManager.findFragmentByTag("")?.let {
+                    (it as DialogFragment).dismiss()
+                }
+            }
+        }
     }
 }

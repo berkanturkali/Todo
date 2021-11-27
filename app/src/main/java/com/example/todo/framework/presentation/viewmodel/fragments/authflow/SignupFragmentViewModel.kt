@@ -25,22 +25,10 @@ class SignupFragmentViewModel @Inject constructor(
 
     val signupInfo: LiveData<Resource<String>> get() = _signupInfo
 
-    fun signupUser(user: User, body: MultipartBody.Part?) {
+    fun signupUser(user: User) {
         viewModelScope.launch(Dispatchers.Main) {
             _signupInfo.value = Resource.Loading()
-            _signupInfo.value = repo.signupUser(user, body)
+            _signupInfo.value = repo.signupUser(user)
         }
-    }
-
-    fun fieldsAreValid(
-        firstname: String,
-        lastname: String,
-        email: String,
-        password: String
-    ): Boolean {
-        return firstname.isValidFirstNameOrLastName() &&
-                lastname.isValidFirstNameOrLastName() &&
-                email.isValidEmail() &&
-                password.isValidPassword()
     }
 }

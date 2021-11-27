@@ -7,32 +7,56 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:label="Todos"
         android:name="com.example.todo.framework.presentation.view.fragments.homeflow.HomeFragment"
-        tools:layout="@layout/fragment_home_layout">
+        android:label=""
+        tools:layout="@layout/fragment_home">
         <action
-            android:id="@+id/action_homeFragment_to_todoOptionsDialog"
-            app:destination="@id/todoOptionsDialog" />
+            android:id="@+id/action_homeFragment_to_addEditTodoFragment"
+            app:destination="@id/addEditTodoFragment"
+            app:enterAnim="@anim/slide_in_bottom"
+            app:exitAnim="@anim/slide_out_bottom"
+            app:popEnterAnim="@anim/slide_in_top"
+            app:popExitAnim="@anim/slide_out_bottom"/>
+        <action
+            android:id="@+id/action_homeFragment_to_statisticsFragment"
+            app:destination="@id/statisticsFragment"
+            app:enterAnim="@anim/slide_in_bottom"
+            app:exitAnim="@anim/slide_out_bottom"
+            app:popEnterAnim="@anim/slide_in_top"
+            app:popExitAnim="@anim/slide_out_bottom"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/addEditTodoFragment"
+        android:name="com.example.todo.framework.presentation.view.fragments.homeflow.AddEditTodoFragment"
+        android:label=""
+        tools:layout="@layout/fragment_add_edit_todo">
+        <action
+            android:id="@+id/action_addTodoFragment_to_addEditTodoBottomSheetDialog"
+            app:destination="@id/addEditTodoBottomSheetDialog" />
+        <argument
+            android:name="todo"
+            android:defaultValue="@null"
+            app:argType="com.example.todo.business.domain.model.Todo"
+            app:nullable="true" />
     </fragment>
     <dialog
-        android:id="@+id/todoOptionsDialog"
-        android:label="Options"
-        android:name="com.example.todo.framework.presentation.view.fragments.homeflow.TodoOptionsDialog"
-        tools:layout="@layout/dialog_todo_options_layout">
-        <action
-            android:id="@+id/action_todoOptionsDialog_to_editTodoFragment"
-            app:destination="@id/editTodoFragment" />
+        android:id="@+id/addEditTodoBottomSheetDialog"
+        android:name="com.example.todo.framework.presentation.view.fragments.homeflow.AddEditTodoBottomSheetDialog"
+        android:label="AddEditTodoBottomSheetDialog"
+        tools:layout="@layout/dialog_add_edit_todo">
         <argument
-            android:name="todo"
-            app:argType="com.example.todo.business.domain.model.Todo" />
+            android:name="array"
+            app:argType="integer" />
     </dialog>
     <fragment
-        android:id="@+id/editTodoFragment"
-        android:label="Edit Todo"
-        android:name="com.example.todo.framework.presentation.view.fragments.homeflow.EditTodoFragment"
-        tools:layout="@layout/fragment_edit_todo_layout">
-        <argument
-            android:name="todo"
-            app:argType="com.example.todo.business.domain.model.Todo" />
-    </fragment>
+        android:id="@+id/statisticsFragment"
+        tools:layout="@layout/fragment_statistics"
+        android:name="com.example.todo.framework.presentation.view.fragments.homeflow.StatisticsFragment"
+        android:label="Statistics" />
+    <fragment
+        android:id="@+id/profileFragment"
+        tools:layout="@layout/fragment_profile"
+        android:name="com.example.todo.framework.presentation.view.fragments.homeflow.ProfileFragment"
+        android:label="" />
 </navigation>

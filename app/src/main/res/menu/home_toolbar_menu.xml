@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/filter"
+        android:icon="@drawable/ic_filter"
+        android:orderInCategory="1"
+        android:title="filter"
+        app:iconTint="@color/black"
+        app:showAsAction="ifRoom">
+        <menu>
+            <item
+                android:id="@+id/all"
+                android:title="@string/all" />
+            <item
+                android:id="@+id/active"
+                android:title="Active" />
+            <item
+                android:id="@+id/completed"
+                android:title="Completed" />
+            <item
+                android:id="@+id/important"
+                android:title="Important" />
+        </menu>
+    </item>
+    <item
+        android:id="@+id/options"
+        android:icon="@drawable/ic_more"
+        android:orderInCategory="2"
+        android:title="Options"
+        app:iconTint="@color/black"
+        app:showAsAction="ifRoom">
+        <menu>
+            <item
+                android:id="@+id/remove_completed"
+                android:icon="@drawable/ic_delete_red"
+                android:title="Remove Completed Todos"
+                app:showAsAction="never" />
+        </menu>
+    </item>
+</menu>

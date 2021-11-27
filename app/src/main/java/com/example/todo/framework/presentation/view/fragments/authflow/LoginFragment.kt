@@ -5,12 +5,10 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.todo.R
-import com.example.todo.databinding.FragmentLoginLayoutBinding
-import com.example.todo.framework.presentation.view.fragments.BaseFragment
+import com.example.todo.databinding.FragmentLoginBinding
+import com.example.todo.framework.presentation.base.BaseFragment
 import com.example.todo.framework.presentation.viewmodel.fragments.authflow.LoginFragmentViewModel
-import com.example.todo.util.Resource
-import com.example.todo.util.StorageManager
-import com.example.todo.util.showSnack
+import com.example.todo.util.*
 import com.google.gson.JsonObject
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -18,7 +16,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoginFragment :
-    BaseFragment<FragmentLoginLayoutBinding>(FragmentLoginLayoutBinding::inflate) {
+    BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::inflate) {
     private val mViewModel: LoginFragmentViewModel by viewModels()
 
     @Inject
@@ -32,19 +30,17 @@ class LoginFragment :
     private fun initButtons() {
         binding.apply {
             loginBtn.setOnClickListener {
-                if (mViewModel.credentialsAreValid(
-                        binding.emailEt.text.toString(),
-                        binding.passwordEt.text.toString()
-                    )
+                if (
+                    binding.emailEt.isValid() &&
+                    binding.passwordEt.isValid()
                 ) loginUser()
-                else showSnack(getString(R.string.invalid_fields))
             }
         }
     }
 
     private fun loginUser() {
-        val email = binding.emailEt.text.toString().trim()
-        val password = binding.passwordEt.text.toString().trim()
+        val email = binding.emailEt.text().trim()
+        val password = binding.passwordEt.text().trim()
         val credentials = JsonObject()
         credentials.addProperty("email", email)
         credentials.addProperty("password", password)
