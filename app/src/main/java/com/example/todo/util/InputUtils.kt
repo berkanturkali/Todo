@@ -1,7 +1,6 @@
 package com.example.todo.util
 
 
-import android.widget.EditText
 import android.widget.TextView
 import androidx.core.util.PatternsCompat
 import com.google.android.material.textfield.TextInputEditText
@@ -21,7 +20,7 @@ fun String.isValidFirstNameOrLastName(): Boolean {
 
 fun TextInputEditText.text(): String = text.toString()
 
-fun TextInputEditText.trim():String = text.toString().trim()
+fun TextInputEditText.trim(): String = text.toString().trim()
 
 fun TextInputEditText.isValid(): Boolean {
     var isValid = false

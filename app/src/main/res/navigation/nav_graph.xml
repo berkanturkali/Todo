@@ -12,10 +12,14 @@
         tools:layout="@layout/fragment_splash_screen">
         <action
             android:id="@+id/action_splashScreenFragment_to_mainTodoFragment"
-            app:destination="@id/HomeFlowContainerFragment" />
+            app:destination="@id/HomeFlowContainerFragment"
+            app:popUpTo="@id/splashScreenFragment"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_splashScreenFragment_to_navigation"
-            app:destination="@id/auth_graph" />
+            app:destination="@id/auth_graph"
+            app:popUpTo="@id/splashScreenFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <navigation
         android:id="@+id/auth_graph"

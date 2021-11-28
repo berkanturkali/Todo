@@ -17,8 +17,10 @@
         <entry key="app/src/main/res/drawable/ic_todo_list.xml" value="0.30462962962962964" />
         <entry key="app/src/main/res/drawable/radius_bg.xml" value="0.30462962962962964" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.2434143870314083" />
+        <entry key="app/src/main/res/layout/category_list_item.xml" value="0.22872340425531915" />
         <entry key="app/src/main/res/layout/dialog_add_edit_todo.xml" value="0.2383485309017224" />
         <entry key="app/src/main/res/layout/dialog_lottie.xml" value="0.23657548125633232" />
+        <entry key="app/src/main/res/layout/dialog_todo_options.xml" value="0.22872340425531915" />
         <entry key="app/src/main/res/layout/drawer_header_layout.xml" value="0.39260385005065856" />
         <entry key="app/src/main/res/layout/fragment_add_edit_todo.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_add_todo.xml" value="0.25" />
@@ -39,8 +41,10 @@
         <entry key="app/src/main/res/layout/fragment_register_layout.xml" value="0.2" />
         <entry key="app/src/main/res/layout/fragment_signup.xml" value="0.24164133738601823" />
         <entry key="app/src/main/res/layout/fragment_signup_layout.xml" value="0.2564814814814815" />
+        <entry key="app/src/main/res/layout/fragment_splash_screen.xml" value="0.22872340425531915" />
         <entry key="app/src/main/res/layout/fragment_statistics.xml" value="0.23657548125633232" />
         <entry key="app/src/main/res/layout/fragment_stats.xml" value="0.23657548125633232" />
+        <entry key="app/src/main/res/layout/load_state_view_footer.xml" value="0.17291666666666666" />
         <entry key="app/src/main/res/layout/load_state_view_footer_layout.xml" value="0.24164133738601823" />
         <entry key="app/src/main/res/layout/progress_layout.xml" value="0.23657548125633232" />
         <entry key="app/src/main/res/layout/statistic_item.xml" value="0.23657548125633232" />
