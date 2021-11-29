@@ -1,9 +1,7 @@
 # Todo
 ## Screenshots
-<img src="screenshots/main_frag.png" alt="main_frag" width="250"/> <img src="screenshots/login.png" alt="login" width="250"/> <img src="screenshots/register.png" alt="register" width="250"/> 
-<img src="screenshots/todos.png" alt="todos" width="250"/> <img src="screenshots/drawer.png" alt="drawer" width="250"/> <img src="screenshots/options.png" alt="options" width="250"/>
-<img src="screenshots/add_todo.png" alt="add_todo" width="250"/> <img src="screenshots/edit_todo.png" alt="edit_todo" width="250"/> <img src="screenshots/edit_profile.png" alt="edit_profile" width="250"/>
-<img src="screenshots/notification.png" alt="edit_profile" width="250"/>
+<img src="screens/splash.gif" alt="splash" width="250"/> <img src="screens/signup_login.gif" alt="signup_login" width="250"/> <img src="screens/add_edit.gif" alt="add_edit" width="250"/> 
+<img src="screens/home_menu.gif" alt="home_menu" width="250"/> <img src="screens/statistics.gif" alt="statistics" width="250"/> <img src="screens/profile.gif" alt="profile" width="250"/>
 
  ## Libraries
   * [Room](https://developer.android.com/training/data-storage/room) 

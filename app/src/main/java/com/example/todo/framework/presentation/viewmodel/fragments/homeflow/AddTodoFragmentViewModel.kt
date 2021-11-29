@@ -118,5 +118,5 @@ class AddTodoFragmentViewModel @Inject constructor(
 
     fun getTitle(isEditMode: Boolean) = if (isEditMode) "Edit Todo" else "Create New Todo"
 
-    fun getButtonText(isEditMode: Boolean) = if (isEditMode) "Update" else "All"
+    fun getButtonText(isEditMode: Boolean) = if (isEditMode) "Update" else "Add"
 }
