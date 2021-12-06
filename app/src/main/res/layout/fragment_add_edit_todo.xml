@@ -26,10 +26,10 @@
                 android:layout_marginBottom="@dimen/margin_padding_8dp"
                 android:drawablePadding="@dimen/padding_4dp"
                 android:text="Category"
-                android:textColor="@color/black"
+                android:textColor="@color/text_color"
                 android:textStyle="bold"
                 app:drawableStartCompat="@drawable/category_icon"
-                app:drawableTint="@color/black" />
+                app:drawableTint="@color/text_color" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -54,6 +54,8 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:background="@null"
+                    android:minWidth="48dp"
+                    android:minHeight="48dp"
                     android:src="@drawable/ic_down" />
             </RelativeLayout>
         </LinearLayout>
@@ -75,10 +77,10 @@
                 android:layout_marginBottom="@dimen/margin_padding_8dp"
                 android:drawablePadding="@dimen/padding_4dp"
                 android:text="Complete"
-                android:textColor="@color/black"
+                android:textColor="@color/text_color"
                 android:textStyle="bold"
                 app:drawableStartCompat="@drawable/ic_done"
-                app:drawableTint="@color/black" />
+                app:drawableTint="@color/text_color" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -86,30 +88,33 @@
                 android:layout_marginBottom="@dimen/margin_padding_8dp"
                 android:background="@drawable/radius_bg">
 
-            <TextView
-                android:id="@+id/complete_tv"
-                style="@style/TextAppearance.AppCompat.Small"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="@dimen/margin_padding_8dp"
-                tools:text="Category" />
+                <TextView
+                    android:id="@+id/complete_tv"
+                    style="@style/TextAppearance.AppCompat.Small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="@dimen/margin_padding_8dp"
+                    tools:text="Category" />
 
                 <ImageButton
                     android:id="@+id/completedPickIb"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
+                    android:layout_gravity="center_vertical"
                     android:background="@null"
+                    android:minWidth="48dp"
+                    android:minHeight="48dp"
                     android:src="@drawable/ic_down" />
 
             </RelativeLayout>
 
 
         </LinearLayout>
+
         <LinearLayout
             android:id="@+id/importanceRl"
             android:layout_width="match_parent"
@@ -127,10 +132,10 @@
                 android:layout_marginBottom="@dimen/margin_padding_8dp"
                 android:drawablePadding="@dimen/padding_4dp"
                 android:text="Importance"
-                android:textColor="@color/black"
+                android:textColor="@color/text_color"
                 android:textStyle="bold"
                 app:drawableStartCompat="@drawable/ic_important"
-                app:drawableTint="@color/black" />
+                app:drawableTint="@color/text_color" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -155,6 +160,8 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:background="@null"
+                    android:minWidth="48dp"
+                    android:minHeight="48dp"
                     android:src="@drawable/ic_down" />
             </RelativeLayout>
         </LinearLayout>
@@ -176,10 +183,10 @@
                 android:layout_marginBottom="@dimen/margin_padding_8dp"
                 android:drawablePadding="@dimen/padding_4dp"
                 android:text="Date"
-                android:textColor="@color/black"
+                android:textColor="@color/text_color"
                 android:textStyle="bold"
                 app:drawableStartCompat="@drawable/ic_calender"
-                app:drawableTint="@color/black" />
+                app:drawableTint="@color/text_color" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -206,6 +213,8 @@
                     android:layout_centerVertical="true"
                     android:layout_gravity="center_vertical"
                     android:background="@null"
+                    android:minWidth="48dp"
+                    android:minHeight="48dp"
                     android:src="@drawable/ic_down" />
             </RelativeLayout>
         </LinearLayout>
@@ -228,10 +237,10 @@
                 android:layout_marginBottom="8dp"
                 android:drawablePadding="4dp"
                 android:text="Time"
-                android:textColor="@color/black"
+                android:textColor="@color/text_color"
                 android:textStyle="bold"
                 app:drawableStartCompat="@drawable/ic_date"
-                app:drawableTint="@color/black" />
+                app:drawableTint="@color/text_color" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -257,6 +266,8 @@
                     android:layout_centerVertical="true"
                     android:layout_gravity="center_vertical"
                     android:background="@null"
+                    android:minWidth="48dp"
+                    android:minHeight="48dp"
                     android:src="@drawable/ic_down" />
             </RelativeLayout>
         </LinearLayout>
@@ -277,8 +288,8 @@
                 style="@style/TextAppearance.AppCompat.Medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
                 android:layout_marginStart="@dimen/margin_padding_8dp"
+                android:gravity="center_vertical"
                 android:text="Notify Me" />
 
             <Space
@@ -290,9 +301,7 @@
                 android:id="@+id/notifySwitch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical|end"
-                app:thumbTint="@color/switch_thumb_selector"
-                app:trackTint="@color/switch_track_selector" />
+                android:gravity="center_vertical|end" />
         </LinearLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -301,14 +310,14 @@
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:layout_marginTop="@dimen/margin_padding_8dp"
+            android:background="@color/card_bg"
             android:ellipsize="end"
             android:hint="@string/add_todo"
-            android:background="@color/white"
             android:inputType="textImeMultiLine"
             android:textAppearance="?attr/textAppearanceSubtitle1"
-            app:boxStrokeColor="@color/black"
+            app:boxStrokeColor="@color/text_input_layout_stroke_color"
             app:endIconMode="clear_text"
-            app:hintTextColor="@color/black"
+            app:hintTextColor="@color/text_color"
             app:layout_constraintTop_toBottomOf="@+id/notify_me_ll"
             app:startIconDrawable="@drawable/ic_todo_details">
 
@@ -317,7 +326,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:inputType="textMultiLine"
-                android:textColor="@color/black" />
+                android:textColor="@color/text_color" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.button.MaterialButton

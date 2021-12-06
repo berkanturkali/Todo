@@ -6,21 +6,25 @@
         android:icon="@drawable/ic_filter"
         android:orderInCategory="1"
         android:title="filter"
-        app:iconTint="@color/black"
+        app:iconTint="@color/text_color"
         app:showAsAction="ifRoom">
         <menu>
             <item
                 android:id="@+id/all"
-                android:title="@string/all" />
+                android:title="@string/all"
+                app:showAsAction="never"/>
             <item
                 android:id="@+id/active"
-                android:title="Active" />
+                android:title="Active"
+                app:showAsAction="never"/>
             <item
                 android:id="@+id/completed"
-                android:title="Completed" />
+                android:title="Completed"
+                app:showAsAction="never"/>
             <item
                 android:id="@+id/important"
-                android:title="Important" />
+                android:title="Important"
+                app:showAsAction="never"/>
         </menu>
     </item>
     <item
@@ -28,7 +32,7 @@
         android:icon="@drawable/ic_more"
         android:orderInCategory="2"
         android:title="Options"
-        app:iconTint="@color/black"
+        app:iconTint="@color/text_color"
         app:showAsAction="ifRoom">
         <menu>
             <item

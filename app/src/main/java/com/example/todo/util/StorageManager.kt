@@ -3,7 +3,6 @@ package com.example.todo.util
 import android.content.Context
 import android.content.SharedPreferences
 import com.example.todo.util.Constants.ID
-
 import com.example.todo.util.Constants.TOKEN
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject

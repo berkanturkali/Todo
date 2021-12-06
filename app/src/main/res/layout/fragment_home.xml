@@ -16,9 +16,8 @@
             android:id="@+id/horizontalScroll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:elevation="@dimen/elevation_8dp"
-            android:scrollbars="none"
+            style="@style/chipsHorizontalScrollStyle"
+            android:background="@drawable/horizontal_scroll_bg"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -141,33 +140,27 @@
 
         <com.github.clans.fab.FloatingActionMenu
             android:id="@+id/menu"
+            style="@style/floatingActionMenuStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_padding_16dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:menu_colorNormal="@color/color_grey_dark"
-            app:menu_colorPressed="@color/color_grey_dark">
+            app:layout_constraintEnd_toEndOf="parent">
 
             <com.github.clans.fab.FloatingActionButton
                 android:id="@+id/statistics_btn"
+                style="@style/floatingActionButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_stats"
-                app:fab_colorNormal="@color/color_grey_dark"
-                app:fab_colorPressed="@color/color_grey_dark"
-                app:fab_label="@string/statistics"
-                app:fab_size="mini" />
+                app:fab_label="@string/statistics" />
 
             <com.github.clans.fab.FloatingActionButton
                 android:id="@+id/add_todo_btn"
+                style="@style/floatingActionButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_add_todo"
-                app:fab_colorNormal="@color/color_grey_dark"
-                app:fab_colorPressed="@color/color_grey_dark"
-                app:fab_label="@string/add"
-                app:fab_size="mini" />
+                app:fab_label="@string/add" />
         </com.github.clans.fab.FloatingActionMenu>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

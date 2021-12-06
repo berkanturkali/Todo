@@ -26,9 +26,9 @@ import com.example.todo.util.StorageManager
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-
 @AndroidEntryPoint
-class HomeFlowContainerFragment :
+class
+HomeFlowContainerFragment :
     BaseFragment<FragmentHomeFlowContainerBinding>(FragmentHomeFlowContainerBinding::inflate) {
 
     private val mViewModel by viewModels<HomeFlowContainerViewModel>()
@@ -37,6 +37,8 @@ class HomeFlowContainerFragment :
     lateinit var storageManager: StorageManager
 
     private lateinit var navController: NavController
+
+    private lateinit var appBarConfiguration: AppBarConfiguration
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -52,7 +54,7 @@ class HomeFlowContainerFragment :
         val navHostFragment =
             childFragmentManager.findFragmentById(R.id.home_flow_container) as NavHostFragment
         navController = navHostFragment.navController
-        val appBarConfiguration = AppBarConfiguration(
+        appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.homeFragment,
                 R.id.profileFragment
@@ -94,23 +96,23 @@ class HomeFlowContainerFragment :
         binding.toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.all -> {
-                    mViewModel.setHomeMenuClick(HomeMenuClickEvent.AllFilterClickEvent(true))
+                    mViewModel.setMenuClick(HomeMenuClickEvent.AllFilterClickEvent(true))
                     true
                 }
                 R.id.active -> {
-                    mViewModel.setHomeMenuClick(HomeMenuClickEvent.ActiveFilterClickEvent(true))
+                    mViewModel.setMenuClick(HomeMenuClickEvent.ActiveFilterClickEvent(true))
                     true
                 }
                 R.id.completed -> {
-                    mViewModel.setHomeMenuClick(HomeMenuClickEvent.CompletedFilterClickEvent(true))
+                    mViewModel.setMenuClick(HomeMenuClickEvent.CompletedFilterClickEvent(true))
                     true
                 }
                 R.id.important -> {
-                    mViewModel.setHomeMenuClick(HomeMenuClickEvent.ImportantFilterClickEvent(true))
+                    mViewModel.setMenuClick(HomeMenuClickEvent.ImportantFilterClickEvent(true))
                     true
                 }
                 R.id.remove_completed -> {
-                    mViewModel.setHomeMenuClick(HomeMenuClickEvent.RemoveAllCompletedClickEvent(true))
+                    mViewModel.setMenuClick(HomeMenuClickEvent.RemoveAllCompletedClickEvent(true))
                     true
                 }
                 R.id.logout -> {

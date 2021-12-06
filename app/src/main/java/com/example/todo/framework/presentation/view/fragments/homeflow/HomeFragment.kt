@@ -159,7 +159,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                 mAdapter.submitData(it)
             }
         }
-        mainTodoViewModel.homeMenuClickEvent.observe(viewLifecycleOwner) {
+        mainTodoViewModel.menuClickEvent.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { clickEvent ->
                 when (clickEvent) {
                     is HomeMenuClickEvent.AllFilterClickEvent -> mViewModel.setFilterType(

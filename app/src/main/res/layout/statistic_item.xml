@@ -10,6 +10,7 @@
         android:layout_height="400dp"
         app:cardCornerRadius="32dp"
         app:cardElevation="@dimen/radius_16dp"
+        android:backgroundTint="@color/card_bg"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -38,7 +39,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginStart="@dimen/margin_padding_8dp"
                     android:text="Important"
-                    android:textColor="@color/black"
+                    android:textColor="@color/text_color"
                     android:textStyle="bold" />
 
                 <TextView
@@ -49,7 +50,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="@dimen/margin_padding_8dp"
-                    android:textColor="@color/black"
+                    android:textColor="@color/text_color"
                     tools:text="Count" />
             </RelativeLayout>
             <RelativeLayout
@@ -64,7 +65,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginStart="@dimen/margin_padding_8dp"
                     android:text="Not Important"
-                    android:textColor="@color/black"
+                    android:textColor="@color/text_color"
                     android:textStyle="bold" />
 
                 <TextView
@@ -75,7 +76,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="@dimen/margin_padding_8dp"
-                    android:textColor="@color/black"
+                    android:textColor="@color/text_color"
                     tools:text="Count" />
             </RelativeLayout>
             <RelativeLayout
@@ -90,7 +91,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginStart="8dp"
                     android:text="Active"
-                    android:textColor="@color/black"
+                    android:textColor="@color/text_color"
                     android:textStyle="bold" />
 
                 <TextView
@@ -101,7 +102,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="@dimen/margin_padding_8dp"
-                    android:textColor="@color/black"
+                    android:textColor="@color/text_color"
                     tools:text="Count" />
             </RelativeLayout>
             <RelativeLayout
@@ -116,7 +117,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginStart="@dimen/margin_padding_8dp"
                     android:text="Completed"
-                    android:textColor="@color/black"
+                    android:textColor="@color/text_color"
                     android:textStyle="bold" />
 
                 <TextView
@@ -127,7 +128,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="@dimen/margin_padding_8dp"
-                    android:textColor="@color/black"
+                    android:textColor="@color/text_color"
                     tools:text="Count" />
             </RelativeLayout>
 

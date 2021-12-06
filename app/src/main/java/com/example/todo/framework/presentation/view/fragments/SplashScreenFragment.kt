@@ -1,8 +1,10 @@
 package com.example.todo.framework.presentation.view.fragments
 
 import android.animation.Animator
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.airbnb.lottie.LottieAnimationView
@@ -26,6 +28,19 @@ class SplashScreenFragment : Fragment(R.layout.fragment_splash_screen) {
     }
 
     private fun loadSplashScreen() {
+      val file =  when (requireContext().resources?.configuration?.uiMode?.and(Configuration.UI_MODE_NIGHT_MASK)) {
+            Configuration.UI_MODE_NIGHT_YES -> {
+                "splash-night.json"
+            }
+            Configuration.UI_MODE_NIGHT_NO -> {
+                "splash.json"
+            }
+            Configuration.UI_MODE_NIGHT_UNDEFINED -> {
+                "splash.json"
+            }
+          else -> "splash.json"
+      }
+        splashAnim.setAnimation(file)
         splashAnim.addAnimatorListener(object : Animator.AnimatorListener {
             override fun onAnimationStart(animation: Animator?) = Unit
 

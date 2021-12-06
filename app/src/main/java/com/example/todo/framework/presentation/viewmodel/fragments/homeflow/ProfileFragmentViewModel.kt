@@ -21,7 +21,6 @@ class ProfileFragmentViewModel @Inject constructor(
 
     val meAndMyStats: LiveData<Resource<Profile>> get() = _meAndMyStats
 
-
     fun meAndMyStats() {
         viewModelScope.launch(Dispatchers.Main) {
             _meAndMyStats.value = Resource.Loading()

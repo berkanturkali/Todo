@@ -1,7 +1,5 @@
 package com.example.todo.framework.presentation.view.fragments.homeflow
 
-import android.graphics.Color
-import android.graphics.ColorFilter
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
@@ -71,7 +69,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
                 setDrawValues(true)
                 setValueFormatter(PercentFormatter(binding.pieChart))
                 setValueTextSize(12f)
-                setValueTextColor(Color.BLACK)
+                setValueTextColor(ContextCompat.getColor(binding.root.context, R.color.text_color))
             }
 
 
@@ -81,6 +79,8 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
                 legend.isEnabled = false
                 centerText = "Total : ${myProfile.total}"
                 description.isEnabled = false
+                setCenterTextColor(ContextCompat.getColor(binding.root.context, R.color.text_color))
+                setHoleColor(ContextCompat.getColor(binding.root.context, R.color.card_bg))
                 data = pieData
                 animateY(1400, Easing.EaseInQuad)
             }

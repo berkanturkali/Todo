@@ -58,5 +58,6 @@
         android:id="@+id/profileFragment"
         tools:layout="@layout/fragment_profile"
         android:name="com.example.todo.framework.presentation.view.fragments.homeflow.ProfileFragment"
-        android:label="" />
+        android:label="" >
+    </fragment>
 </navigation>

@@ -3,9 +3,11 @@ package com.example.todo.framework.presentation.adapter
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.todo.R
 import com.example.todo.business.domain.model.Stat
 import com.example.todo.databinding.StatisticItemBinding
 import com.github.mikephil.charting.components.Legend
@@ -75,14 +77,16 @@ class StatisticsAdapter : ListAdapter<Stat, StatisticsAdapter.ViewHolder>(STAT_C
                     setDrawValues(true)
                     setValueFormatter(PercentFormatter(binding.pieChart))
                     setValueTextSize(12f)
-                    setValueTextColor(Color.BLACK)
+                    setValueTextColor(ContextCompat.getColor(binding.root.context,R.color.text_color))
                 }
 
                 pieChart.apply {
                     isDrawHoleEnabled = true
                     setUsePercentValues(true)
                     setEntryLabelTextSize(8f)
-                    setEntryLabelColor(Color.BLACK)
+                    setEntryLabelColor(ContextCompat.getColor(binding.root.context,R.color.text_color))
+                    setCenterTextColor(ContextCompat.getColor(binding.root.context,R.color.text_color))
+                    setHoleColor(ContextCompat.getColor(binding.root.context,R.color.card_bg))
                     description.isEnabled = false
                     centerText = "${stat.category}\n Total:${stat.total}"
                     setCenterTextSize(11f)
@@ -93,6 +97,7 @@ class StatisticsAdapter : ListAdapter<Stat, StatisticsAdapter.ViewHolder>(STAT_C
                         legend.orientation = Legend.LegendOrientation.VERTICAL
                         textSize = 12f
                         isEnabled = true
+                        textColor = ContextCompat.getColor(binding.root.context,R.color.text_color)
                         form = Legend.LegendForm.CIRCLE
                         yEntrySpace = 10f
                     }

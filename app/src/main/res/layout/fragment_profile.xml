@@ -11,6 +11,7 @@
         android:layout_margin="@dimen/margin_padding_8dp"
         app:cardCornerRadius="@dimen/radius_16dp"
         app:cardElevation="@dimen/elevation_8dp"
+        android:backgroundTint="@color/card_bg"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -30,7 +31,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:textColor="@color/black"
+                android:textColor="@color/text_color"
                 android:textStyle="bold"
                 tools:text="Lorem İpsum" />
 
@@ -42,7 +43,7 @@
                 android:layout_marginTop="@dimen/margin_padding_8dp"
                 android:layout_marginBottom="@dimen/margin_padding_8dp"
                 android:gravity="center_horizontal"
-                android:textColor="@color/black"
+                android:textColor="@color/text_color"
                 android:textStyle="bold"
                 tools:text="Lorem İpsum" />
 
