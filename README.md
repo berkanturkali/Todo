@@ -20,6 +20,9 @@ To run the app on an emulator add `http://10.0.2.2:{Port}` with the key `BASE_UR
 | :-----------------------------------------: | :-------------------------------------------: |
 |<img src="screens/statistics.gif" alt="statistics" width="250"/> | <img src="screens/profile.gif" alt="profile" width="250"/> |
 
+|                   Dark Mode                 |
+| :-----------------------------------------: |
+|<img src="screens/dark_mode.gif" alt="dark" width="250"/> |                               
 
 
 ## Libraries
