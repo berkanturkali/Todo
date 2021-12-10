@@ -39,6 +39,10 @@
             android:defaultValue="@null"
             app:argType="com.example.todo.business.domain.model.Todo"
             app:nullable="true" />
+        <deepLink
+            app:uri="app://todo.com/addEditTodo"
+            app:mimeType="type/subtype"
+            app:action="android.intent.action.VIEW"/>
     </fragment>
     <dialog
         android:id="@+id/addEditTodoBottomSheetDialog"

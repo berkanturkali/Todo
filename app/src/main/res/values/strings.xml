@@ -40,6 +40,9 @@
     <string name="something_went_wrong_please_try_again">Something went wrong please try again</string>
     <string name="dark_mode">Dark Mode</string>
     <string name="use_device_settings">Use device settings</string>
+    <string name="short_shortcut">New Todo</string>
+    <string name="long_shortcut">Add New Todo</string>
+    <string name="disable_shortcut">New Todo Shortcut Disabled</string>
     <string-array name="importance_array">
         <item>Important</item>
         <item>Not Important</item>
